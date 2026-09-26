@@ -1,0 +1,7 @@
+# Store text files with LF in the repo (Vercel builds on Linux); images and fonts are binary.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.woff2 binary

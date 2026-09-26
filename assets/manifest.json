@@ -1,0 +1,37 @@
+{
+  "_note": "Higgsfield-generated campaign photos (Nano Banana 2), saved to assets/generated. Run: npm run assets. Links may expire; if a download fails, re-download from the Higgsfield gallery by job id.",
+  "images": [
+    {
+      "file": "hero-desktop.png",
+      "job": "d55b075f-55d1-4fba-bf1b-ee6dfc8669d3",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jj4AVPp5XS0Uw2GRwX4VYnHiSe/hf_20260923_155851_d55b075f-55d1-4fba-bf1b-ee6dfc8669d3.png"
+    },
+    {
+      "file": "hero-mobile.png",
+      "job": "d9b08928-f4fa-4ac5-9a08-9070210e83b7",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jj4AVPp5XS0Uw2GRwX4VYnHiSe/hf_20260923_155903_d9b08928-f4fa-4ac5-9a08-9070210e83b7.png"
+    },
+    {
+      "file": "promo-campaign.png",
+      "job": "dac8a8e1-dccd-4a3b-a78b-f0a8b4edf8b7",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jj4AVPp5XS0Uw2GRwX4VYnHiSe/hf_20260923_155903_dac8a8e1-dccd-4a3b-a78b-f0a8b4edf8b7.png"
+    },
+    {
+      "file": "ordering-feet.png",
+      "job": "0ec2301e-62b3-4653-a42c-e822f9f8ce6a",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jj4AVPp5XS0Uw2GRwX4VYnHiSe/hf_20260923_155903_0ec2301e-62b3-4653-a42c-e822f9f8ce6a.png"
+    },
+    {
+      "file": "detail-buckle.png",
+      "job": "7e274646-ac44-467b-8147-f26e0ddc3ec5",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jj4AVPp5XS0Uw2GRwX4VYnHiSe/hf_20260923_155903_7e274646-ac44-467b-8147-f26e0ddc3ec5.png"
+    },
+    {
+      "file": "detail-sole.png",
+      "job": "c97d6e1c-b107-428a-ba44-f4bc692c099b",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jj4AVPp5XS0Uw2GRwX4VYnHiSe/hf_20260923_155903_c97d6e1c-b107-428a-ba44-f4bc692c099b.png"
+    }
+  ],
+  "missing": [],
+  "_resolved": "detail-footbed and comfort-product are now real LP photos (assets/photos/cork-footbed-detail.jpg, buckle-sandal-rust.jpg)."
+}

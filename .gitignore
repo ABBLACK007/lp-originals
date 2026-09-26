@@ -1,0 +1,19 @@
+node_modules
+.next
+out
+.vercel
+
+# Environment files hold secrets (Paystack keys etc.): never commit them.
+.env*
+!.env.example
+
+# Third-party imagery: kept locally for reference, never published (copyright / trademark).
+design/reference/style-inspiration-reef-ad.jpg
+design/reference/layout-inspiration-nipro.webp
+assets/photos/originals/brown black birken.jpeg
+assets/photos/originals/brown & black birken 2.jpeg
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.tsbuildinfo

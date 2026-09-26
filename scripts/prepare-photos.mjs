@@ -1,0 +1,35 @@
+// Crops the client's original product photos (assets/photos/originals) into the web
+// versions the site imports (assets/photos). Re-run after adding or re-cropping photos:
+//   npm run photos
+// Colours are left untouched so suede and leather shades stay true to the product.
+import sharp from "sharp";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const src = path.join(root, "assets/photos/originals");
+const out = path.join(root, "assets/photos");
+
+// [output file, original file, crop box in original pixels (omit to keep the full frame)]
+// Product crops are 4:5 to match the product cards.
+// Not used: "brown black birken.jpeg" and "brown & black birken 2.jpeg" (buckles stamped with another brand's name).
+const photos = [
+  ["cork-collection.jpg", "birken pams.jpeg"],
+  ["wide-band-slide-tan.jpg", "birken pams.jpeg", { left: 105, top: 0, width: 480, height: 600 }],
+  ["cross-strap-slide-black.jpg", "birken pams.jpeg", { left: 0, top: 420, width: 480, height: 600 }],
+  ["two-strap-slide-brown.jpg", "birken pams.jpeg", { left: 470, top: 380, width: 564, height: 705 }],
+  ["buckle-sandal-rust.jpg", "brown birken.jpeg", { left: 250, top: 150, width: 840, height: 1050 }],
+  ["buckle-sandal-group.jpg", "brown birken.jpeg"],
+  ["band-slide-chocolate.jpg", "birken swade.jpeg", { left: 0, top: 0, width: 1024, height: 1280 }],
+  ["cork-footbed-detail.jpg", "birken swade.jpeg", { left: 0, top: 230, width: 700, height: 800 }],
+  ["cutout-slide-red.jpg", "slides.jpeg"],
+  ["cross-slide-black-leather.jpg", "male slides.jpeg"],
+  ["toe-post-sandal-cream.jpg", "female slides.jpeg", { left: 300, top: 150, width: 726, height: 908 }],
+];
+
+for (const [file, original, box] of photos) {
+  let img = sharp(path.join(src, original)).rotate(); // respect camera orientation
+  if (box) img = img.extract(box);
+  const { width, height } = await img.jpeg({ quality: 88, mozjpeg: true }).toFile(path.join(out, file));
+  console.log(`saved ${file} (${width}x${height})`);
+}

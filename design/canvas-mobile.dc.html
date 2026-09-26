@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LP Originals — Homepage (Mobile)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700&amp;family=Instrument+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;font-family:'Instrument Sans',system-ui,sans-serif;color:#2A2724;background:#F2EDE6}
+a{color:#2A2724}a:hover{color:#8A5A2E}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 5620px; box-sizing: border-box; background: #F2EDE6; display: flex; flex-direction: column; font-family: 'Instrument Sans', system-ui, sans-serif; color: #2A2724; overflow: hidden;">
+
+<section style="padding: 12px 12px 0 12px;">
+<div style="position: relative; height: 680px; border-radius: 24px; overflow: hidden; background: #151311; display: flex; flex-direction: column; justify-content: space-between; padding: 18px 20px 28px 20px; box-sizing: border-box;">
+<div style="position: absolute; top: 90px; left: 20px; right: 20px; text-align: center; pointer-events: none;">
+<span style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.42);">Photo · Lifestyle hero, portrait crop</span>
+</div>
+<header style="position: relative; display: flex; align-items: center; justify-content: space-between;">
+<a href="#" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #FFFFFF;">
+<img src="/_blob/352c2332da29b99b72f2a46dacfa3db5" alt="LP Originals logo" style="width: 42px; height: 42px; border-radius: 999px; object-fit: cover;">
+<span style="font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.08em; color: #D4B06A;">ORIGINALS</span>
+</a>
+<div style="display: flex; gap: 8px;">
+<button aria-label="Cart" style="width: 44px; height: 44px; border-radius: 999px; border: none; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center;">
+<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7z"></path><path d="M9 7a3 3 0 0 1 6 0"></path></svg>
+</button>
+<button aria-label="Menu" style="width: 44px; height: 44px; border-radius: 999px; border: none; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center;">
+<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h16"></path><path d="M4 16h16"></path></svg>
+</button>
+</div>
+</header>
+<div style="position: relative; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-size: 13px; color: rgba(255,255,255,0.88);">Handmade in Nigeria · Delivered nationwide</span>
+<h1 style="margin: 0; text-transform: uppercase; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 500; font-size: 46px; line-height: 1.02; letter-spacing: 0.01em; color: #FFFFFF;">Handmade Comfort For Every Step</h1>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,0.86);">Cork-footbed sandals, slides and clogs, made by hand and built to go from native wear to street wear.</p>
+<div style="display: flex; gap: 10px; margin-top: 6px;">
+<a href="#" style="flex-grow: 1; text-align: center; padding: 15px 0; border-radius: 999px; background: #C9A45C; color: #141210; text-decoration: none; font-size: 15px; font-weight: 500;">Shop Now</a>
+<a href="#" style="flex-grow: 1; text-align: center; padding: 14px 0; border-radius: 999px; border: 1px solid rgba(255,255,255,0.5); color: #FFFFFF; text-decoration: none; font-size: 15px;">WhatsApp Order</a>
+</div>
+</div>
+</div>
+</section>
+
+<section style="padding: 72px 20px 0 20px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<h2 style="margin: 0; text-transform: uppercase; color: #8C6B2A; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 300; font-size: 36px; letter-spacing: 0.01em; line-height: 1.05;">Meet Our <strong style="font-weight: 600;">New Drops</strong></h2>
+<p style="margin: 0; font-size: 14px; line-height: 1.55; color: #6A635A;">The latest styles fresh from the workshop.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+<sc-for list="{{products}}" as="item" hint-placeholder-count="4">
+<article style="display: flex; flex-direction: column; gap: 8px;">
+<div style="height: 180px; border-radius: 14px; background: #E2DBD0; display: flex; align-items: center; justify-content: center;">
+<svg viewBox="0 0 220 120" width="150" height="82" aria-hidden="true">
+<path d="M26 60 C26 36 48 27 80 29 L150 27 C182 25 200 42 200 62 C200 84 182 97 150 95 L80 91 C48 93 26 84 26 60 Z" fill="#6B5440"></path>
+<path d="M32 60 C32 40 52 33 81 35 L150 33 C178 31 193 46 193 62 C193 80 178 90 150 89 L81 85 C52 87 32 80 32 60 Z" fill="#C9A27A"></path>
+<rect x="92" y="24" width="24" height="72" rx="7" fill="{{item.strap}}" opacity="{{item.oTwo}}"></rect>
+<rect x="136" y="23" width="24" height="74" rx="7" fill="{{item.strap}}" opacity="{{item.oTwo}}"></rect>
+<rect x="95" y="30" width="18" height="10" rx="2" fill="none" stroke="#D8CDB8" stroke-width="2.5" opacity="{{item.oTwo}}"></rect>
+<rect x="139" y="30" width="18" height="10" rx="2" fill="none" stroke="#D8CDB8" stroke-width="2.5" opacity="{{item.oTwo}}"></rect>
+<rect x="104" y="24" width="52" height="72" rx="10" fill="{{item.strap}}" opacity="{{item.oOne}}"></rect>
+<path d="M118 33 L150 30 C180 28 197 45 197 62 C197 81 180 93 150 92 L118 88 C108 70 108 51 118 33 Z" fill="{{item.strap}}" opacity="{{item.oClog}}"></path>
+<rect x="84" y="28" width="16" height="64" rx="6" fill="{{item.strap}}" opacity="{{item.oClog}}"></rect>
+</svg>
+</div>
+<div style="font-size: 15px; font-weight: 500;">{{item.name}}</div>
+<span style="font-size: 12px; color: #6A635A;">{{item.mat}}</span>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="font-size: 13px; font-weight: 500;">₦ [PRICE]</span>
+<button aria-label="Add to cart" style="width: 44px; height: 44px; border-radius: 999px; border: none; background: #2A2724; display: flex; align-items: center; justify-content: center;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+</button>
+</div>
+</article>
+</sc-for>
+</div>
+<a href="#" style="text-align: center; padding: 15px 0; border-radius: 999px; border: 1px solid #CFC6B9; text-decoration: none; font-size: 15px;">View all drops</a>
+</section>
+
+<section style="padding: 72px 20px 0 20px;">
+<div style="border-radius: 20px; background: #E2DBD0; overflow: hidden; display: flex; flex-direction: column;">
+<div style="padding: 32px 24px; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 300; font-size: 20px;">DETTY DECEMBER DROP</span>
+<span style="font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 700; font-size: 60px; line-height: 1; letter-spacing: -0.03em;">[XX]% OFF</span>
+<span style="font-size: 13px; letter-spacing: 0.1em; color: #5E5850;">SITEWIDE · [DATES]</span>
+<a href="#" style="margin-top: 16px; text-align: center; padding: 15px 0; border-radius: 999px; background: #2A2724; color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 500;">Shop the Sale</a>
+</div>
+<div style="height: 200px; background: #CFC5B6; display: flex; align-items: center; justify-content: center; padding: 20px;">
+<span style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #5E5850; text-align: center;">Photo · Campaign shot</span>
+</div>
+</div>
+</section>
+
+<section style="padding: 72px 20px 0 20px; display: flex; flex-direction: column; gap: 36px;">
+<div style="border-radius: 22px; background: #EAE2D7; overflow: hidden; padding: 36px 24px; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-size: 15px; letter-spacing: 0.28em; color: #8C6B2A;">STEP INTO</span>
+<span style="font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 600; font-size: 88px; line-height: 0.88; color: #8C6B2A;">COMFORT</span>
+<div style="width: 44px; height: 2px; background: #8C6B2A;"></div>
+<span style="font-size: 13px; letter-spacing: 0.28em; color: #4F4640;">EVERYDAY. ANYWHERE.</span>
+<div style="align-self: center; margin-top: 16px; width: 280px; height: 280px; border-radius: 999px; background: #DDD2C4; display: flex; align-items: center; justify-content: center; padding: 40px; box-sizing: border-box; text-align: center;">
+<span style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #5E5850;">Photo · LP suede sandal studio shot</span>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px;">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;">
+<span style="width: 58px; height: 58px; border-radius: 999px; border: 1px solid #B8964F; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8C6B2A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4C11 4 5 10 5 19"></path><path d="M20 4c0 9-6 14-13 14"></path><path d="M5 19l7-7"></path></svg></span>
+<span style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;">Lightweight</span>
+<span style="font-size: 13px; color: #6A635A;">Easy on your feet</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;">
+<span style="width: 58px; height: 58px; border-radius: 999px; border: 1px solid #B8964F; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8C6B2A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15c3 0 4-5 9-5s6 3 9 3v3H3z"></path><path d="M3 18h18"></path></svg></span>
+<span style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;">Cushioned Footbed</span>
+<span style="font-size: 13px; color: #6A635A;">All-day comfort</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;">
+<span style="width: 58px; height: 58px; border-radius: 999px; border: 1px solid #B8964F; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8C6B2A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9c3-2 6 2 9 0s6-2 9 0"></path><path d="M3 14c3-2 6 2 9 0s6-2 9 0"></path><path d="M3 19c3-2 6 2 9 0s6-2 9 0"></path></svg></span>
+<span style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;">Breathable Design</span>
+<span style="font-size: 13px; color: #6A635A;">Keeps you fresh</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;">
+<span style="width: 58px; height: 58px; border-radius: 999px; border: 1px solid #B8964F; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8C6B2A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path><path d="M8.5 12l2.5 2.5 4.5-5"></path></svg></span>
+<span style="font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;">Durable &amp; Reliable</span>
+<span style="font-size: 13px; color: #6A635A;">Built to last</span>
+</div>
+</div>
+</section>
+
+<section style="padding: 72px 20px 0 20px; display: flex; flex-direction: column; gap: 24px;">
+<h2 style="margin: 0; text-transform: uppercase; color: #8C6B2A; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 300; font-size: 36px; letter-spacing: 0.01em; line-height: 1.05;">Easy <strong style="font-weight: 600;">Ordering Process</strong></h2>
+<div style="border-radius: 18px; background: #1A1715; color: #FFFFFF; padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+<div style="display: flex; justify-content: space-between;">
+<h3 style="margin: 0; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 500; font-size: 26px;">Choose Your Pair</h3>
+<span style="font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-size: 24px;">1</span>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.84);">Pick a style, colour and your EU size. Not sure of your size? Check the size guide or send us your foot length on WhatsApp.</p>
+<a href="#" style="align-self: flex-start; padding: 13px 22px; border-radius: 999px; background: #C9A45C; color: #141210; text-decoration: none; font-size: 14px; font-weight: 500;">Shop Now</a>
+</div>
+<button style="border: none; border-radius: 18px; background: #2A2521; color: #FFFFFF; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 17px;"><span>Pay Your Way</span><span style="font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-size: 22px;">2</span></button>
+<button style="border: none; border-radius: 18px; background: #2A2521; color: #FFFFFF; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 17px;"><span>Handmade &amp; Delivered</span><span style="font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-size: 22px;">3</span></button>
+</section>
+
+<section style="padding: 72px 20px 0 20px; display: flex; flex-direction: column; gap: 24px;">
+<h2 style="margin: 0; text-transform: uppercase; color: #8C6B2A; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 300; font-size: 36px; letter-spacing: 0.01em; line-height: 1.05;">Details Down To <strong style="font-weight: 600;">The Stitch</strong></h2>
+<div style="position: relative; height: 300px; border-radius: 18px; background: #DDD5C9; overflow: hidden;">
+<p style="position: absolute; top: 24px; left: 24px; right: 24px; margin: 0; font-size: 16px; line-height: 1.4; font-weight: 500;">Contoured cork footbed with deep heel cup and arch support</p>
+<svg style="position: absolute; top: 0; left: 0;" width="350" height="300" aria-hidden="true"><polyline points="26,96 26,200 170,200" fill="none" stroke="#2A2724" stroke-width="1.2"></polyline><circle cx="176" cy="200" r="6" fill="none" stroke="#2A2724" stroke-width="1.5"></circle></svg>
+<span style="position: absolute; bottom: 18px; right: 20px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #5E5850;">Photo · Footbed macro</span>
+</div>
+<div style="position: relative; height: 300px; border-radius: 18px; background: #CFC5B6; overflow: hidden;">
+<p style="position: absolute; top: 24px; left: 24px; right: 24px; margin: 0; font-size: 16px; line-height: 1.4; font-weight: 500;">Adjustable metal buckles so every strap fits just right</p>
+<svg style="position: absolute; top: 0; left: 0;" width="350" height="300" aria-hidden="true"><polyline points="26,96 26,170 230,170" fill="none" stroke="#2A2724" stroke-width="1.2"></polyline><circle cx="236" cy="170" r="6" fill="none" stroke="#2A2724" stroke-width="1.5"></circle></svg>
+<span style="position: absolute; bottom: 18px; right: 20px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #3F3A35;">Photo · Buckle close-up</span>
+</div>
+<div style="position: relative; height: 300px; border-radius: 18px; background: #2A2521; overflow: hidden;">
+<p style="position: absolute; top: 24px; left: 24px; right: 24px; margin: 0; font-size: 16px; line-height: 1.4; font-weight: 500; color: #FFFFFF;">Anti-slip rubber sole made for city streets</p>
+<svg style="position: absolute; top: 0; left: 0;" width="350" height="300" aria-hidden="true"><polyline points="26,76 26,190 120,190" fill="none" stroke="#FFFFFF" stroke-width="1.2"></polyline><circle cx="126" cy="190" r="6" fill="none" stroke="#FFFFFF" stroke-width="1.5"></circle></svg>
+<span style="position: absolute; bottom: 18px; right: 20px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.7);">Photo · Sole detail</span>
+</div>
+</section>
+
+<section style="padding: 64px 20px 0 20px;">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px;">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A2724" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"></path><path d="M14 10h4l3 3v3h-7"></path><circle cx="7" cy="18" r="1.8"></circle><circle cx="17" cy="18" r="1.8"></circle></svg><span style="font-size: 13px; font-weight: 500;">Nationwide Delivery</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A2724" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="7" r="2.5"></circle><circle cx="6" cy="17" r="2.5"></circle><path d="M8 8.5L20 17"></path><path d="M8 15.5L20 7"></path></svg><span style="font-size: 13px; font-weight: 500;">Made To Order</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A2724" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"></path><path d="M20 5v6h-6"></path></svg><span style="font-size: 13px; font-weight: 500;">Easy Size Exchange</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A2724" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><span style="font-size: 13px; font-weight: 500;">Secure Payment</span></div>
+</div>
+</section>
+
+<footer style="margin: 64px 12px 12px 12px; border-radius: 24px; background: #141210; color: #FFFFFF; padding: 40px 24px 28px 24px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<img src="/_blob/352c2332da29b99b72f2a46dacfa3db5" alt="LP Originals logo" style="width: 42px; height: 42px; border-radius: 999px; object-fit: cover;">
+<span style="font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.08em; color: #D4B06A;">ORIGINALS</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-size: 14px; font-weight: 600;">Shop</span>
+<a href="#" style="font-size: 14px; color: rgba(255,255,255,0.72); text-decoration: none;">New Drops</a>
+<a href="#" style="font-size: 14px; color: rgba(255,255,255,0.72); text-decoration: none;">Sandals</a>
+<a href="#" style="font-size: 14px; color: rgba(255,255,255,0.72); text-decoration: none;">Clogs</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-size: 14px; font-weight: 600;">Help</span>
+<a href="#" style="font-size: 14px; color: rgba(255,255,255,0.72); text-decoration: none;">Size Guide</a>
+<a href="#" style="font-size: 14px; color: rgba(255,255,255,0.72); text-decoration: none;">Delivery</a>
+<a href="#" style="font-size: 14px; color: rgba(255,255,255,0.72); text-decoration: none;">Track Order</a>
+</div>
+</div>
+<a href="#" style="text-align: center; padding: 15px 0; border-radius: 999px; background: #C9A45C; color: #141210; text-decoration: none; font-size: 15px; font-weight: 500;">Chat on WhatsApp</a>
+<div style="display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.62);">
+<span>© 2026 LP Originals</span>
+<span>@_lp_originals_</span>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":5620}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const raw = [
+      { name: 'Two-Strap Classic', mat: 'Black leather', strap: '#2B2622', style: 'two' },
+      { name: 'Single-Band Slide', mat: 'Brown leather', strap: '#6E4B2F', style: 'one' },
+      { name: 'Closed-Toe Clog', mat: 'Olive suede', strap: '#5C5E3A', style: 'clog' },
+      { name: 'Two-Strap Classic', mat: 'Tan suede', strap: '#A87A4F', style: 'two' }
+    ];
+    return {
+      products: raw.map((p) => ({
+        ...p,
+        oTwo: p.style === 'two' ? '1' : '0',
+        oOne: p.style === 'one' ? '1' : '0',
+        oClog: p.style === 'clog' ? '1' : '0'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

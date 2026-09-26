@@ -1,0 +1,3 @@
+# Keep source-only material out of Vercel uploads (never served, but no need to upload it).
+assets/photos/originals
+design
