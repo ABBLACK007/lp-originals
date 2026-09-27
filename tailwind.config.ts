@@ -34,10 +34,19 @@ const config: Config = {
       keyframes: {
         "pop-in": { from: { opacity: "0", transform: "scale(0.97)" }, to: { opacity: "1", transform: "scale(1)" } },
         "fade-in": { from: { opacity: "0" }, to: { opacity: "1" } },
+        rise: { from: { opacity: "0", transform: "translateY(18px)" }, to: { opacity: "1", transform: "translateY(0)" } },
+        marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
+        "marquee-rev": { from: { transform: "translateX(-50%)" }, to: { transform: "translateX(0)" } },
+        progress: { from: { transform: "scaleX(0)" }, to: { transform: "scaleX(1)" } },
       },
       animation: {
         "pop-in": "pop-in 220ms cubic-bezier(0.23, 1, 0.32, 1)",
         "fade-in": "fade-in 200ms ease-out",
+        rise: "rise 700ms cubic-bezier(0.23, 1, 0.32, 1) both",
+        marquee: "marquee 40s linear infinite",
+        "marquee-rev": "marquee-rev 55s linear infinite",
+        "spin-slow": "spin 24s linear infinite",
+        progress: "progress 6500ms linear both", // keep in sync with DURATION in components/HeroSlider.tsx
       },
     },
   },

@@ -39,7 +39,11 @@ export const viewport: Viewport = { themeColor: "#141210", width: "device-width"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable}`}>
+    <html lang="en" className={`${display.variable} ${sans.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Marks JS as available before first paint, so scroll-reveal can hide content without a flash. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body>
         <a href="#main" className="fixed left-3 top-3 z-50 -translate-y-20 rounded-full bg-gold px-5 py-3 font-medium text-ink no-underline focus:translate-y-0">Skip to content</a>
         <CartProvider>

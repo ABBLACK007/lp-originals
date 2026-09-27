@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getImageProps } from "next/image";
+import { getImageProps, type StaticImageData } from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Photo from "@/components/Photo";
@@ -8,7 +8,12 @@ import StyleFlyers from "@/components/StyleFlyers";
 import OrderingSteps from "@/components/OrderingSteps";
 import SectionTitle from "@/components/SectionTitle";
 import JsonLd from "@/components/JsonLd";
-import { getProduct, products } from "@/lib/products";
+import HeroSlider, { type HeroArt, type HeroSlide } from "@/components/HeroSlider";
+import Marquee from "@/components/Marquee";
+import Reveal from "@/components/Reveal";
+import RotatingStamp from "@/components/RotatingStamp";
+import FlyerBoard from "@/components/FlyerBoard";
+import { products } from "@/lib/products";
 import { images, photos } from "@/lib/images";
 import { site, siteUrl, whatsappLink } from "@/lib/site";
 
@@ -42,66 +47,68 @@ const workshop = [
   { src: photos.crossSlideBlack, alt: "Black cross-over slides", href: "/shop/cross-over-slide-black" },
 ];
 
-// Art-directed hero: landscape photo on tablet/desktop, portrait on phones. Both resized to WebP by next/image.
-function heroSources() {
+const ticker = ["Handmade in Nigeria", "Cork-latex footbed", "Made to order", "EU sizes 36–46", "Delivered nationwide", "Order on WhatsApp"];
+
+// Art-directed, resized srcsets for photo slides (landscape on tablet/desktop, portrait on phones).
+function art(desktop: StaticImageData, mobile: StaticImageData = desktop): HeroArt {
   const common = { alt: "", sizes: "100vw", quality: 75 };
-  const { props: { srcSet: desktop } } = getImageProps({ ...common, src: images.heroDesktop });
-  const { props: { srcSet: mobile, ...img } } = getImageProps({ ...common, src: images.heroMobile, priority: true });
-  return { desktop, mobile, img };
+  const d = getImageProps({ ...common, src: desktop }).props;
+  const m = getImageProps({ ...common, src: mobile }).props;
+  return { desktop: d.srcSet ?? d.src, mobile: m.srcSet ?? m.src, src: m.src, width: mobile.width, height: mobile.height, sizes: "100vw" };
 }
 
+const wa = whatsappLink("Hi LP Originals, I'd like to place an order.");
+
+const slides: HeroSlide[] = [
+  {
+    id: "handmade", kind: "photo", art: art(images.heroDesktop, images.heroMobile),
+    eyebrow: "HANDMADE IN NIGERIA", title: "Handmade comfort for every step",
+    sub: "Cork-footbed sandals, slides, palms and clogs, made by hand and built to go from native wear to street wear.",
+    ctas: [{ label: "Shop now", href: "/shop", style: "gold" }, { label: "WhatsApp order", href: wa, style: "outline", external: true }],
+  },
+  {
+    id: "buckle", kind: "flyer", tone: "ink", word: "Cork", photos: [photos.buckleRust, photos.buckleGroup],
+    eyebrow: "NEW DROP", title: "The two-buckle sandal",
+    sub: "Rust suede on a contoured cork-latex footbed, with adjustable metal buckles.",
+    ctas: [{ label: "Shop the sandal", href: "/shop/two-buckle-sandal-rust", style: "gold" }, { label: "All cork footbed", href: "/shop?category=cork", style: "outline" }],
+  },
+  {
+    id: "promo", kind: "photo", art: art(images.promo), position: "object-[70%_center]",
+    eyebrow: site.promo.title.toUpperCase(), title: `${site.promo.discount}, sitewide`,
+    sub: `Our festive drop, ${site.promo.dates}. Order early: every pair is made to order.`,
+    ctas: [{ label: "Shop the sale", href: "/shop", style: "gold" }],
+  },
+  {
+    id: "slides", kind: "flyer", tone: "sand", word: "Palms", photos: [photos.cutoutRed, photos.toePostCream],
+    eyebrow: "SLIDES & PALMS", title: "Flat out easy",
+    sub: "Leather slides and palms for native and street wear, for men and women.",
+    ctas: [{ label: "Shop slides & palms", href: "/shop?category=slides", style: "gold" }],
+  },
+  {
+    id: "order", kind: "flyer", tone: "ink", word: "Yours", photos: [photos.corkCollection, photos.bandChocolate],
+    eyebrow: "MADE TO ORDER", title: "Your size, your pair",
+    sub: "Choose your style and EU size, pay online or on WhatsApp, and we deliver nationwide.",
+    ctas: [{ label: "How to order", href: "#ordering", style: "gold" }, { label: "Chat on WhatsApp", href: wa, style: "outline", external: true }],
+  },
+];
+
 export default function Home() {
-  const hero = heroSources();
-  const featured = getProduct("two-buckle-sandal-rust")!;
   return (
     <main id="main">
       <JsonLd data={{ "@context": "https://schema.org", "@type": "Store", name: site.name, url: siteUrl, logo: `${siteUrl}/icons/icon-512.png`, image: `${siteUrl}/opengraph-image.jpg`, description: "Handmade cork-footbed sandals, slides, palms and clogs.", sameAs: [site.instagram], areaServed: "NG" }} />
-      {/* Hero */}
-      <section className="px-3 pt-3 md:px-6 md:pt-6">
-        <div className="relative flex h-[calc(100svh-24px)] max-h-[780px] min-h-[600px] flex-col justify-between overflow-hidden rounded-hero bg-ink px-5 pb-7 pt-5 md:h-[780px] md:px-10 md:pb-10 md:pt-7">
-          <picture className="absolute inset-0">
-            <source media="(min-width: 768px)" srcSet={hero.desktop} />
-            <source srcSet={hero.mobile} />
-            {/* eslint-disable-next-line jsx-a11y/alt-text */}
-            <img {...hero.img} className="h-full w-full object-cover" />
-          </picture>
-          <div className="absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/30 to-ink/70" aria-hidden="true" />
-          <Header variant="overlay" />
-          <div className="relative flex flex-col gap-5 md:-mt-10 md:items-center md:text-center">
-            <span className="self-start rounded-full bg-ink/50 px-3.5 py-1.5 text-[11px] tracking-[0.3em] text-gold backdrop-blur md:self-center md:text-[12px]">HANDMADE IN NIGERIA</span>
-            <h1 className="max-w-[900px] text-balance font-display text-[52px] font-medium uppercase leading-[0.98] text-white md:text-[96px]">Handmade comfort for every step</h1>
-            <p className="max-w-[560px] text-[15px] leading-relaxed text-white/85 md:text-lg">Cork-footbed sandals, slides, palms and clogs, made by hand and built to go from native wear to street wear.</p>
-          </div>
-          <div className="relative flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="flex flex-col gap-4">
-              <span className="text-[13px] text-white/85 md:text-[15px]">Made to order, delivered nationwide</span>
-              <div className="flex gap-3 md:items-center md:gap-5">
-                <Link href="/shop" className="btn btn-gold flex-grow md:flex-grow-0">Shop now</Link>
-                <a href={whatsappLink("Hi LP Originals, I'd like to place an order.")} target="_blank" rel="noreferrer" className="btn btn-outline-light flex-grow px-6 md:hidden">WhatsApp order</a>
-                <Link href="#new-drops" className="hidden text-base text-white underline underline-offset-4 md:inline">See new drops</Link>
-              </div>
-            </div>
-            {/* Real product teaser, glass card */}
-            <Link href={`/shop/${featured.slug}`} className="group hidden w-[340px] items-center gap-4 rounded-panel bg-white/10 p-3 pr-5 no-underline ring-1 ring-inset ring-white/15 backdrop-blur-md transition-colors hover:bg-white/15 md:flex">
-              <Photo src={featured.images[0]} alt="" sizes="80px" className="h-[100px] w-20 shrink-0 rounded-xl" />
-              <div className="flex flex-col gap-1">
-                <span className="text-[11px] tracking-[0.22em] text-gold">NEW DROP</span>
-                <span className="font-display text-2xl font-medium uppercase leading-none text-white">{featured.name}</span>
-                <span className="text-sm text-white/75">{featured.material} · Shop now →</span>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <Header variant="float" />
+      <HeroSlider slides={slides} />
+
+      <div className="mt-6 md:mt-8"><Marquee items={ticker} /></div>
 
       <div className="mx-auto flex max-w-page flex-col px-5 md:px-8">
         {/* New drops */}
-        <section id="new-drops" className="flex flex-col gap-9 pt-20 md:pt-32">
+        <section id="new-drops" className="flex flex-col gap-9 pt-20 md:pt-28">
           <div className="flex items-end justify-between gap-6">
             <SectionTitle light="Meet our" strong="new drops" sub="The latest styles fresh from the workshop. Pick your colour and size before each batch sells out." />
             <Link href="/shop" className="link hidden shrink-0 text-[15px] md:inline">View all</Link>
           </div>
-          <DropsCarousel items={products.filter((p) => p.isNew)} />
+          <Reveal><DropsCarousel items={products.filter((p) => p.isNew)} /></Reveal>
         </section>
 
         {/* Shop by style flyers */}
@@ -114,46 +121,50 @@ export default function Home() {
         </section>
 
         {/* Promo */}
-        <section className="pt-20 md:pt-32">
+        <Reveal as="section" className="pt-20 md:pt-32">
           <div className="grid overflow-hidden rounded-[24px] bg-sand md:h-[420px] md:grid-cols-2">
-            <div className="flex flex-col justify-center gap-2 p-7 md:p-14">
+            <div className="cork-dots relative flex flex-col justify-center gap-2 p-7 md:p-14">
               <span className="font-display text-xl font-light uppercase md:text-[30px]">{site.promo.title}</span>
               <span className="font-display text-6xl font-bold uppercase leading-none md:text-[104px]">{site.promo.discount}</span>
               <span className="text-[13px] tracking-[0.1em] text-[#5E5850] md:text-base">Sitewide, {site.promo.dates}</span>
               <div className="mt-6"><Link href="/shop" className="btn btn-ink">Shop the sale</Link></div>
+              <RotatingStamp size={96} tone="bronze" text="DETTY DECEMBER · LP DROP · " className="absolute right-6 top-6 hidden md:block" />
             </div>
             <Photo src={images.promo} alt="Model in festive Ankara wear wearing LP slides" sizes="(min-width: 768px) 50vw, 100vw" className="h-[260px] w-full md:h-full" />
           </div>
-        </section>
+        </Reveal>
 
         {/* Step into comfort */}
         <section className="flex flex-col gap-14 pt-20 md:pt-32">
-          <div className="relative grid overflow-hidden rounded-hero bg-dune md:h-[620px] md:grid-cols-2">
-            <div className="flex flex-col justify-center gap-5 p-7 md:p-[72px]">
-              <span className="text-[15px] tracking-[0.28em] text-bronze md:text-[22px]">STEP INTO</span>
-              <span className="font-display text-[88px] font-semibold leading-[0.88] text-bronze md:text-[160px]">COMFORT</span>
-              <div className="h-0.5 w-14 bg-bronze" aria-hidden="true" />
-              <span className="text-[13px] tracking-[0.3em] text-[#4F4640] md:text-[17px]">EVERYDAY. ANYWHERE.</span>
-              <div className="mt-3 hidden flex-col gap-1.5 border-l-2 border-gold pl-4 text-[15px] font-semibold tracking-[0.2em] text-bronze md:flex">
-                <span>PREMIUM COMFORT</span><span>TIMELESS STYLE</span>
+          <Reveal>
+            <div className="cork-dots relative grid overflow-hidden rounded-hero bg-dune md:h-[620px] md:grid-cols-2">
+              <div className="flex flex-col justify-center gap-5 p-7 md:p-[72px]">
+                <span className="text-[15px] tracking-[0.28em] text-bronze md:text-[22px]">STEP INTO</span>
+                <span className="font-display text-[88px] font-semibold leading-[0.88] text-bronze md:text-[160px]">COMFORT</span>
+                <div className="h-0.5 w-14 bg-bronze" aria-hidden="true" />
+                <span className="text-[13px] tracking-[0.3em] text-[#4F4640] md:text-[17px]">EVERYDAY. ANYWHERE.</span>
+                <div className="mt-3 hidden flex-col gap-1.5 border-l-2 border-gold pl-4 text-[15px] font-semibold tracking-[0.2em] text-bronze md:flex">
+                  <span>PREMIUM COMFORT</span><span>TIMELESS STYLE</span>
+                </div>
+              </div>
+              <div className="relative flex items-center justify-center pb-10 md:pb-0">
+                <div className="absolute h-[320px] w-[320px] animate-spin-slow rounded-full border border-dashed border-bronze/40 md:h-[510px] md:w-[510px]" aria-hidden="true" />
+                <Photo src={photos.buckleRust} alt="LP two-buckle sandals in rust and tan suede" sizes="(min-width: 768px) 440px, 280px"
+                  className="h-[280px] w-[280px] rounded-full shadow-[0_30px_60px_-20px_rgba(20,18,16,0.45)] md:h-[440px] md:w-[440px]" />
+                <RotatingStamp size={120} tone="bronze" className="absolute left-4 top-2 md:left-10 md:top-16" />
+                <Link href="/shop/two-buckle-sandal-rust" className="absolute bottom-8 right-6 rounded-full bg-ink px-4 py-2.5 text-[13px] font-medium text-white no-underline transition-transform duration-150 active:scale-[0.97] md:bottom-16 md:right-14">Two-Buckle Sandal →</Link>
               </div>
             </div>
-            <div className="relative flex items-center justify-center pb-10 md:pb-0">
-              <div className="absolute h-[320px] w-[320px] rounded-full border border-bronze/30 md:h-[500px] md:w-[500px]" aria-hidden="true" />
-              <Photo src={photos.buckleRust} alt="LP two-buckle sandals in rust and tan suede" sizes="(min-width: 768px) 440px, 280px"
-                className="h-[280px] w-[280px] rounded-full shadow-[0_30px_60px_-20px_rgba(20,18,16,0.45)] md:h-[440px] md:w-[440px]" />
-              <Link href="/shop/two-buckle-sandal-rust" className="absolute bottom-8 right-6 rounded-full bg-ink px-4 py-2.5 text-[13px] font-medium text-white no-underline md:bottom-16 md:right-14">Two-Buckle Sandal →</Link>
-            </div>
-          </div>
+          </Reveal>
           <div className="grid grid-cols-2 gap-x-3 gap-y-7 md:grid-cols-4 md:gap-5">
-            {features.map((f) => (
-              <div key={f.t} className="flex flex-col items-center gap-3 text-center">
-                <span className="flex h-[58px] w-[58px] items-center justify-center rounded-full border border-[#B8964F] md:h-[68px] md:w-[68px]">
+            {features.map((f, n) => (
+              <Reveal key={f.t} delay={n * 80} className="group flex flex-col items-center gap-3 text-center">
+                <span className="flex h-[58px] w-[58px] items-center justify-center rounded-full border border-[#B8964F] transition-[transform,background-color] duration-300 ease-out group-hover:-translate-y-1 group-hover:bg-gold/15 md:h-[68px] md:w-[68px]">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8C6B2A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{f.icon}</svg>
                 </span>
                 <span className="text-[13px] font-semibold tracking-[0.08em]">{f.t}</span>
                 <span className="text-[13px] text-muted">{f.s}</span>
-              </div>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -161,18 +172,29 @@ export default function Home() {
         {/* Ordering */}
         <section id="ordering" className="flex flex-col gap-11 pt-20 md:pt-36">
           <SectionTitle center light="Easy" strong="ordering process" sub="Choose, pay and get your handmade pair delivered in three simple steps." />
-          <OrderingSteps />
+          <Reveal><OrderingSteps /></Reveal>
+        </section>
+
+        {/* Flyer board */}
+        <section className="flex flex-col gap-10 pt-20 md:pt-32">
+          <SectionTitle light="The LP" strong="flyer board" sub="How we make, pack and send your pair, in four posters." />
+          <FlyerBoard />
         </section>
 
         {/* Details */}
-        <section id="details" className="flex flex-col gap-11 pt-20 md:pt-36">
+        <section id="details" className="flex flex-col gap-11 pt-20 md:pt-32">
           <SectionTitle center light="Details down to" strong="the stitch" sub="Every pair is cut, stitched and finished by hand. Here is what goes into yours." />
           <div className="grid gap-4 md:grid-cols-3">
-            {details.map((d) => (
-              <figure key={d.text} className="relative h-[300px] overflow-hidden rounded-panel md:h-[460px]">
-                <Photo src={d.src} alt={d.alt} sizes="(min-width: 768px) 33vw, 100vw" className="!absolute inset-0" />
-                <figcaption className="absolute inset-x-0 top-0 bg-gradient-to-b from-ink/75 to-transparent p-6 pb-16 text-base font-medium leading-snug text-white md:p-8 md:text-lg">{d.text}</figcaption>
-              </figure>
+            {details.map((d, n) => (
+              <Reveal key={d.text} delay={n * 100}>
+                <figure className="group relative h-[300px] overflow-hidden rounded-panel md:h-[460px]">
+                  <Photo src={d.src} alt={d.alt} sizes="(min-width: 768px) 33vw, 100vw" className="!absolute inset-0"
+                    imgClassName="transition-transform duration-700 ease-out group-hover:scale-[1.05]" />
+                  <figcaption className="absolute inset-x-0 top-0 bg-gradient-to-b from-ink/75 to-transparent p-6 pb-16 text-base font-medium leading-snug text-white md:p-8 md:text-lg">
+                    <span className="mb-2 block font-display text-sm tracking-[0.2em] text-gold">0{n + 1}</span>{d.text}
+                  </figcaption>
+                </figure>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -188,10 +210,12 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 gap-3 md:h-[560px] md:grid-cols-4 md:grid-rows-2 md:gap-5">
             {workshop.map((w, i) => (
-              <Link key={w.href + i} href={w.href} className={`group relative overflow-hidden rounded-card ${i === 0 ? "col-span-2 aspect-[4/3] md:row-span-2 md:aspect-auto" : "aspect-square md:aspect-auto"}`}>
-                <Photo src={w.src} alt={w.alt} sizes={i === 0 ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 25vw, 50vw"} className="!absolute inset-0"
-                  imgClassName="transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
-              </Link>
+              <Reveal key={w.href + i} delay={i * 70} className={i === 0 ? "col-span-2 md:row-span-2" : ""}>
+                <Link href={w.href} className={`group relative block h-full overflow-hidden rounded-card ${i === 0 ? "aspect-[4/3] md:aspect-auto" : "aspect-square md:aspect-auto"}`}>
+                  <Photo src={w.src} alt={w.alt} sizes={i === 0 ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 25vw, 50vw"} className="!absolute inset-0"
+                    imgClassName="transition-transform duration-700 ease-out group-hover:scale-[1.05]" />
+                </Link>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -199,15 +223,17 @@ export default function Home() {
         {/* Services */}
         <section className="pt-20 md:pt-28">
           <ul className="grid grid-cols-2 gap-x-3 gap-y-7 md:grid-cols-5 md:gap-5">
-            {services.map((s) => (
-              <li key={s.t} className="flex flex-col items-center gap-3 text-center">
+            {services.map((s, n) => (
+              <Reveal as="li" key={s.t} delay={n * 60} className="flex flex-col items-center gap-3 text-center">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2A2724" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{s.icon}</svg>
                 <span className="text-sm font-medium">{s.t}</span>
-              </li>
+              </Reveal>
             ))}
           </ul>
         </section>
       </div>
+
+      <div className="-mb-8 mt-20 md:-mb-12 md:mt-28"><Marquee variant="outline" reverse items={["Step into comfort", "LP Originals", "Handmade in Nigeria"]} /></div>
       <Footer />
     </main>
   );

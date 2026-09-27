@@ -7,6 +7,7 @@ import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
 import BuyBox from "@/components/BuyBox";
 import JsonLd from "@/components/JsonLd";
+import SizeHelpFlyer from "@/components/SizeHelpFlyer";
 import { categoryLabel, getProduct, products, type Product } from "@/lib/products";
 import { formatNaira, site, siteUrl } from "@/lib/site";
 
@@ -80,6 +81,7 @@ export default async function ProductPage({ params }: Props) {
             </ul>
           </div>
         </div>
+        <SizeHelpFlyer />
         {related.length > 0 && (
           <section className="flex flex-col gap-8">
             <h2 className="font-display text-4xl font-light uppercase text-bronze">You may <strong className="font-semibold">also like</strong></h2>

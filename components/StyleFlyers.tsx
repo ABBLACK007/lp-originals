@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Photo from "./Photo";
 import SandalArt from "./SandalArt";
+import Reveal from "./Reveal";
 import { categories, countIn, type Category } from "@/lib/products";
 import { photos } from "@/lib/images";
 import type { StaticImageData } from "next/image";
@@ -19,7 +20,8 @@ export default function StyleFlyers() {
         const a = art[c.id];
         const n = countIn(c.id);
         return (
-          <Link key={c.id} href={`/shop?category=${c.id}`}
+          <Reveal key={c.id} delay={i * 110}>
+          <Link href={`/shop?category=${c.id}`}
             className="group relative flex h-[380px] flex-col justify-between overflow-hidden rounded-hero bg-ink p-6 no-underline ring-1 ring-inset ring-white/10 md:h-[540px] md:p-8">
             {a.image ? (
               <>
@@ -46,6 +48,7 @@ export default function StyleFlyers() {
               </div>
             </div>
           </Link>
+          </Reveal>
         );
       })}
     </div>

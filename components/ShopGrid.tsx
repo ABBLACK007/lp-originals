@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ProductCard from "./ProductCard";
+import Reveal from "./Reveal";
 import { categories, type Category, type Product } from "@/lib/products";
 
 type Filter = "all" | Category;
@@ -32,7 +33,7 @@ export default function ShopGrid({ items, initial = "all" }: { items: Product[];
         ))}
       </div>
       <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-5 md:gap-y-12">
-        {list.map((p) => <ProductCard key={p.slug} p={p} />)}
+        {list.map((p, n) => <Reveal key={`${f}-${p.slug}`} delay={(n % 4) * 70}><ProductCard p={p} /></Reveal>)}
       </div>
     </div>
   );
