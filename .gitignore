@@ -17,3 +17,6 @@ assets/photos/originals/brown & black birken 2.jpeg
 .DS_Store
 Thumbs.db
 *.tsbuildinfo
+
+# Playwright CLI snapshots and logs
+.playwright-cli
