@@ -48,8 +48,8 @@ export const products: Product[] = [
     images: [photos.crossSlideBlack], art: { style: "two", strap: "#1E1B18" } },
   { slug: "toe-post-sandal-cream", name: "Toe-Post Sandal", material: "Cream leather straps", category: "slides", audience: "Women", price: null, isNew: true,
     images: [photos.toePostCream], art: { style: "one", strap: "#E8D9A8" } },
-  { slug: "closed-toe-clog", name: "Closed-Toe Clog", material: "[MATERIAL]", category: "clogs", footbed: cork, price: null,
-    images: [], art: { style: "clog", strap: "#5C5E3A" } },
+  { slug: "closed-toe-clog-mocha", name: "Closed-Toe Clog", material: "Mocha suede", category: "clogs", footbed: cork, price: null, isNew: true,
+    images: [photos.clogMocha], art: { style: "clog", strap: "#6B6058" } },
 ];
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);

@@ -10,7 +10,7 @@ import type { StaticImageData } from "next/image";
 const art: Record<Category, { image?: StaticImageData; alt: string; position?: string }> = {
   cork: { image: photos.buckleGroup, alt: "Two-buckle cork sandals in rust, orange and tan suede", position: "object-[50%_60%]" },
   slides: { image: photos.cutoutRed, alt: "Red croc-embossed cut-out slides in a gift box" },
-  clogs: { alt: "" },
+  clogs: { image: photos.clogMocha, alt: "Mocha suede closed-toe clog with a cork footbed, held in hand", position: "object-[50%_45%]" },
 };
 
 export default function StyleFlyers() {

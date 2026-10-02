@@ -13,7 +13,8 @@ const out = path.join(root, "assets/photos");
 // [output file, original file, crop box in original pixels (omit to keep the full frame)]
 // Product crops are 4:5 to match the product cards.
 // Not used: "brown black birken.jpeg" and "brown & black birken 2.jpeg" (BIRKENSTOCK on the buckles),
-// "black-cutout-slides.jpg" (Loro Piana logo on the insole), "black-buckle-slide-worn.jpg" (unconfirmed buckle engraving).
+// "black-cutout-slides.jpg" (Loro Piana logo on the insole), "black-buckle-slide-worn.jpg" (unconfirmed buckle engraving),
+// and a Birkenstock clog product photo (never copied in).
 const photos = [
   ["cork-collection.jpg", "birken pams.jpeg"],
   ["wide-band-slide-tan.jpg", "birken pams.jpeg", { left: 105, top: 0, width: 480, height: 600 }],
@@ -27,6 +28,8 @@ const photos = [
   ["cross-slide-black-leather.jpg", "male slides.jpeg"],
   ["toe-post-sandal-cream.jpg", "female slides.jpeg", { left: 300, top: 150, width: 726, height: 908 }],
   ["perforated-slide-brown.jpg", "brown-perforated-slides.jpg", { left: 0, top: 30, width: 736, height: 920 }],
+  // Only the clog in hand: the top clog's buckle is engraved "BIRKEN…" and the corner shows a size label and another brand's box.
+  ["clog-mocha.jpg", "mocha-clogs.jpg", { left: 96, top: 372, width: 544, height: 609 }],
 ];
 
 for (const [file, original, box] of photos) {

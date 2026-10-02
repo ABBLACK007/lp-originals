@@ -41,6 +41,10 @@ const nextConfig = {
     formats: ["image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },
+  // Old product URLs that are already live or shared.
+  async redirects() {
+    return [{ source: "/shop/closed-toe-clog", destination: "/shop/closed-toe-clog-mocha", permanent: true }];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
