@@ -37,7 +37,8 @@ const photos = [
 ];
 
 for (const [file, original, box, opts] of photos) {
-  let buf = await sharp(path.join(src, original)).rotate().toBuffer(); // respect camera orientation
+  // Respect camera orientation; keep the working copy lossless (PNG) so photos are JPEG-compressed only once.
+  let buf = await sharp(path.join(src, original)).rotate().png().toBuffer();
   for (const r of opts?.soften ?? []) {
     // Blurred patch with a feathered oval alpha, so no hard-edged box shows.
     const mask = await sharp(Buffer.from(`<svg width="${r.width}" height="${r.height}"><ellipse cx="${r.width / 2}" cy="${r.height / 2}" rx="${r.width * 0.42}" ry="${r.height * 0.42}" fill="#fff"/></svg>`))
