@@ -6,8 +6,11 @@ export default function RotatingStamp({ text = "HANDMADE IN NIGERIA · LP ORIGIN
 }) {
   const id = useId().replace(/:/g, "");
   const color = tone === "gold" ? "#C9A45C" : "#8C6B2A";
+  // Positioned by the caller (absolute/fixed in className) or in normal flow (relative) – never both,
+  // or "relative" would win in the CSS and the stamp would push the layout around.
+  const positioned = className.split(" ").some((c) => c === "absolute" || c === "fixed" || c.endsWith(":absolute") || c.endsWith(":fixed"));
   return (
-    <div className={`relative shrink-0 rounded-full ${filled ? (tone === "gold" ? "bg-ink shadow-xl ring-1 ring-gold/40" : "bg-cream shadow-xl ring-1 ring-bronze/30") : ""} ${className}`} style={{ width: size, height: size }} aria-hidden="true">
+    <div className={`${positioned ? "" : "relative"} shrink-0 rounded-full ${filled ? (tone === "gold" ? "bg-ink shadow-xl ring-1 ring-gold/40" : "bg-cream shadow-xl ring-1 ring-bronze/30") : ""} ${className}`} style={{ width: size, height: size }} aria-hidden="true">
       <svg viewBox="0 0 120 120" className="absolute inset-0 h-full w-full animate-spin-slow">
         <defs><path id={`c${id}`} d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" /></defs>
         <text fill={color} style={{ fontSize: 10.5, letterSpacing: "0.26em", fontWeight: 600, fontFamily: "var(--font-sans)" }}>

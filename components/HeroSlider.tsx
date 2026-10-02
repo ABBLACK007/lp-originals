@@ -156,7 +156,7 @@ function FlyerBg({ s, active }: { s: Extract<HeroSlide, { kind: "flyer" }>; acti
       </span>
       <div className="absolute inset-y-0 right-[6%] hidden w-[46%] items-center justify-center md:flex">
         <PhotoStack photos={s.photos} active={active} size="desktop" />
-        <RotatingStamp size={112} tone={ink ? "gold" : "bronze"} filled className="absolute right-[-2%] top-[10%]" />
+        <RotatingStamp size={112} tone={ink ? "gold" : "bronze"} filled className="absolute right-[-2%] top-[17%]" />
       </div>
     </div>
   );

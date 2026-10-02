@@ -151,7 +151,11 @@ export default function Home() {
                 <div className="absolute h-[320px] w-[320px] animate-spin-slow rounded-full border border-dashed border-bronze/40 md:h-[510px] md:w-[510px]" aria-hidden="true" />
                 <Photo src={photos.buckleRust} alt="LP two-buckle sandals in rust and tan suede" sizes="(min-width: 768px) 440px, 280px"
                   className="h-[280px] w-[280px] rounded-full shadow-[0_30px_60px_-20px_rgba(20,18,16,0.45)] md:h-[440px] md:w-[440px]" />
-                <RotatingStamp size={120} tone="bronze" className="absolute left-4 top-2 md:left-10 md:top-16" />
+                {/* Second photo: worn on feet, as a small round print in the upper corner */}
+                <Photo src={photos.buckleWorn} alt="Black buckle slides worn with white linen trousers" sizes="(min-width: 768px) 200px, 128px"
+                  className="!absolute right-1 top-0 h-[128px] w-[128px] rounded-full shadow-[0_18px_40px_-14px_rgba(20,18,16,0.5)] ring-4 ring-dune md:right-12 md:top-10 md:h-[200px] md:w-[200px]"
+                  imgClassName="object-[50%_62%]" />
+                <RotatingStamp size={104} tone="bronze" filled className="absolute left-0 top-0 md:left-10 md:top-16" />
                 <Link href="/shop/two-buckle-sandal-rust" className="absolute bottom-8 right-6 rounded-full bg-ink px-4 py-2.5 text-[13px] font-medium text-white no-underline transition-transform duration-150 active:scale-[0.97] md:bottom-16 md:right-14">Two-Buckle Sandal →</Link>
               </div>
             </div>

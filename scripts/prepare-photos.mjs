@@ -10,10 +10,11 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const src = path.join(root, "assets/photos/originals");
 const out = path.join(root, "assets/photos");
 
-// [output file, original file, crop box in original pixels (omit to keep the full frame)]
+// [output file, original file, crop box in original pixels (omit to keep the full frame),
+//  options: { soften: [boxes] } blurs small areas, e.g. lettering engraved on a buckle]
 // Product crops are 4:5 to match the product cards.
 // Not used: "brown black birken.jpeg" and "brown & black birken 2.jpeg" (BIRKENSTOCK on the buckles),
-// "black-cutout-slides.jpg" (Loro Piana logo on the insole), "black-buckle-slide-worn.jpg" (unconfirmed buckle engraving),
+// "black-cutout-slides.jpg" (Loro Piana logo on the insole),
 // and a Birkenstock clog product photo (never copied in).
 const photos = [
   ["cork-collection.jpg", "birken pams.jpeg"],
@@ -30,10 +31,21 @@ const photos = [
   ["perforated-slide-brown.jpg", "brown-perforated-slides.jpg", { left: 0, top: 30, width: 736, height: 920 }],
   // Only the clog in hand: the top clog's buckle is engraved "BIRKEN…" and the corner shows a size label and another brand's box.
   ["clog-mocha.jpg", "mocha-clogs.jpg", { left: 96, top: 372, width: 544, height: 609 }],
+  // Square for a round frame; the lettering engraved on the left buckle is softened (original stays out of git).
+  ["buckle-slide-worn.jpg", "black-buckle-slide-worn.jpg", { left: 0, top: 245, width: 736, height: 736 },
+    { soften: [{ left: 258, top: 710, width: 46, height: 44 }] }],
 ];
 
-for (const [file, original, box] of photos) {
-  let img = sharp(path.join(src, original)).rotate(); // respect camera orientation
+for (const [file, original, box, opts] of photos) {
+  let buf = await sharp(path.join(src, original)).rotate().toBuffer(); // respect camera orientation
+  for (const r of opts?.soften ?? []) {
+    // Blurred patch with a feathered oval alpha, so no hard-edged box shows.
+    const mask = await sharp(Buffer.from(`<svg width="${r.width}" height="${r.height}"><ellipse cx="${r.width / 2}" cy="${r.height / 2}" rx="${r.width * 0.42}" ry="${r.height * 0.42}" fill="#fff"/></svg>`))
+      .blur(4).extractChannel(0).toBuffer();
+    const patch = await sharp(buf).extract(r).blur(2.2).removeAlpha().joinChannel(mask).png().toBuffer();
+    buf = await sharp(buf).composite([{ input: patch, left: r.left, top: r.top }]).toBuffer();
+  }
+  let img = sharp(buf);
   if (box) img = img.extract(box);
   const { width, height } = await img.jpeg({ quality: 88, mozjpeg: true }).toFile(path.join(out, file));
   console.log(`saved ${file} (${width}x${height})`);
