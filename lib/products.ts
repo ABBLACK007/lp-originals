@@ -42,6 +42,8 @@ export const products: Product[] = [
     images: [photos.bandChocolate, photos.corkFootbed], art: { style: "one", strap: "#6E4B2F" } },
   { slug: "cut-out-slide-red", name: "Cut-Out Slide", material: "Red croc-embossed leather", category: "slides", price: null, isNew: true,
     images: [photos.cutoutRed], art: { style: "one", strap: "#B3261E" } },
+  { slug: "perforated-cut-out-slide-brown", name: "Perforated Cut-Out Slide", material: "Brown perforated leather", category: "slides", price: null, isNew: true,
+    images: [photos.perforatedBrown], art: { style: "one", strap: "#8A6E5C" } },
   { slug: "cross-over-slide-black", name: "Cross-Over Slide", material: "Black suede and textured leather", category: "slides", audience: "Men", price: null, isNew: true,
     images: [photos.crossSlideBlack], art: { style: "two", strap: "#1E1B18" } },
   { slug: "toe-post-sandal-cream", name: "Toe-Post Sandal", material: "Cream leather straps", category: "slides", audience: "Women", price: null, isNew: true,

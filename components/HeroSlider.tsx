@@ -134,28 +134,49 @@ function PhotoBg({ s, active, priority }: { s: Extract<HeroSlide, { kind: "photo
   );
 }
 
-// Poster layout for portrait product photos: big outlined word, fanned "printed" photos, a turning stamp.
+// Poster layout for portrait product photos: a blurred colour wash of the product fills the whole slide,
+// with cork grain, a big outlined word, fanned "printed" photos and a turning stamp on top.
+// Phones place the photo stack inside the text column (see SlideText) so it always fills the space above the
+// headline; tablets/desktop show it on the right.
 function FlyerBg({ s, active }: { s: Extract<HeroSlide, { kind: "flyer" }>; active: boolean }) {
   const ink = s.tone === "ink";
-  const [a, b] = s.photos;
   return (
-    <div className={`absolute inset-0 ${ink ? "cork-dots-light bg-ink" : "cork-dots bg-dune"}`}>
+    <div className={`absolute inset-0 overflow-hidden ${ink ? "bg-ink" : "bg-dune"}`}>
+      {/* Ambient wash: a tiny (≈64px) version of the photo, blurred and scaled up. Costs a few KB. */}
+      <div aria-hidden="true" className={`absolute inset-0 transition-transform duration-[8000ms] ease-out ${active ? "scale-110" : "scale-125"}`}>
+        <Image src={s.photos[0]} alt="" fill sizes="64px" quality={75} className={`object-cover blur-2xl ${ink ? "opacity-55" : "opacity-40 saturate-50"}`} />
+      </div>
+      <div aria-hidden="true" className={`absolute inset-0 ${ink ? "bg-gradient-to-b from-ink/60 via-ink/35 to-ink/90" : "bg-gradient-to-b from-dune/70 via-dune/40 to-dune/95"}`} />
+      <div aria-hidden="true" className={`absolute inset-0 ${ink ? "cork-dots-light" : "cork-dots"}`} />
+      {/* Soft spotlight behind the photos */}
+      <div aria-hidden="true" className={`absolute left-1/2 top-[30%] h-[60%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl md:left-[72%] md:top-1/2 md:w-[50%] ${ink ? "bg-gold/15" : "bg-white/50"}`} />
       <span aria-hidden="true"
-        className={`text-outline pointer-events-none absolute right-3 top-16 select-none font-display text-[120px] font-bold uppercase leading-none md:bottom-[-3.5rem] md:left-[28%] md:right-auto md:top-auto md:text-[260px] ${ink ? "text-gold/30" : "text-bronze/30"} transition-transform duration-[8000ms] ease-out ${active ? "translate-x-0" : "translate-x-10"}`}>
+        className={`text-outline pointer-events-none absolute right-3 top-[72px] select-none font-display text-[120px] font-bold uppercase leading-none md:bottom-[-3.5rem] md:left-[28%] md:right-auto md:top-auto md:text-[260px] ${ink ? "text-gold/35" : "text-bronze/35"} transition-transform duration-[8000ms] ease-out ${active ? "translate-x-0" : "translate-x-10"}`}>
         {s.word}
       </span>
-      <div className="absolute inset-x-0 top-[13%] flex h-[33%] items-center justify-center md:inset-y-0 md:left-auto md:right-[6%] md:top-0 md:h-full md:w-[46%]">
-        {b && (
-          <div className={`absolute h-[82%] w-auto aspect-[4/5] overflow-hidden rounded-xl bg-white p-1.5 shadow-2xl transition-transform duration-1000 ease-out md:h-[58%] md:p-2 ${active ? "-translate-x-[38%] -rotate-[9deg]" : "-translate-x-[20%] -rotate-3"}`}>
-            <div className="relative h-full w-full overflow-hidden rounded-lg"><Image src={b} alt="" fill sizes="(min-width: 768px) 30vw, 45vw" className="object-cover" /></div>
-          </div>
-        )}
-        <div className={`relative h-[92%] w-auto aspect-[4/5] overflow-hidden rounded-xl bg-white p-1.5 shadow-2xl transition-transform duration-1000 ease-out md:h-[66%] md:p-2 ${b ? (active ? "translate-x-[22%] rotate-[5deg]" : "translate-x-[8%] rotate-1") : active ? "rotate-[3deg]" : "rotate-0"}`}>
-          <div className="relative h-full w-full overflow-hidden rounded-lg"><Image src={a} alt="" fill sizes="(min-width: 768px) 34vw, 55vw" className="object-cover" /></div>
-        </div>
-        <RotatingStamp size={112} tone={ink ? "gold" : "bronze"} filled className="absolute right-[-2%] top-[10%] hidden md:block" />
+      <div className="absolute inset-y-0 right-[6%] hidden w-[46%] items-center justify-center md:flex">
+        <PhotoStack photos={s.photos} active={active} size="desktop" />
+        <RotatingStamp size={112} tone={ink ? "gold" : "bronze"} filled className="absolute right-[-2%] top-[10%]" />
       </div>
     </div>
+  );
+}
+
+// Two fanned prints (front + back). Heights are relative to the box it sits in.
+function PhotoStack({ photos, active, size }: { photos: StaticImageData[]; active: boolean; size: "phone" | "desktop" }) {
+  const [a, b] = photos;
+  const desk = size === "desktop";
+  return (
+    <>
+      {b && (
+        <div className={`absolute aspect-[4/5] w-auto overflow-hidden rounded-xl bg-white shadow-2xl transition-transform duration-1000 ease-out ${desk ? "h-[58%] p-2" : "h-[82%] p-1.5"} ${active ? "-translate-x-[38%] -rotate-[9deg]" : "-translate-x-[20%] -rotate-3"}`}>
+          <div className="relative h-full w-full overflow-hidden rounded-lg"><Image src={b} alt="" fill sizes={desk ? "30vw" : "45vw"} className="object-cover" /></div>
+        </div>
+      )}
+      <div className={`relative aspect-[4/5] w-auto overflow-hidden rounded-xl bg-white shadow-2xl transition-transform duration-1000 ease-out ${desk ? "h-[66%] p-2" : "h-[94%] p-1.5"} ${b ? (active ? "translate-x-[22%] rotate-[5deg]" : "translate-x-[8%] rotate-1") : active ? "rotate-[3deg]" : "rotate-0"}`}>
+        <div className="relative h-full w-full overflow-hidden rounded-lg"><Image src={a} alt="" fill sizes={desk ? "34vw" : "55vw"} className="object-cover" /></div>
+      </div>
+    </>
   );
 }
 
@@ -163,7 +184,14 @@ function SlideText({ s, active }: { s: HeroSlide; active: boolean }) {
   const light = s.kind === "photo" || s.tone === "ink";
   const rise = (d: number) => (active ? { className: "animate-rise", style: { animationDelay: `${d}ms` } } : { className: "opacity-0", style: undefined });
   return (
-    <div className="absolute inset-0 flex flex-col justify-end px-5 pb-24 md:w-[58%] md:px-10 md:pb-28">
+    <div className="absolute inset-0 flex flex-col justify-end px-5 pb-24 pt-[84px] md:w-[58%] md:px-10 md:pb-28 md:pt-0">
+      {/* Phones: the flyer's photos take whatever height is left above the text, so there is no empty band. */}
+      {s.kind === "flyer" && (
+        <div className="relative mb-5 flex min-h-0 flex-1 items-center justify-center md:hidden">
+          <PhotoStack photos={s.photos} active={active} size="phone" />
+          <RotatingStamp size={64} tone={s.tone === "ink" ? "gold" : "bronze"} filled className="absolute bottom-0 right-0" />
+        </div>
+      )}
       <div className="flex max-w-[640px] flex-col gap-3 md:gap-5">
         <span {...rise(100)}><span className={`inline-block rounded-full px-3.5 py-1.5 text-[11px] tracking-[0.3em] md:text-[12px] ${light ? "bg-ink/50 text-gold backdrop-blur" : "bg-ink text-gold"}`}>{s.eyebrow}</span></span>
         <h2 {...rise(180)}>

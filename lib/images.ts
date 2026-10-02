@@ -19,6 +19,7 @@ import corkFootbed from "@/assets/photos/cork-footbed-detail.jpg";
 import cutoutRed from "@/assets/photos/cutout-slide-red.jpg";
 import crossSlideBlack from "@/assets/photos/cross-slide-black-leather.jpg";
 import toePostCream from "@/assets/photos/toe-post-sandal-cream.jpg";
+import perforatedBrown from "@/assets/photos/perforated-slide-brown.jpg";
 
 // Campaign imagery (AI-generated lifestyle shots)
 export const images = { heroDesktop, heroMobile, promo, ordering, buckle, sole };
@@ -26,7 +27,7 @@ export const images = { heroDesktop, heroMobile, promo, ordering, buckle, sole }
 // Real LP product photos
 export const photos = {
   corkCollection, wideBandTan, crossStrapBlack, twoStrapBrown, buckleRust, buckleGroup,
-  bandChocolate, corkFootbed, cutoutRed, crossSlideBlack, toePostCream,
+  bandChocolate, corkFootbed, cutoutRed, crossSlideBlack, toePostCream, perforatedBrown,
 };
 
 export const logo = "/images/logo.jpg";

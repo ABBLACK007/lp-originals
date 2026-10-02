@@ -6,6 +6,7 @@ export const gallery: GalleryItem[] = [
   { src: photos.buckleGroup, alt: "Two-buckle cork sandals in rust, orange and tan suede", kind: "product", product: "two-buckle-sandal-rust" },
   { src: images.heroMobile, alt: "Agbada and cork sandals on a city street", kind: "campaign" },
   { src: photos.cutoutRed, alt: "Red croc-embossed cut-out slides in a gift box", kind: "product", product: "cut-out-slide-red" },
+  { src: photos.perforatedBrown, alt: "Brown perforated cut-out slides held up on a street", kind: "product", product: "perforated-cut-out-slide-brown" },
   { src: photos.corkCollection, alt: "Suede cork slides in tan, black and dark brown", kind: "product", product: "wide-band-slide-tan" },
   { src: images.promo, alt: "Ankara dress with tan slides", kind: "campaign" },
   { src: photos.toePostCream, alt: "Women's toe-post sandals with cream straps", kind: "product", product: "toe-post-sandal-cream" },

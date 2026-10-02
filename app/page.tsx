@@ -79,7 +79,7 @@ const slides: HeroSlide[] = [
     ctas: [{ label: "Shop the sale", href: "/shop", style: "gold" }],
   },
   {
-    id: "slides", kind: "flyer", tone: "sand", word: "Palms", photos: [photos.cutoutRed, photos.toePostCream],
+    id: "slides", kind: "flyer", tone: "sand", word: "Palms", photos: [photos.perforatedBrown, photos.cutoutRed],
     eyebrow: "SLIDES & PALMS", title: "Flat out easy",
     sub: "Leather slides and palms for native and street wear, for men and women.",
     ctas: [{ label: "Shop slides & palms", href: "/shop?category=slides", style: "gold" }],
