@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="mx-3 mb-3 mt-20 rounded-hero bg-ink px-6 pb-8 pt-12 text-white md:mx-6 md:mb-6 md:mt-28 md:px-14 md:pt-16">
       <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
         <div className="flex max-w-xs flex-col gap-5">
-          <Logo />
+          <Logo className="h-20 w-auto md:h-24" />
           <p className="text-sm leading-relaxed text-white/70">Handmade cork-footbed sandals, slides, palms and clogs.</p>
         </div>
         <div className="grid grid-cols-2 gap-8 md:flex md:gap-16">

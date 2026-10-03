@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "assets": "node scripts/fetch-assets.mjs",
-    "photos": "node scripts/prepare-photos.mjs"
+    "photos": "node scripts/prepare-photos.mjs",
+    "logo": "node scripts/prepare-logo.mjs"
   },
   "dependencies": {
     "next": "16.3.6",

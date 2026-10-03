@@ -32,4 +32,3 @@ export const photos = {
   bandChocolate, corkFootbed, cutoutRed, crossSlideBlack, toePostCream, perforatedBrown, clogMocha, buckleWorn,
 };
 
-export const logo = "/images/logo.jpg";

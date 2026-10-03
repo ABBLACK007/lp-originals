@@ -29,7 +29,6 @@ export const metadata: Metadata = {
   title: { default: "LP Originals | Handmade cork-footbed sandals", template: "%s | LP Originals" },
   description,
   applicationName: "LP Originals",
-  icons: { icon: "/images/logo.jpg" },
   alternates: { canonical: "/" },
   openGraph: { type: "website", siteName: "LP Originals", locale: "en_NG", title: "LP Originals | Handmade cork-footbed sandals", description, url: "/" },
   twitter: { card: "summary_large_image" },

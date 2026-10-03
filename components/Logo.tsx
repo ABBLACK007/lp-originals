@@ -1,12 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { logo } from "@/lib/images";
+import logoLight from "@/public/images/logo-light.png";
 
-export default function Logo({ size = 44 }: { size?: number }) {
+// LP Wears logo (cream + gold version for the dark header and footer). Built by `npm run logo`.
+export default function Logo({ className = "h-12 w-auto md:h-14" }: { className?: string }) {
   return (
-    <Link href="/" className="flex items-center gap-2.5 no-underline" aria-label="LP Originals home">
-      <Image src={logo} alt="" width={size} height={size} className="rounded-full object-cover" />
-      <span className="font-display text-xl font-bold tracking-[0.08em] text-gold">ORIGINALS</span>
+    <Link href="/" className="flex shrink-0 items-center no-underline" aria-label="LP Wears home">
+      <Image src={logoLight} alt="" priority sizes="160px" className={className} />
     </Link>
   );
 }
