@@ -29,12 +29,12 @@ export default function Footer() {
           <div className={col}>
             <span className="text-sm font-semibold">Follow</span>
             <a className={a} href={site.instagram} target="_blank" rel="noreferrer">Instagram {site.instagramHandle}</a>
-            <a className={a} href={whatsappLink("Hi LP Originals!")} target="_blank" rel="noreferrer">WhatsApp</a>
+            <a className={a} href={whatsappLink("Hi LP Wears!")} target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>
       <div className="mt-12 flex justify-between border-t border-white/15 pt-6 text-[13px] text-white/60">
-        <span>© {new Date().getFullYear()} LP Originals</span>
+        <span>© {new Date().getFullYear()} LP Wears</span>
         <span>Privacy · Terms</span>
       </div>
     </footer>

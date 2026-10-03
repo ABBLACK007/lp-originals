@@ -35,7 +35,7 @@ export default function StyleFlyers() {
               </div>
             )}
             <div className="relative flex items-center justify-between text-[11px] tracking-[0.28em] text-gold [&>span]:rounded-full [&>span]:bg-ink/60 [&>span]:px-3 [&>span]:py-1.5 [&>span]:backdrop-blur">
-              <span>LP ORIGINALS</span><span>0{i + 1}</span>
+              <span>LP WEARS</span><span>0{i + 1}</span>
             </div>
             <div className="relative flex flex-col gap-3">
               <span className="text-[13px] tracking-[0.2em] text-white/75">{n} {n === 1 ? "STYLE" : "STYLES"}</span>

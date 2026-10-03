@@ -26,11 +26,11 @@ const description = "Handmade cork-footbed sandals, slides, palms and clogs, mad
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "LP Originals | Handmade cork-footbed sandals", template: "%s | LP Originals" },
+  title: { default: "LP Wears | Handmade cork-footbed sandals", template: "%s | LP Wears" },
   description,
-  applicationName: "LP Originals",
+  applicationName: "LP Wears",
   alternates: { canonical: "/" },
-  openGraph: { type: "website", siteName: "LP Originals", locale: "en_NG", title: "LP Originals | Handmade cork-footbed sandals", description, url: "/" },
+  openGraph: { type: "website", siteName: "LP Wears", locale: "en_NG", title: "LP Wears | Handmade cork-footbed sandals", description, url: "/" },
   twitter: { card: "summary_large_image" },
   formatDetection: { telephone: false },
 };

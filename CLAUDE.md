@@ -1,4 +1,4 @@
-# CLAUDE.md: LP Originals
+# CLAUDE.md: LP Wears
 
 Read README.md first. This file tells you how to keep working on the project.
 

@@ -1,6 +1,6 @@
-# LP Originals website
+# LP Wears website
 
-E-commerce site for LP Originals ([@_lp_originals_](https://www.instagram.com/_lp_originals_/)), a brand of handmade cork-footbed sandals, slides, palms and clogs.
+E-commerce site for LP Wears ([@_lp_originals_](https://www.instagram.com/_lp_originals_/)), a brand of handmade cork-footbed sandals, slides, palms and clogs.
 
 Stack: Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS 3, sharp. No backend yet.
 

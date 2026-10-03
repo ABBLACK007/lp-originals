@@ -19,7 +19,7 @@ export function generateStaticParams() {
 export const dynamicParams = false; // unknown slugs 404 without rendering
 
 const describe = (p: Product) =>
-  `${p.name} in ${p.material.toLowerCase()}${p.footbed ? ` on a ${p.footbed.toLowerCase()}` : ""}. Handmade to order in EU sizes 36 to 46 by LP Originals, delivered nationwide.`;
+  `${p.name} in ${p.material.toLowerCase()}${p.footbed ? ` on a ${p.footbed.toLowerCase()}` : ""}. Handmade to order in EU sizes 36 to 46 by LP Wears, delivered nationwide.`;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = getProduct((await params).slug);

@@ -3,8 +3,8 @@ import type { MetadataRoute } from "next";
 // Lets customers "Add to Home Screen" from Instagram's browser with the LP icon and colours.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "LP Originals",
-    short_name: "LP Originals",
+    name: "LP Wears",
+    short_name: "LP Wears",
     description: "Handmade cork-footbed sandals, slides, palms and clogs.",
     start_url: "/",
     display: "standalone",

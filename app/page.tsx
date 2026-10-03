@@ -65,7 +65,7 @@ function art(desktop: StaticImageData, mobile: StaticImageData = desktop): HeroA
   return { desktop: d.srcSet ?? d.src, mobile: m.srcSet ?? m.src, src: m.src, width: mobile.width, height: mobile.height, sizes: "100vw" };
 }
 
-const wa = whatsappLink("Hi LP Originals, I'd like to place an order.");
+const wa = whatsappLink("Hi LP Wears, I'd like to place an order.");
 
 const slides: HeroSlide[] = [
   {
@@ -168,7 +168,7 @@ export default function Home() {
               </div>
               <div className="flex flex-wrap gap-3 pt-1">
                 <Link href="/shop" className="btn btn-ink">Shop the sale</Link>
-                <a href={whatsappLink(`Hi LP Originals, I'd like to order from the ${site.promo.title}.`)} target="_blank" rel="noreferrer" className="btn btn-outline">Order on WhatsApp</a>
+                <a href={whatsappLink(`Hi LP Wears, I'd like to order from the ${site.promo.title}.`)} target="_blank" rel="noreferrer" className="btn btn-outline">Order on WhatsApp</a>
               </div>
             </div>
             <Photo src={images.promo} alt="Model in festive Ankara wear wearing LP slides" sizes="(min-width: 768px) 46vw, 100vw" className="h-[320px] w-full md:h-full md:min-h-[560px]" />
@@ -279,7 +279,7 @@ export default function Home() {
         </section>
       </div>
 
-      <div className="-mb-8 mt-20 md:-mb-12 md:mt-28"><Marquee variant="outline" reverse items={["Step into comfort", "LP Originals", "Handmade in Nigeria"]} /></div>
+      <div className="-mb-8 mt-20 md:-mb-12 md:mt-28"><Marquee variant="outline" reverse items={["Step into comfort", "LP Wears", "Handmade in Nigeria"]} /></div>
       <Footer />
     </main>
   );

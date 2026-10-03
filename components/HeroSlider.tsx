@@ -48,7 +48,7 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   return (
     <section className="px-3 pt-3 md:px-6 md:pt-6">
       <div
-        aria-roledescription="carousel" aria-label="LP Originals highlights"
+        aria-roledescription="carousel" aria-label="LP Wears highlights"
         onKeyDown={onKey}
         onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHovered(true); }}
         onMouseLeave={() => setHovered(false)}

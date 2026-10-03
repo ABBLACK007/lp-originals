@@ -6,7 +6,7 @@ import GalleryGrid from "@/components/GalleryGrid";
 import { gallery } from "@/lib/gallery";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Gallery", description: "LP Originals sandals and slides up close, and how they wear.", alternates: { canonical: "/gallery" } };
+export const metadata: Metadata = { title: "Gallery", description: "LP Wears sandals and slides up close, and how they wear.", alternates: { canonical: "/gallery" } };
 
 export default function GalleryPage() {
   return (

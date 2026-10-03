@@ -16,7 +16,7 @@ export default function SizeHelpFlyer() {
           <h2 className="font-display text-[44px] font-semibold uppercase leading-[0.92] md:text-[64px]">Send us your<br />foot length</h2>
           <p className="max-w-md text-[15px] leading-relaxed text-white/80">Stand on paper, mark heel and longest toe, measure in centimetres and message us. We&apos;ll match you to the right EU size before we make your pair.</p>
           <div className="flex flex-wrap gap-3">
-            <a href={whatsappLink("Hi LP Originals, I'm not sure of my size. My foot length is ___ cm.")} target="_blank" rel="noreferrer" className="btn btn-gold">Ask on WhatsApp</a>
+            <a href={whatsappLink("Hi LP Wears, I'm not sure of my size. My foot length is ___ cm.")} target="_blank" rel="noreferrer" className="btn btn-gold">Ask on WhatsApp</a>
             <Link href="/shop#size-guide" className="btn btn-outline-light">Size guide</Link>
           </div>
         </div>

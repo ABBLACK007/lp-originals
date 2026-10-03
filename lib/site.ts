@@ -1,6 +1,6 @@
 // Brand + business settings. Replace every [PLACEHOLDER] with real client info.
 export const site = {
-  name: "LP Originals",
+  name: "LP Wears",
   instagram: "https://www.instagram.com/_lp_originals_/",
   instagramHandle: "@_lp_originals_",
   // International format, no "+" or spaces, e.g. 2348012345678

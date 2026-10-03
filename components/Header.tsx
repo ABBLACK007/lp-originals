@@ -54,7 +54,7 @@ export default function Header({ variant = "solid" }: { variant?: "overlay" | "s
           </nav>
           <div className="flex items-center gap-2.5">
             <CartButton tone={variant === "overlay" ? "glass" : "dark"} />
-            <a href={whatsappLink("Hi LP Originals, I'd like to place an order.")} target="_blank" rel="noreferrer"
+            <a href={whatsappLink("Hi LP Wears, I'd like to place an order.")} target="_blank" rel="noreferrer"
               className="btn btn-gold btn-sm hidden lg:inline-flex">Order on WhatsApp</a>
             <button type="button" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(!open)}
               className={`flex h-11 w-11 items-center justify-center rounded-full backdrop-blur transition-transform duration-150 ease-out active:scale-[0.94] lg:hidden ${variant === "overlay" ? "bg-ink/45 ring-1 ring-inset ring-white/15" : "bg-white/15"}`}>
@@ -70,7 +70,7 @@ export default function Header({ variant = "solid" }: { variant?: "overlay" | "s
             {nav.map((n) => (
               <Link key={n.href} href={n.href} onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-white no-underline hover:bg-white/10">{n.label}</Link>
             ))}
-            <a href={whatsappLink("Hi LP Originals, I'd like to place an order.")} target="_blank" rel="noreferrer" className="btn btn-gold mt-2 py-3">Order on WhatsApp</a>
+            <a href={whatsappLink("Hi LP Wears, I'd like to place an order.")} target="_blank" rel="noreferrer" className="btn btn-gold mt-2 py-3">Order on WhatsApp</a>
           </nav>
         )}
       </div>

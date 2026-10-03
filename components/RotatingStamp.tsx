@@ -1,7 +1,7 @@
 import { useId } from "react";
 
 // Circular "stamp" badge: text on a circle that slowly turns around a fixed LP monogram.
-export default function RotatingStamp({ text = "HANDMADE IN NIGERIA · LP ORIGINALS · ", size = 128, tone = "gold", filled = false, className = "" }: {
+export default function RotatingStamp({ text = "HANDMADE IN NIGERIA · LP WEARS · ", size = 128, tone = "gold", filled = false, className = "" }: {
   text?: string; size?: number; tone?: "gold" | "bronze"; filled?: boolean; className?: string;
 }) {
   const id = useId().replace(/:/g, "");
