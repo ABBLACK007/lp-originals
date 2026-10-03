@@ -233,9 +233,10 @@ export default function Home() {
             {details.map((d, n) => (
               <Reveal key={d.text} delay={n * 100}>
                 <figure className="group relative h-[300px] overflow-hidden rounded-panel md:h-[460px]">
-                  <Photo src={d.src} alt={d.alt} sizes="(min-width: 768px) 33vw, 100vw" className="!absolute inset-0"
+                  {/* zoom-out: the photo starts zoomed in and settles as the card scrolls into view (see globals.css) */}
+                  <Photo src={d.src} alt={d.alt} sizes="(min-width: 768px) 33vw, 100vw" className="zoom-out !absolute inset-0"
                     imgClassName="transition-transform duration-700 ease-out group-hover:scale-[1.05]" />
-                  <figcaption className="absolute inset-x-0 top-0 bg-gradient-to-b from-ink/75 to-transparent p-6 pb-16 text-base font-medium leading-snug text-white md:p-8 md:text-lg">
+                  <figcaption className="zoom-caption absolute inset-x-0 top-0 bg-gradient-to-b from-ink/75 to-transparent p-6 pb-16 text-base font-medium leading-snug text-white md:p-8 md:text-lg">
                     <span className="mb-2 block font-display text-sm tracking-[0.2em] text-gold">0{n + 1}</span>{d.text}
                   </figcaption>
                 </figure>
