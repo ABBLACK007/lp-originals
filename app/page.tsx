@@ -47,6 +47,14 @@ const workshop = [
   { src: photos.crossSlideBlack, alt: "Black cross-over slides", href: "/shop/cross-over-slide-black" },
 ];
 
+// Small round photos in the promo ("In the drop")
+const promoPicks = [
+  { src: photos.buckleRust, alt: "Two-Buckle Sandal", href: "/shop/two-buckle-sandal-rust" },
+  { src: photos.cutoutRed, alt: "Cut-Out Slide", href: "/shop/cut-out-slide-red" },
+  { src: photos.perforatedBrown, alt: "Perforated Cut-Out Slide", href: "/shop/perforated-cut-out-slide-brown" },
+  { src: photos.clogMocha, alt: "Closed-Toe Clog", href: "/shop/closed-toe-clog-mocha" },
+];
+
 const ticker = ["Handmade in Nigeria", "Cork-latex footbed", "Made to order", "EU sizes 36–46", "Delivered nationwide", "Order on WhatsApp"];
 
 // Art-directed, resized srcsets for photo slides (landscape on tablet/desktop, portrait on phones).
@@ -120,17 +128,50 @@ export default function Home() {
           <StyleFlyers />
         </section>
 
-        {/* Promo */}
+        {/* Promo: Detty December. Discount and dates stay as [PLACEHOLDERS] in lib/site.ts until the client confirms them. */}
         <Reveal as="section" className="pt-20 md:pt-32">
-          <div className="grid overflow-hidden rounded-[24px] bg-sand md:h-[420px] md:grid-cols-2">
-            <div className="cork-dots relative flex flex-col justify-center gap-2 p-7 md:p-14">
-              <span className="font-display text-xl font-light uppercase md:text-[30px]">{site.promo.title}</span>
-              <span className="font-display text-6xl font-bold uppercase leading-none md:text-[104px]">{site.promo.discount}</span>
-              <span className="text-[13px] tracking-[0.1em] text-[#5E5850] md:text-base">Sitewide, {site.promo.dates}</span>
-              <div className="mt-6"><Link href="/shop" className="btn btn-ink">Shop the sale</Link></div>
-              <RotatingStamp size={96} tone="bronze" text="DETTY DECEMBER · LP DROP · " className="absolute right-6 top-6 hidden md:block" />
+          <div className="grid grid-cols-1 overflow-hidden rounded-[24px] bg-sand md:grid-cols-[1.15fr_1fr]">
+            <div className="cork-dots relative flex flex-col gap-5 p-7 md:p-12">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col gap-2">
+                  <span className="self-start rounded-full bg-ink px-3.5 py-1.5 text-[11px] tracking-[0.28em] text-gold">LIMITED FESTIVE DROP</span>
+                  <span className="font-display text-xl font-light uppercase md:text-[30px]">{site.promo.title}</span>
+                </div>
+                <RotatingStamp size={84} tone="bronze" filled text="DETTY DECEMBER · LP DROP · " className="hidden sm:block" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="font-display text-6xl font-bold uppercase leading-none md:text-[96px]">{site.promo.discount}</span>
+                <span className="text-[13px] tracking-[0.1em] text-[#5E5850] md:text-base">Sitewide, {site.promo.dates}</span>
+              </div>
+              <p className="max-w-md text-[15px] leading-relaxed text-text/80">
+                Our festive edit for owambe, December weddings and nights out. Every pair is still handmade to order, so order early: production takes {site.productionDays} working days before delivery.
+              </p>
+              <ul className="grid gap-2.5 text-[14px] sm:grid-cols-2">
+                {["Every style: sandals, slides, palms and clogs", "Made to order in EU sizes 36 to 46", "Delivered nationwide", "Gift packaging on request"].map((t) => (
+                  <li key={t} className="flex gap-2.5">
+                    <svg className="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C6B2A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+              {/* Styles in the drop */}
+              <div className="flex flex-col gap-2.5">
+                <span className="text-[11px] tracking-[0.24em] text-bronze">IN THE DROP</span>
+                <div className="flex flex-wrap gap-2 md:gap-2.5">
+                  {promoPicks.map((p) => (
+                    <Link key={p.href} href={p.href} aria-label={p.alt} className="group relative h-[50px] w-[50px] overflow-hidden rounded-full ring-2 ring-cream transition-transform duration-150 active:scale-95 md:h-[72px] md:w-[72px]">
+                      <Photo src={p.src} alt="" sizes="72px" className="!absolute inset-0" imgClassName="transition-transform duration-500 group-hover:scale-110" />
+                    </Link>
+                  ))}
+                  <Link href="/shop" className="flex h-[50px] w-[50px] items-center justify-center rounded-full border border-dashed border-bronze/60 text-[12px] font-medium text-bronze no-underline md:h-[72px] md:w-[72px]">All →</Link>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-3 pt-1">
+                <Link href="/shop" className="btn btn-ink">Shop the sale</Link>
+                <a href={whatsappLink(`Hi LP Originals, I'd like to order from the ${site.promo.title}.`)} target="_blank" rel="noreferrer" className="btn btn-outline">Order on WhatsApp</a>
+              </div>
             </div>
-            <Photo src={images.promo} alt="Model in festive Ankara wear wearing LP slides" sizes="(min-width: 768px) 50vw, 100vw" className="h-[260px] w-full md:h-full" />
+            <Photo src={images.promo} alt="Model in festive Ankara wear wearing LP slides" sizes="(min-width: 768px) 46vw, 100vw" className="h-[320px] w-full md:h-full md:min-h-[560px]" />
           </div>
         </Reveal>
 
