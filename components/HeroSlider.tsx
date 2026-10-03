@@ -11,7 +11,7 @@ export type HeroArt = { desktop: string; mobile: string; src: string; width: num
 type Base = { id: string; eyebrow: string; title: string; sub: string; ctas: HeroCta[] };
 export type HeroSlide =
   | (Base & { kind: "photo"; art: HeroArt; position?: string })
-  | (Base & { kind: "flyer"; tone: "ink" | "sand"; photos: StaticImageData[]; word: string });
+  | (Base & { kind: "flyer"; tone: "ink" | "sand" | "cocoa"; photos: StaticImageData[]; word: string });
 
 // Slide length is the "animate-progress" duration in tailwind.config.ts (6.5s); the bar finishing advances the slide.
 
@@ -38,7 +38,7 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const autoplay = !reduced;
   const running = autoplay && !userPaused && !hovered && !focused && !hidden;
   const cur = slides[i];
-  const onDark = cur.kind === "photo" || cur.tone === "ink";
+  const onDark = cur.kind === "photo" || cur.tone !== "sand";
 
   const onKey = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowRight") go(i + 1);
@@ -139,14 +139,24 @@ function PhotoBg({ s, active, priority }: { s: Extract<HeroSlide, { kind: "photo
 // Phones place the photo stack inside the text column (see SlideText) so it always fills the space above the
 // headline; tablets/desktop show it on the right.
 function FlyerBg({ s, active }: { s: Extract<HeroSlide, { kind: "flyer" }>; active: boolean }) {
-  const ink = s.tone === "ink";
+  const ink = s.tone !== "sand"; // dark slides (ink, cocoa) share light text and gold accents
+  const cocoa = s.tone === "cocoa";
   return (
-    <div className={`absolute inset-0 overflow-hidden ${ink ? "bg-ink" : "bg-dune"}`}>
-      {/* Ambient wash: a tiny (≈64px) version of the photo, blurred and scaled up. Costs a few KB. */}
+    <div className={`absolute inset-0 overflow-hidden ${cocoa ? "bg-[#2A1C13]" : ink ? "bg-ink" : "bg-dune"}`}>
+      {/* Ambient wash: a tiny (≈64px) version of the photo, blurred and scaled up. Costs a few KB. Cocoa slides use a pure gradient instead. */}
+      {!cocoa && (
       <div aria-hidden="true" className={`absolute inset-0 transition-transform duration-[8000ms] ease-out ${active ? "scale-110" : "scale-125"}`}>
-        <Image src={s.photos[0]} alt="" fill sizes="64px" quality={75} className={`object-cover blur-2xl ${ink ? "opacity-55" : "opacity-40 saturate-50"}`} />
+        <Image src={s.photos[0]} alt="" fill sizes="64px" quality={75} className={`object-cover blur-2xl ${cocoa ? "opacity-25 saturate-150" : ink ? "opacity-35" : "opacity-40 saturate-50"}`} />
       </div>
-      <div aria-hidden="true" className={`absolute inset-0 ${ink ? "bg-gradient-to-b from-ink/60 via-ink/35 to-ink/90" : "bg-gradient-to-b from-dune/70 via-dune/40 to-dune/95"}`} />
+      )}
+      <div aria-hidden="true" className={`absolute inset-0 ${cocoa ? "bg-[radial-gradient(85%_55%_at_85%_8%,rgba(201,164,92,0.42),transparent_60%),radial-gradient(70%_45%_at_0%_95%,rgba(140,107,42,0.32),transparent_70%),linear-gradient(to_bottom,#3A2618,#26180F_55%,#140E0A)]" : ink ? "bg-[radial-gradient(90%_60%_at_70%_25%,rgba(201,164,92,0.14),transparent_65%),linear-gradient(to_bottom,rgba(20,18,16,0.7),rgba(20,18,16,0.45)_40%,rgba(20,18,16,0.96))]" : "bg-gradient-to-b from-dune/70 via-dune/40 to-dune/95"}`} />
+      {cocoa && (
+        // Gold "sun" arcs behind the photos
+        <div aria-hidden="true" className="absolute left-1/2 top-[33%] h-[min(130vw,700px)] w-[min(130vw,700px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-gold/40 md:left-[72%] md:top-1/2">
+          <div className="absolute inset-[10%] rounded-full border border-dashed border-gold/25" />
+          <div className="absolute inset-[22%] rounded-full bg-gold/10" />
+        </div>
+      )}
       <div aria-hidden="true" className={`absolute inset-0 ${ink ? "cork-dots-light" : "cork-dots"}`} />
       {/* Soft spotlight behind the photos */}
       <div aria-hidden="true" className={`absolute left-1/2 top-[30%] h-[60%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl md:left-[72%] md:top-1/2 md:w-[50%] ${ink ? "bg-gold/15" : "bg-white/50"}`} />
@@ -181,7 +191,7 @@ function PhotoStack({ photos, active, size }: { photos: StaticImageData[]; activ
 }
 
 function SlideText({ s, active }: { s: HeroSlide; active: boolean }) {
-  const light = s.kind === "photo" || s.tone === "ink";
+  const light = s.kind === "photo" || s.tone !== "sand";
   const rise = (d: number) => (active ? { className: "animate-rise", style: { animationDelay: `${d}ms` } } : { className: "opacity-0", style: undefined });
   return (
     <div className="absolute inset-0 flex flex-col justify-end px-5 pb-24 pt-[84px] md:w-[58%] md:px-10 md:pb-28 md:pt-0">
@@ -189,7 +199,7 @@ function SlideText({ s, active }: { s: HeroSlide; active: boolean }) {
       {s.kind === "flyer" && (
         <div className="relative mb-5 flex min-h-0 flex-1 items-center justify-center md:hidden">
           <PhotoStack photos={s.photos} active={active} size="phone" />
-          <RotatingStamp size={64} tone={s.tone === "ink" ? "gold" : "bronze"} filled className="absolute bottom-0 right-0" />
+          <RotatingStamp size={64} tone={s.tone !== "sand" ? "gold" : "bronze"} filled className="absolute bottom-0 right-0" />
         </div>
       )}
       <div className="flex max-w-[640px] flex-col gap-3 md:gap-5">
