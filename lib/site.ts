@@ -3,16 +3,20 @@ export const site = {
   name: "LP Wears",
   instagram: "https://www.instagram.com/_lp_originals_/",
   instagramHandle: "@_lp_originals_",
-  // International format, no "+" or spaces, e.g. 2348012345678
-  whatsappNumber: "[WHATSAPP_NUMBER]",
+  // International format, no "+" or spaces (+234 706 170 2536)
+  whatsappNumber: "2347061702536",
   productionDays: "[X]",
   promo: { title: "Detty December Drop", discount: "[XX]% off", dates: "[DATES]" },
 };
 
-export function whatsappLink(message: string) {
+// Every WhatsApp button opens a chat with LP Wears with this message already typed.
+export const whatsappGreeting = "Hi, I'm from the LP Wears website. I want to get ";
+
+// `want` fills in the blank (e.g. the product and size); leave it out and the message ends at
+// "I want to get " so the customer types the rest.
+export function whatsappLink(want = "") {
   const n = site.whatsappNumber.replace(/\D/g, "");
-  const base = n ? `https://wa.me/${n}` : "https://wa.me/";
-  return `${base}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${n}?text=${encodeURIComponent(whatsappGreeting + want)}`;
 }
 
 export function formatNaira(amount: number | null) {

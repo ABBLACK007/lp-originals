@@ -19,7 +19,7 @@ export default function WhatsAppFab() {
   }, [home]);
   if (path.startsWith("/shop/") || path === "/cart" || (home && !pastHero)) return null;
   return (
-    <a href={whatsappLink("Hi LP Wears, I'd like to place an order.")} target="_blank" rel="noreferrer"
+    <a href={whatsappLink()} target="_blank" rel="noreferrer"
       aria-label="Chat with LP Wears on WhatsApp"
       className="fixed bottom-[calc(16px+env(safe-area-inset-bottom))] right-4 z-40 flex h-14 w-14 animate-pop-in items-center justify-center rounded-full bg-gold text-ink shadow-[0_8px_24px_rgba(20,18,16,0.28)] transition-transform duration-150 ease-out hover:bg-goldhover active:scale-[0.94] md:bottom-6 md:right-6">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -97,7 +97,7 @@ function GiftAPair() {
         <h3 className="font-display text-[40px] font-semibold uppercase leading-[0.9] text-ink">Gift a pair</h3>
         <p className="text-sm text-muted">Gift packaging on request. Tell us the size and we&apos;ll handle the rest.</p>
       </div>
-      <a href={whatsappLink("Hi LP Wears, I'd like to order a pair as a gift.")} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm relative mt-auto self-start">Order a gift</a>
+      <a href={whatsappLink("a pair as a gift: ")} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm relative mt-auto self-start">Order a gift</a>
     </article>
   );
 }
@@ -124,7 +124,7 @@ function DmToOrder() {
         </div>
         <span className="max-w-[78%] rounded-2xl rounded-bl-sm bg-white/85 px-3.5 py-2">Yes! Sending details now ✓✓</span>
       </div>
-      <a href={whatsappLink("Hi LP Wears, I'd like to place an order.")} target="_blank" rel="noreferrer" className="btn btn-ink btn-sm relative self-start">Chat on WhatsApp</a>
+      <a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn btn-ink btn-sm relative self-start">Chat on WhatsApp</a>
     </article>
   );
 }

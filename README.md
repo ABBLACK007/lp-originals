@@ -41,7 +41,7 @@ npm run dev      # http://localhost:3000
 ## Before launch, fill in
 
 Search the codebase for `[` to find every placeholder:
-- `[WHATSAPP_NUMBER]`, `[X]` production days, promo `[XX]%` and `[DATES]`
+- `[X]` production days, promo `[XX]%` and `[DATES]` (WhatsApp: +234 706 170 2536 is set in `lib/site.ts`; every button opens a chat with "Hi, I'm from the LP Wears website. I want to get …")
 - Prices (`price: null` shows ₦ [PRICE]), clog material and photo
 - Size guide foot lengths `[cm]`
 - Confirm product names and materials in `lib/products.ts` (written from the photos)

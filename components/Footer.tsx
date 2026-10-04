@@ -24,12 +24,12 @@ export default function Footer() {
             <span className="text-sm font-semibold">Help</span>
             <Link className={a} href="/shop#size-guide">Size guide</Link>
             <Link className={a} href="/#ordering">Delivery</Link>
-            <a className={a} href={whatsappLink("Hi, I'd like to track my order.")} target="_blank" rel="noreferrer">Track order</a>
+            <a className={a} href={whatsappLink("an update on my order. My name is ")} target="_blank" rel="noreferrer">Track order</a>
           </div>
           <div className={col}>
             <span className="text-sm font-semibold">Follow</span>
             <a className={a} href={site.instagram} target="_blank" rel="noreferrer">Instagram {site.instagramHandle}</a>
-            <a className={a} href={whatsappLink("Hi LP Wears!")} target="_blank" rel="noreferrer">WhatsApp</a>
+            <a className={a} href={whatsappLink()} target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>

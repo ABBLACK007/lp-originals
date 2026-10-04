@@ -46,7 +46,7 @@ export default function BuyBox({ product }: { product: Product }) {
       </fieldset>
       <div className="flex flex-col gap-3 sm:flex-row">
         <button type="button" onClick={onAdd} className="btn btn-gold">Add to cart</button>
-        <a href={whatsappLink(`Hi LP Wears, I'd like to order the ${product.name} (${product.material})${size ? `, size ${size}` : ""}.`)} target="_blank" rel="noreferrer"
+        <a href={whatsappLink(`the ${product.name} (${product.material})${size ? `, EU size ${size}.` : ", EU size "}`)} target="_blank" rel="noreferrer"
           className="btn btn-outline">Order on WhatsApp</a>
       </div>
       {added && <p role="status" className="text-sm">Added to cart. <Link href="/cart" className="link">View cart</Link></p>}

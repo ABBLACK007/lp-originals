@@ -11,7 +11,7 @@ export default function Error({ reset }: { error: Error & { digest?: string }; r
       <div className="flex flex-wrap gap-3">
         <button type="button" onClick={reset} className="btn btn-gold">Try again</button>
         <Link href="/" className="btn btn-outline">Back home</Link>
-        <a href={whatsappLink("Hi LP Wears, the website had a problem. Can you help me order?")} target="_blank" rel="noreferrer" className="btn btn-outline">WhatsApp us</a>
+        <a href={whatsappLink("help placing an order (the website had a problem).")} target="_blank" rel="noreferrer" className="btn btn-outline">WhatsApp us</a>
       </div>
     </main>
   );

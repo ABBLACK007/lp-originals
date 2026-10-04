@@ -21,7 +21,7 @@ export default function CartView() {
 
   const priced = lines.every((l) => l.p.price !== null);
   const total = priced ? lines.reduce((n, l) => n + (l.p.price ?? 0) * l.qty, 0) : null;
-  const message = "Hi LP Wears, I'd like to order:\n" + lines.map((l) => `- ${l.qty} x ${l.p.name} (${l.p.material}), EU ${l.size}`).join("\n");
+  const message = "these pairs:\n" +lines.map((l) => `- ${l.qty} x ${l.p.name} (${l.p.material}), EU ${l.size}`).join("\n");
 
   return (
     <div className="grid gap-10 md:grid-cols-[1fr_380px]">
