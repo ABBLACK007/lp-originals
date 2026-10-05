@@ -16,7 +16,7 @@ const nav = [
 
 // overlay: sits on top of the dark hero photo. solid: sticky dark bar for inner pages.
 // float: home page only; a fixed bar that slides down once the hero has scrolled away.
-export default function Header({ variant = "solid" }: { variant?: "overlay" | "solid" | "float" }) {
+export default function Header({ variant = "solid", onLight = false }: { variant?: "overlay" | "solid" | "float"; onLight?: boolean }) {
   const [open, setOpen] = useState(false);
   const [shown, setShown] = useState(variant !== "float");
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function Header({ variant = "solid" }: { variant?: "overlay" | "s
         : "sticky top-0 z-30 bg-ink/95 px-5 py-3 backdrop-blur md:px-10"}>
       <div className="relative">
         <div className="flex items-center justify-between">
-          <Logo />
+          <Logo dark={onLight} />
           <nav aria-label="Main" className={`hidden gap-1 rounded-full p-1.5 backdrop-blur lg:flex ${variant === "overlay" ? "bg-ink/45 ring-1 ring-inset ring-white/15" : "bg-white/15"}`}>
             {nav.map((n) => (
               <Link key={n.href} href={n.href} aria-current={path === n.href ? "page" : undefined}

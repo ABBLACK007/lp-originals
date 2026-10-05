@@ -11,7 +11,10 @@ export type HeroArt = { desktop: string; mobile: string; src: string; width: num
 type Base = { id: string; eyebrow: string; title: string; sub: string; ctas: HeroCta[] };
 export type HeroSlide =
   | (Base & { kind: "photo"; art: HeroArt; position?: string })
-  | (Base & { kind: "flyer"; tone: "ink" | "sand" | "cocoa"; photos: StaticImageData[]; word: string });
+  | (Base & { kind: "flyer"; tone: "ink" | "sand" | "cocoa" | "taupe"; photos: StaticImageData[]; word: string; layout?: "stack" | "lineup" });
+
+// Light-background flyer tones get dark text and bronze accents.
+const isLight = (s: HeroSlide) => s.kind === "flyer" && (s.tone === "sand" || s.tone === "taupe");
 
 // Slide length is the "animate-progress" duration in tailwind.config.ts (6.5s); the bar finishing advances the slide.
 
@@ -38,7 +41,7 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const autoplay = !reduced;
   const running = autoplay && !userPaused && !hovered && !focused && !hidden;
   const cur = slides[i];
-  const onDark = cur.kind === "photo" || cur.tone !== "sand";
+  const onDark = !isLight(cur);
 
   const onKey = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowRight") go(i + 1);
@@ -71,7 +74,7 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
           </div>
         ))}
 
-        <div className="absolute inset-x-0 top-0 z-20 px-5 pt-5 md:px-10 md:pt-7"><Header variant="overlay" /></div>
+        <div className="absolute inset-x-0 top-0 z-20 px-5 pt-5 md:px-10 md:pt-7"><Header variant="overlay" onLight={!onDark} /></div>
 
         {/* Controls */}
         <div className="absolute inset-x-0 bottom-0 z-20 flex items-center gap-4 px-5 pb-6 md:px-10 md:pb-9">
@@ -139,17 +142,19 @@ function PhotoBg({ s, active, priority }: { s: Extract<HeroSlide, { kind: "photo
 // Phones place the photo stack inside the text column (see SlideText) so it always fills the space above the
 // headline; tablets/desktop show it on the right.
 function FlyerBg({ s, active }: { s: Extract<HeroSlide, { kind: "flyer" }>; active: boolean }) {
-  const ink = s.tone !== "sand"; // dark slides (ink, cocoa) share light text and gold accents
+  const ink = !isLight(s); // dark slides (ink, cocoa) share light text and gold accents
   const cocoa = s.tone === "cocoa";
+  const taupe = s.tone === "taupe";
+  const lineup = s.layout === "lineup";
   return (
-    <div className={`absolute inset-0 overflow-hidden ${cocoa ? "bg-[#2A1C13]" : ink ? "bg-ink" : "bg-dune"}`}>
+    <div className={`absolute inset-0 overflow-hidden ${cocoa ? "bg-[#2A1C13]" : taupe ? "bg-[#E8E1DB]" : ink ? "bg-ink" : "bg-dune"}`}>
       {/* Ambient wash: a tiny (≈64px) version of the photo, blurred and scaled up. Costs a few KB. Cocoa slides use a pure gradient instead. */}
-      {!cocoa && (
+      {!cocoa && !taupe && (
       <div aria-hidden="true" className={`absolute inset-0 transition-transform duration-[8000ms] ease-out ${active ? "scale-110" : "scale-125"}`}>
         <Image src={s.photos[0]} alt="" fill sizes="64px" quality={75} className={`object-cover blur-2xl ${cocoa ? "opacity-25 saturate-150" : ink ? "opacity-35" : "opacity-40 saturate-50"}`} />
       </div>
       )}
-      <div aria-hidden="true" className={`absolute inset-0 ${cocoa ? "bg-[radial-gradient(85%_55%_at_85%_8%,rgba(201,164,92,0.42),transparent_60%),radial-gradient(70%_45%_at_0%_95%,rgba(140,107,42,0.32),transparent_70%),linear-gradient(to_bottom,#3A2618,#26180F_55%,#140E0A)]" : ink ? "bg-[radial-gradient(90%_60%_at_70%_25%,rgba(201,164,92,0.14),transparent_65%),linear-gradient(to_bottom,rgba(20,18,16,0.7),rgba(20,18,16,0.45)_40%,rgba(20,18,16,0.96))]" : "bg-gradient-to-b from-dune/70 via-dune/40 to-dune/95"}`} />
+      <div aria-hidden="true" className={`absolute inset-0 ${cocoa ? "bg-[radial-gradient(85%_55%_at_85%_8%,rgba(201,164,92,0.42),transparent_60%),radial-gradient(70%_45%_at_0%_95%,rgba(140,107,42,0.32),transparent_70%),linear-gradient(to_bottom,#3A2618,#26180F_55%,#140E0A)]" : ink ? "bg-[radial-gradient(90%_60%_at_70%_25%,rgba(201,164,92,0.14),transparent_65%),linear-gradient(to_bottom,rgba(20,18,16,0.7),rgba(20,18,16,0.45)_40%,rgba(20,18,16,0.96))]" : taupe ? "bg-[radial-gradient(70%_55%_at_75%_35%,rgba(255,255,255,0.75),transparent_70%),linear-gradient(to_bottom,rgba(232,225,219,0),rgba(214,204,195,0.6))]" : "bg-gradient-to-b from-dune/70 via-dune/40 to-dune/95"}`} />
       {cocoa && (
         // Gold "sun" arcs behind the photos
         <div aria-hidden="true" className="absolute left-1/2 top-[33%] h-[min(130vw,700px)] w-[min(130vw,700px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-gold/40 md:left-[72%] md:top-1/2">
@@ -165,9 +170,33 @@ function FlyerBg({ s, active }: { s: Extract<HeroSlide, { kind: "flyer" }>; acti
         {s.word}
       </span>
       <div className="absolute inset-y-0 right-[6%] hidden w-[46%] items-center justify-center md:flex">
-        <PhotoStack photos={s.photos} active={active} size="desktop" />
-        <RotatingStamp size={112} tone={ink ? "gold" : "bronze"} filled className="absolute right-[-2%] top-[17%]" />
+        {lineup
+          ? <div className="aspect-[0.78] h-[80%] max-w-full"><Lineup photos={s.photos} active={active} sizes="20vw" /></div>
+          : <PhotoStack photos={s.photos} active={active} size="desktop" />}
+        <RotatingStamp size={112} tone={ink ? "gold" : "bronze"} filled className={`absolute ${lineup ? "-right-8 bottom-[22%]" : "right-[-2%] top-[17%]"}`} />
       </div>
+    </div>
+  );
+}
+
+// Staggered two-column line-up of products (a zig-zag, like a catalogue flyer). Tiles rise in one after another.
+function Lineup({ photos, active, sizes }: { photos: StaticImageData[]; active: boolean; sizes: string }) {
+  const cols = [photos.filter((_, n) => n % 2 === 0), photos.filter((_, n) => n % 2 === 1)];
+  return (
+    <div className="grid h-full grid-cols-2 gap-3">
+      {cols.map((col, c) => (
+        <div key={c} className={`flex min-h-0 flex-col gap-3 ${c === 0 ? "pb-[14%]" : "pt-[14%]"}`}>
+          {col.map((src, n) => {
+            const order = n * 2 + c;
+            return (
+              <div key={order} style={{ transitionDelay: active ? `${150 + order * 110}ms` : "0ms" }}
+                className={`relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-white p-1.5 shadow-[0_18px_40px_-18px_rgba(20,18,16,0.45)] transition-[transform,opacity] duration-700 ease-out ${active ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"}`}>
+                <div className="relative h-full w-full overflow-hidden rounded-xl"><Image src={src} alt="" fill sizes={sizes} className="object-cover" /></div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }
@@ -191,15 +220,17 @@ function PhotoStack({ photos, active, size }: { photos: StaticImageData[]; activ
 }
 
 function SlideText({ s, active }: { s: HeroSlide; active: boolean }) {
-  const light = s.kind === "photo" || s.tone !== "sand";
+  const light = !isLight(s);
   const rise = (d: number) => (active ? { className: "animate-rise", style: { animationDelay: `${d}ms` } } : { className: "opacity-0", style: undefined });
   return (
     <div className="absolute inset-0 flex flex-col justify-end px-5 pb-24 pt-[84px] md:w-[58%] md:px-10 md:pb-28 md:pt-0">
       {/* Phones: the flyer's photos take whatever height is left above the text, so there is no empty band. */}
       {s.kind === "flyer" && (
         <div className="relative mb-5 flex min-h-0 flex-1 items-center justify-center md:hidden">
-          <PhotoStack photos={s.photos} active={active} size="phone" />
-          <RotatingStamp size={64} tone={s.tone !== "sand" ? "gold" : "bronze"} filled className="absolute bottom-0 right-0" />
+          {s.layout === "lineup"
+            ? <div className="aspect-[1.1] h-full max-w-full"><Lineup photos={s.photos} active={active} sizes="45vw" /></div>
+            : <PhotoStack photos={s.photos} active={active} size="phone" />}
+          <RotatingStamp size={64} tone={light ? "gold" : "bronze"} filled className="absolute bottom-0 right-0" />
         </div>
       )}
       <div className="flex max-w-[640px] flex-col gap-3 md:gap-5">

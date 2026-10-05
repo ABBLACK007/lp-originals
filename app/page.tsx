@@ -93,7 +93,8 @@ const slides: HeroSlide[] = [
     ctas: [{ label: "Shop slides & palms", href: "/shop?category=slides", style: "gold" }],
   },
   {
-    id: "order", kind: "flyer", tone: "cocoa", word: "Yours", photos: [photos.corkCollection, photos.bandChocolate],
+    id: "order", kind: "flyer", tone: "taupe", layout: "lineup", word: "Yours",
+    photos: [photos.buckleRust, photos.clogMocha, photos.twoStrapBrown, photos.perforatedBrown],
     eyebrow: "MADE TO ORDER", title: "Your size, your pair",
     sub: "Choose your style and EU size, pay online or on WhatsApp, and we deliver nationwide.",
     ctas: [{ label: "How to order", href: "#ordering", style: "gold" }, { label: "Chat on WhatsApp", href: wa, style: "outline", external: true }],
