@@ -49,7 +49,7 @@ export default function BuyBox({ product }: { product: Product }) {
         <a href={whatsappLink(`the ${product.name} (${product.material})${size ? `, EU size ${size}.` : ", EU size "}`)} target="_blank" rel="noreferrer"
           className="btn btn-outline">Order on WhatsApp</a>
       </div>
-      {added && <p role="status" className="text-sm">Added to cart. <Link href="/cart" className="link">View cart</Link></p>}
+      {added && <p role="status" className="text-sm">Added to cart. <Link href="/cart" className="link">View cart</Link> · <Link href="/receipt" className="link">Get your receipt</Link></p>}
 
       {showBar && (
         <div className="fixed inset-x-0 bottom-0 z-40 flex animate-fade-in items-center gap-3 border-t border-line bg-cream/95 px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 backdrop-blur md:hidden">

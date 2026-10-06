@@ -54,6 +54,7 @@ export default function CartView() {
       <aside className="flex h-fit flex-col gap-4 rounded-panel bg-dune p-6 md:sticky md:top-24">
         <div className="flex justify-between text-lg"><span>Total</span><span className="font-medium">{formatNaira(total)}</span></div>
         <p className="text-sm text-muted">Delivery fee is confirmed at checkout.</p>
+        <Link href="/receipt" className="btn btn-ink">Get your receipt</Link>
         {/* TODO(Claude Code): wire Paystack inline checkout here. */}
         <button type="button" disabled className="btn btn-gold opacity-50" title="Paystack checkout not connected yet">Pay with card or transfer</button>
         <a href={whatsappLink(message)} target="_blank" rel="noreferrer" className="btn btn-outline">Order on WhatsApp</a>

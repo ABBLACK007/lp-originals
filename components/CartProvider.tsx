@@ -6,6 +6,8 @@ export type CartItem = { slug: string; size: string; qty: number };
 type Cart = {
   items: CartItem[];
   count: number;
+  ready: boolean; // saved cart has been read from the browser
+
   add: (slug: string, size: string) => void;
   setQty: (slug: string, size: string, qty: number) => void;
   remove: (slug: string, size: string) => void;
@@ -44,6 +46,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<Cart>(() => ({
     items,
+    ready: loaded,
     count: items.reduce((n, i) => n + i.qty, 0),
     add: (slug, size) => setItems((xs) => {
       const hit = xs.find((i) => i.slug === slug && i.size === size);
@@ -54,7 +57,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setQty: (slug, size, qty) => setItems((xs) => xs.map((i) => (i.slug === slug && i.size === size ? { ...i, qty: clampQty(qty) } : i))),
     remove: (slug, size) => setItems((xs) => xs.filter((i) => !(i.slug === slug && i.size === size))),
     clear: () => setItems([]),
-  }), [items]);
+  }), [items, loaded]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

@@ -17,7 +17,7 @@ export default function WhatsAppFab() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [home]);
-  if (path.startsWith("/shop/") || path === "/cart" || (home && !pastHero)) return null;
+  if (path.startsWith("/shop/") || path === "/cart" || path === "/receipt" || (home && !pastHero)) return null;
   return (
     <a href={whatsappLink()} target="_blank" rel="noreferrer"
       aria-label="Chat with LP Wears on WhatsApp"
