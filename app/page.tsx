@@ -94,7 +94,7 @@ const slides: HeroSlide[] = [
   },
   {
     id: "order", kind: "flyer", tone: "taupe", layout: "lineup", word: "Yours",
-    photos: [photos.buckleRust, photos.clogMocha, photos.twoStrapBrown, photos.perforatedBrown],
+    photos: [photos.platformToePost, photos.stitchedBlack, photos.slidesTrio, photos.stitchedGreen],
     eyebrow: "MADE TO ORDER", title: "Your size, your pair",
     sub: "Choose your style and EU size, pay online or on WhatsApp, and we deliver nationwide.",
     ctas: [{ label: "How to order", href: "#ordering", style: "gold" }, { label: "Chat on WhatsApp", href: wa, style: "outline", external: true }],

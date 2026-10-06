@@ -31,6 +31,12 @@ const photos = [
   ["perforated-slide-brown.jpg", "brown-perforated-slides.jpg", { left: 0, top: 30, width: 736, height: 920 }],
   // Only the clog in hand: the top clog's buckle is engraved "BIRKEN…" and the corner shows a size label and another brand's box.
   ["clog-mocha.jpg", "mocha-clogs.jpg", { left: 96, top: 372, width: 544, height: 609 }],
+  // LP Wears own-label pairs (LP labels on the insoles)
+  ["platform-toe-post-brown.jpg", "lp-platform-toe-post.jpg"],
+  ["stitched-slide-black.jpg", "lp-stitched-slides-black.jpg"],
+  ["lp-slides-trio.jpg", "lp-slides-trio.jpg"],
+  ["woven-slide-olive.jpg", "lp-slides-trio.jpg", { left: 0, top: 520, width: 430, height: 538 }],
+  ["stitched-slide-green.jpg", "lp-slides-trio.jpg", { left: 598, top: 560, width: 430, height: 538 }],
   // Square for a round frame; the lettering engraved on the left buckle is softened (original stays out of git).
   ["buckle-slide-worn.jpg", "black-buckle-slide-worn.jpg", { left: 0, top: 245, width: 736, height: 736 },
     { soften: [{ left: 258, top: 710, width: 46, height: 44 }] }],

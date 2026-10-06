@@ -22,6 +22,11 @@ import toePostCream from "@/assets/photos/toe-post-sandal-cream.jpg";
 import perforatedBrown from "@/assets/photos/perforated-slide-brown.jpg";
 import clogMocha from "@/assets/photos/clog-mocha.jpg";
 import buckleWorn from "@/assets/photos/buckle-slide-worn.jpg";
+import platformToePost from "@/assets/photos/platform-toe-post-brown.jpg";
+import stitchedBlack from "@/assets/photos/stitched-slide-black.jpg";
+import slidesTrio from "@/assets/photos/lp-slides-trio.jpg";
+import wovenOlive from "@/assets/photos/woven-slide-olive.jpg";
+import stitchedGreen from "@/assets/photos/stitched-slide-green.jpg";
 
 // Campaign imagery (AI-generated lifestyle shots)
 export const images = { heroDesktop, heroMobile, promo, ordering, buckle, sole };
@@ -30,5 +35,6 @@ export const images = { heroDesktop, heroMobile, promo, ordering, buckle, sole }
 export const photos = {
   corkCollection, wideBandTan, crossStrapBlack, twoStrapBrown, buckleRust, buckleGroup,
   bandChocolate, corkFootbed, cutoutRed, crossSlideBlack, toePostCream, perforatedBrown, clogMocha, buckleWorn,
+  platformToePost, stitchedBlack, slidesTrio, wovenOlive, stitchedGreen,
 };
 

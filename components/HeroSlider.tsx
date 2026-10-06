@@ -191,7 +191,7 @@ function Lineup({ photos, active, sizes }: { photos: StaticImageData[]; active: 
             return (
               <div key={order} style={{ transitionDelay: active ? `${150 + order * 110}ms` : "0ms" }}
                 className={`relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-white p-1.5 shadow-[0_18px_40px_-18px_rgba(20,18,16,0.45)] transition-[transform,opacity] duration-700 ease-out ${active ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"}`}>
-                <div className="relative h-full w-full overflow-hidden rounded-xl"><Image src={src} alt="" fill sizes={sizes} className="object-cover" /></div>
+                <div className="relative h-full w-full overflow-hidden rounded-xl"><Image src={src} alt="" fill sizes={sizes} loading="eager" className="object-cover" /></div>
               </div>
             );
           })}

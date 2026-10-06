@@ -3,6 +3,9 @@ import { images, photos } from "./images";
 
 // Gallery order: product photos (real LP pairs) mixed with campaign shots (AI-generated, labelled "Campaign").
 export const gallery: GalleryItem[] = [
+  { src: photos.slidesTrio, alt: "LP Wears slides in olive, black and green, with LP labels", kind: "product", product: "stitched-cut-out-slide-black" },
+  { src: photos.platformToePost, alt: "Brown platform toe-post sandals beside the LP Wears card", kind: "product", product: "platform-toe-post-brown" },
+  { src: photos.stitchedBlack, alt: "Black stitched cut-out slides beside the LP Wears card", kind: "product", product: "stitched-cut-out-slide-black" },
   { src: photos.buckleGroup, alt: "Two-buckle cork sandals in rust, orange and tan suede", kind: "product", product: "two-buckle-sandal-rust" },
   { src: images.heroMobile, alt: "Agbada and cork sandals on a city street", kind: "campaign" },
   { src: photos.cutoutRed, alt: "Red croc-embossed cut-out slides in a gift box", kind: "product", product: "cut-out-slide-red" },
