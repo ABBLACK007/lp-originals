@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getProduct, sizes } from "@/lib/products";
+import { sizes, type Product } from "@/lib/content-types";
+import { useProducts } from "./StoreProvider";
 
 export type CartItem = { slug: string; size: string; qty: number };
 type Cart = {
@@ -19,7 +20,7 @@ const KEY = "lp-cart-v2"; // v2: catalogue rebuilt from real product photos
 const MAX_QTY = 20;
 const MAX_LINES = 30;
 
-const isValidItem = (i: unknown): i is CartItem => {
+const isValidItem = (getProduct: (slug: string) => Product | undefined) => (i: unknown): i is CartItem => {
   const x = i as CartItem;
   return !!x && typeof x.slug === "string" && !!getProduct(x.slug) && sizes.includes(x.size)
     && Number.isInteger(x.qty) && x.qty >= 1 && x.qty <= MAX_QTY;
@@ -27,6 +28,7 @@ const isValidItem = (i: unknown): i is CartItem => {
 const clampQty = (n: number) => Math.min(MAX_QTY, Math.max(1, Math.floor(n) || 1));
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
+  const { getProduct } = useProducts();
   const [items, setItems] = useState<CartItem[]>([]);
   // Don't write until the saved cart has been read, or the first render's empty cart overwrites it.
   const [loaded, setLoaded] = useState(false);
@@ -35,7 +37,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     // localStorage is user-editable: keep only well-formed lines for real products and sizes.
     try {
       const saved: unknown = JSON.parse(localStorage.getItem(KEY) ?? "[]");
-      if (Array.isArray(saved)) setItems(saved.filter(isValidItem).slice(0, MAX_LINES));
+      if (Array.isArray(saved)) setItems(saved.filter(isValidItem(getProduct)).slice(0, MAX_LINES));
     } catch {}
     setLoaded(true);
   }, []);
@@ -57,7 +59,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setQty: (slug, size, qty) => setItems((xs) => xs.map((i) => (i.slug === slug && i.size === size ? { ...i, qty: clampQty(qty) } : i))),
     remove: (slug, size) => setItems((xs) => xs.filter((i) => !(i.slug === slug && i.size === size))),
     clear: () => setItems([]),
-  }), [items, loaded]);
+  }), [items, loaded, getProduct]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

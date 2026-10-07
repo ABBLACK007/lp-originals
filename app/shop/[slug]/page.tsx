@@ -8,21 +8,23 @@ import ProductGallery from "@/components/ProductGallery";
 import BuyBox from "@/components/BuyBox";
 import JsonLd from "@/components/JsonLd";
 import SizeHelpFlyer from "@/components/SizeHelpFlyer";
-import { categoryLabel, getProduct, products, type Product } from "@/lib/products";
-import { formatNaira, site, siteUrl } from "@/lib/site";
+import { categoryLabel, type Product } from "@/lib/content-types";
+import { findProduct, getContent, visibleProducts } from "@/lib/content";
+import { formatNaira, siteUrl } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  return visibleProducts(await getContent()).map((p) => ({ slug: p.slug }));
 }
-export const dynamicParams = false; // unknown slugs 404 without rendering
+// Products added in /admin after a deploy are rendered on first visit; unknown slugs still 404.
+export const dynamicParams = true;
 
 const describe = (p: Product) =>
   `${p.name} in ${p.material.toLowerCase()}${p.footbed ? ` on a ${p.footbed.toLowerCase()}` : ""}. Handmade to order in EU sizes 36 to 46 by LP Wears, delivered nationwide.`;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const p = getProduct((await params).slug);
+  const p = findProduct(await getContent(), (await params).slug);
   if (!p) return {};
   const title = `${p.name}, ${p.material}`;
   const images = p.images[0] ? [{ url: p.images[0].src, width: p.images[0].width, height: p.images[0].height, alt: title }] : undefined;
@@ -35,7 +37,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const p = getProduct((await params).slug);
+  const content = await getContent();
+  const { site } = content;
+  const products = visibleProducts(content);
+  const p = findProduct(content, (await params).slug);
   if (!p) notFound();
   const related = [...products.filter((x) => x.slug !== p.slug && x.category === p.category), ...products.filter((x) => x.category !== p.category)].slice(0, 4);
 

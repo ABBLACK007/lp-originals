@@ -1,13 +1,14 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { whatsappLink } from "@/lib/site";
+import { useWhatsapp } from "./StoreProvider";
 
 // Floating chat button: most customers order on WhatsApp, so it's always one tap away.
 // Hidden on product and cart pages, which have their own WhatsApp buttons (and the sticky buy bar),
 // and on the home page until the hero (which has its own WhatsApp button and slide controls) is scrolled past.
 export default function WhatsAppFab() {
   const path = usePathname();
+  const whatsappLink = useWhatsapp();
   const home = path === "/";
   const [pastHero, setPastHero] = useState(false);
   useEffect(() => {
@@ -17,7 +18,7 @@ export default function WhatsAppFab() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [home]);
-  if (path.startsWith("/shop/") || path === "/cart" || path === "/receipt" || (home && !pastHero)) return null;
+  if (path.startsWith("/shop/") || path === "/cart" || path === "/receipt" || path.startsWith("/admin") || (home && !pastHero)) return null;
   return (
     <a href={whatsappLink()} target="_blank" rel="noreferrer"
       aria-label="Chat with LP Wears on WhatsApp"

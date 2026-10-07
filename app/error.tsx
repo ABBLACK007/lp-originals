@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
-import { whatsappLink } from "@/lib/site";
+import { useWhatsapp } from "@/components/StoreProvider";
 
 // Shown if a page crashes in the browser. No error details are displayed to visitors.
 export default function Error({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  const whatsappLink = useWhatsapp();
   return (
     <main id="main" className="mx-auto flex min-h-[70vh] max-w-page flex-col items-start justify-center gap-5 px-5 md:px-8">
       <h1 className="font-display text-5xl font-light uppercase text-bronze">Something <strong className="font-semibold">slipped</strong></h1>

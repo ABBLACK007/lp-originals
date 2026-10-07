@@ -33,10 +33,12 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false, // don't advertise the framework/version
+  // Admin photo uploads go through a server action (the admin shrinks photos first; Vercel caps bodies at ~4.5MB).
+  experimental: { serverActions: { bodySizeLimit: "4.5mb" } },
   images: {
-    // Only local, statically imported images are optimised: no remote hosts can be proxied (SSRF/DoS),
-    // one quality and WebP only keep the cache small.
-    remotePatterns: [],
+    // Optimised images: the site's own files, plus photos uploaded from /admin to this project's Vercel Blob
+    // store. No other remote host can be proxied (SSRF/DoS); one quality and WebP only keep the cache small.
+    remotePatterns: [{ protocol: "https", hostname: "pfv4isj8xyzwi9ga.public.blob.vercel-storage.com", pathname: "/uploads/**" }],
     qualities: [75],
     formats: ["image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,

@@ -4,12 +4,14 @@ import Footer from "@/components/Footer";
 import ShopGrid from "@/components/ShopGrid";
 import SectionTitle from "@/components/SectionTitle";
 import SizeHelpFlyer from "@/components/SizeHelpFlyer";
-import { categories, products, sizes, type Category } from "@/lib/products";
+import { categories, sizes, type Category } from "@/lib/content-types";
+import { getContent, visibleProducts } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Shop all styles", description: "Cork-footbed sandals, slides, palms and clogs, handmade to order in EU sizes 36 to 46.", alternates: { canonical: "/shop" } };
 
 export default async function Shop({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
   const { category } = await searchParams;
+  const products = visibleProducts(await getContent());
   const initial = categories.some((c) => c.id === category) ? (category as Category) : "all";
   return (
     <main id="main">
@@ -18,7 +20,7 @@ export default async function Shop({ searchParams }: { searchParams: Promise<{ c
         <SectionTitle light="Shop" strong="all styles" sub="Cork-footbed sandals, slides, palms and clogs, each made to order in your size." />
         <ShopGrid items={products} initial={initial} />
         <div className="mt-6"><SizeHelpFlyer /></div>
-        <section id="size-guide" className="flex flex-col gap-5 rounded-panel bg-dune p-6 md:p-10">
+        <section id="size-guide" className="glass flex flex-col gap-5 rounded-panel p-6 md:p-10">
           <h2 className="font-display text-3xl font-semibold uppercase text-bronze">Size guide</h2>
           <p className="max-w-xl text-[15px] leading-relaxed text-muted">We make every pair in EU sizes {sizes[0]} to {sizes[sizes.length - 1]}. Stand on a sheet of paper, mark your heel and longest toe, measure the distance in centimetres, and match it below. Between sizes? Size up, or send us your measurement on WhatsApp.</p>
           <div className="overflow-x-auto">

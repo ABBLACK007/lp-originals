@@ -2,11 +2,13 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "./CartProvider";
-import { sizes, type Product } from "@/lib/products";
-import { formatNaira, whatsappLink } from "@/lib/site";
+import { sizes, type Product } from "@/lib/content-types";
+import { formatNaira } from "@/lib/site";
+import { useWhatsapp } from "./StoreProvider";
 
 export default function BuyBox({ product }: { product: Product }) {
   const { add } = useCart();
+  const whatsappLink = useWhatsapp();
   const [size, setSize] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
   const [error, setError] = useState(false);
@@ -52,7 +54,7 @@ export default function BuyBox({ product }: { product: Product }) {
       {added && <p role="status" className="text-sm">Added to cart. <Link href="/cart" className="link">View cart</Link> · <Link href="/receipt" className="link">Get your receipt</Link></p>}
 
       {showBar && (
-        <div className="fixed inset-x-0 bottom-0 z-40 flex animate-fade-in items-center gap-3 border-t border-line bg-cream/95 px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 backdrop-blur md:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 flex animate-fade-in items-center gap-3 glass-strong px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 backdrop-blur md:hidden">
           <div className="flex min-w-0 flex-grow flex-col">
             <span className="truncate text-sm font-medium">{product.name}</span>
             <span className="text-xs text-muted">{formatNaira(product.price)}{size ? ` · EU ${size}` : " · choose a size"}</span>

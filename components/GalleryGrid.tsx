@@ -3,7 +3,8 @@ import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type GalleryItem = { src: StaticImageData; alt: string; kind: "product" | "campaign"; product?: string };
+export type { GalleryItem } from "@/lib/content-types";
+import type { GalleryItem } from "@/lib/content-types";
 
 const tabs = [
   { id: "all", label: "All" },

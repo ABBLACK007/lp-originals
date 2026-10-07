@@ -8,7 +8,7 @@ export default function SectionTitle({ light, strong, sub, center = false }: { l
         <span className="h-0 w-14 border-t-2 border-dashed border-gold" />
         <span className="h-1.5 w-1.5 rounded-full bg-gold" />
       </span>
-      <h2 className="text-balance font-display text-4xl font-light uppercase leading-[1.05] text-bronze md:text-[56px]">
+      <h2 className="text-balance font-display text-4xl font-light uppercase leading-[1.02] tracking-[-0.01em] text-bronze md:text-[60px]">
         {light} <strong className="font-semibold">{strong}</strong>
       </h2>
       {sub && <p className="max-w-lg text-[15px] leading-relaxed text-muted md:text-base">{sub}</p>}

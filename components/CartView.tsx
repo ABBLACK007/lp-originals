@@ -3,16 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "./CartProvider";
 import SandalArt from "./SandalArt";
-import { getProduct } from "@/lib/products";
-import { formatNaira, whatsappLink } from "@/lib/site";
+import { formatNaira } from "@/lib/site";
+import { useProducts, useWhatsapp } from "./StoreProvider";
 
 export default function CartView() {
   const { items, setQty, remove } = useCart();
+  const { getProduct } = useProducts();
+  const whatsappLink = useWhatsapp();
   const lines = items.map((i) => ({ ...i, p: getProduct(i.slug)! })).filter((l) => l.p);
 
   if (lines.length === 0) {
     return (
-      <div className="flex flex-col items-start gap-5 rounded-panel bg-dune p-8">
+      <div className="glass flex flex-col items-start gap-5 rounded-panel p-8">
         <p className="text-lg">Your cart is empty. Pick a style and size to get started.</p>
         <Link href="/shop" className="btn btn-gold">Shop all styles</Link>
       </div>
@@ -51,7 +53,7 @@ export default function CartView() {
           </li>
         ))}
       </ul>
-      <aside className="flex h-fit flex-col gap-4 rounded-panel bg-dune p-6 md:sticky md:top-24">
+      <aside className="glass-strong flex h-fit flex-col gap-4 rounded-panel p-6 md:sticky md:top-24">
         <div className="flex justify-between text-lg"><span>Total</span><span className="font-medium">{formatNaira(total)}</span></div>
         <p className="text-sm text-muted">Delivery fee is confirmed at checkout.</p>
         <Link href="/receipt" className="btn btn-ink">Get your receipt</Link>

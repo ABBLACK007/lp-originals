@@ -4,12 +4,12 @@ import Image from "next/image";
 import { useState } from "react";
 import Photo from "./Photo";
 import { images, photos } from "@/lib/images";
-import { site } from "@/lib/site";
+import { useStore } from "./StoreProvider";
 
-const steps = [
+const makeSteps = (productionDays: string) => [
   { label: "Choose", title: "Choose your pair", body: "Pick a style, colour and your EU size. Not sure of your size? Check the size guide or send us your foot length on WhatsApp.", cta: "Shop now", href: "/shop", photo: photos.corkCollection, position: "object-[50%_40%]" },
   { label: "Pay", title: "Pay your way", body: "Pay by card or bank transfer at checkout, or place your order directly with us on WhatsApp.", cta: "Go to cart", href: "/cart", photo: photos.crossSlideBlack, position: "object-center" },
-  { label: "Delivery", title: "Handmade and delivered", body: `Every pair is made to order, then delivered to your door. Production takes ${site.productionDays} working days.`, cta: "See sizes", href: "/shop#size-guide", photo: photos.buckleWorn, position: "object-[50%_70%]" },
+  { label: "Delivery", title: "Handmade and delivered", body: `Every pair is made to order, then delivered to your door. Production takes ${productionDays} working days.`, cta: "See sizes", href: "/shop#size-guide", photo: photos.buckleWorn, position: "object-[50%_70%]" },
 ];
 
 const icons = [
@@ -20,6 +20,7 @@ const icons = [
 
 export default function OrderingSteps() {
   const [active, setActive] = useState(0);
+  const steps = makeSteps(useStore().site.productionDays);
   return (
     <div className="flex flex-col gap-3 md:h-[520px] md:flex-row">
       <Photo src={images.ordering} alt="Feet in LP sandals in four colours" sizes="560px"
@@ -46,7 +47,7 @@ export default function OrderingSteps() {
         ) : (
           // Closed step: light cork-coloured tab.
           <button key={s.label} type="button" onClick={() => setActive(i)} aria-label={`Show step ${i + 1}: ${s.title}`}
-            className="cork-dots group flex items-center gap-4 rounded-panel bg-dune px-5 py-4 text-ink ring-1 ring-inset ring-line transition-[transform,background-color] duration-150 ease-out hover:bg-sand active:scale-[0.98] md:w-[84px] md:shrink-0 md:flex-col md:justify-between md:px-0 md:py-6">
+            className="glass group flex items-center gap-4 rounded-panel px-5 py-4 text-ink transition-[transform,background-color] duration-150 ease-out hover:bg-sand active:scale-[0.98] md:w-[84px] md:shrink-0 md:flex-col md:justify-between md:px-0 md:py-6">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-bronze/50 font-display text-[22px] text-bronze">{i + 1}</span>
             <span className="flex flex-col items-start text-left md:rotate-180 md:[writing-mode:vertical-rl]">
               <span className="text-[11px] tracking-[0.24em] text-bronze md:hidden">STEP {i + 1}</span>

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import ProductCard from "./ProductCard";
 import Reveal from "./Reveal";
-import { categories, type Category, type Product } from "@/lib/products";
+import { categories, type Category, type Product } from "@/lib/content-types";
 
 type Filter = "all" | Category;
 
@@ -27,7 +27,7 @@ export default function ShopGrid({ items, initial = "all" }: { items: Product[];
       <div role="group" aria-label="Filter by style" className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 md:mx-0 md:flex-wrap md:px-0">
         {filters.map((x) => (
           <button key={x.id} type="button" onClick={() => choose(x.id)} aria-pressed={f === x.id}
-            className={`shrink-0 rounded-full px-5 py-3 text-sm transition-[transform,background-color,color] duration-150 ease-out active:scale-[0.97] ${f === x.id ? "bg-ink text-white" : "bg-sand text-text hover:bg-line"}`}>
+            className={`shrink-0 rounded-full px-5 py-3 text-sm transition-[transform,background-color,color] duration-150 ease-out active:scale-[0.97] ${f === x.id ? "bg-ink text-white" : "glass text-text hover:bg-white/80"}`}>
             {x.label} <span className={f === x.id ? "text-white/60" : "text-muted"}>{x.n}</span>
           </button>
         ))}

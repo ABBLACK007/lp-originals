@@ -1,5 +1,5 @@
 import ProductCard from "./ProductCard";
-import type { Product } from "@/lib/products";
+import type { Product } from "@/lib/content-types";
 
 // Swipeable row of new products (2 per screen on phones, 4 on desktop). No controls: swipe or scroll sideways.
 export default function DropsCarousel({ items }: { items: Product[] }) {

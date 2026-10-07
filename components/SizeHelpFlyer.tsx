@@ -3,10 +3,13 @@ import Image from "next/image";
 import Reveal from "./Reveal";
 import RotatingStamp from "./RotatingStamp";
 import { photos } from "@/lib/images";
-import { whatsappLink } from "@/lib/site";
+import { getContent } from "@/lib/content";
+import { whatsappHref } from "@/lib/site";
 
 // Wide banner flyer for shop and product pages: size help, with WhatsApp as the fallback.
-export default function SizeHelpFlyer() {
+export default async function SizeHelpFlyer() {
+  const { site } = await getContent();
+  const whatsappLink = (want = "") => whatsappHref(site, want);
   return (
     <Reveal>
       <aside className="cork-dots-light relative grid overflow-hidden rounded-hero bg-ink text-white md:grid-cols-[1.2fr_1fr]">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getImageProps, type StaticImageData } from "next/image";
+import { getImageProps } from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Photo from "@/components/Photo";
@@ -13,9 +13,10 @@ import Marquee from "@/components/Marquee";
 import Reveal from "@/components/Reveal";
 import RotatingStamp from "@/components/RotatingStamp";
 import FlyerBoard from "@/components/FlyerBoard";
-import { products } from "@/lib/products";
 import { images, photos } from "@/lib/images";
-import { site, siteUrl, whatsappLink } from "@/lib/site";
+import { siteUrl, whatsappHref } from "@/lib/site";
+import { fillTokens, getContent, visibleProducts, visibleSlides } from "@/lib/content";
+import type { Img } from "@/lib/content-types";
 
 const features = [
   { t: "Lightweight", s: "Easy on your feet", icon: <><path d="M20 4C11 4 5 10 5 19" /><path d="M20 4c0 9-6 14-13 14" /><path d="M5 19l7-7" /></> },
@@ -58,49 +59,25 @@ const promoPicks = [
 const ticker = ["Handmade in Nigeria", "Cork-latex footbed", "Made to order", "EU sizes 36–46", "Delivered nationwide", "Order on WhatsApp"];
 
 // Art-directed, resized srcsets for photo slides (landscape on tablet/desktop, portrait on phones).
-function art(desktop: StaticImageData, mobile: StaticImageData = desktop): HeroArt {
+function art(desktop: Img, mobile: Img = desktop): HeroArt {
   const common = { alt: "", sizes: "100vw", quality: 75 };
   const d = getImageProps({ ...common, src: desktop }).props;
   const m = getImageProps({ ...common, src: mobile }).props;
   return { desktop: d.srcSet ?? d.src, mobile: m.srcSet ?? m.src, src: m.src, width: mobile.width, height: mobile.height, sizes: "100vw" };
 }
 
-const wa = whatsappLink();
-
-const slides: HeroSlide[] = [
-  {
-    id: "handmade", kind: "photo", art: art(images.heroDesktop, images.heroMobile),
-    eyebrow: "HANDMADE IN NIGERIA", title: "Handmade comfort for every step",
-    sub: "Cork-footbed sandals, slides, palms and clogs, made by hand and built to go from native wear to street wear.",
-    ctas: [{ label: "Shop now", href: "/shop", style: "gold" }, { label: "WhatsApp order", href: wa, style: "outline", external: true }],
-  },
-  {
-    id: "buckle", kind: "photo", art: art(photos.buckleGroup), position: "object-[60%_50%]", shade: "left",
-    eyebrow: "NEW DROP", title: "The two-buckle sandal",
-    sub: "Rust suede on a contoured cork-latex footbed, with adjustable metal buckles.",
-    ctas: [{ label: "Shop the sandal", href: "/shop/two-buckle-sandal-rust", style: "gold" }, { label: "All cork footbed", href: "/shop?category=cork", style: "outline" }],
-  },
-  {
-    id: "promo", kind: "photo", art: art(images.promo), position: "object-[70%_center]",
-    eyebrow: site.promo.title.toUpperCase(), title: `${site.promo.discount}, sitewide`,
-    sub: `Our festive drop, ${site.promo.dates}. Order early: every pair is made to order.`,
-    ctas: [{ label: "Shop the sale", href: "/shop", style: "gold" }],
-  },
-  {
-    id: "slides", kind: "photo", art: art(photos.stitchedBlack), position: "object-[50%_65%]", shade: "left",
-    eyebrow: "SLIDES & PALMS", title: "Flat out easy",
-    sub: "Leather slides and palms for native and street wear, for men and women.",
-    ctas: [{ label: "Shop slides & palms", href: "/shop?category=slides", style: "gold" }],
-  },
-  {
-    id: "order", kind: "photo", art: art(photos.slidesTrio), position: "object-[55%_60%]", shade: "left",
-    eyebrow: "MADE TO ORDER", title: "Your size, your pair",
-    sub: "Choose your style and EU size, pay online or on WhatsApp, and we deliver nationwide.",
-    ctas: [{ label: "How to order", href: "#ordering", style: "gold" }, { label: "Chat on WhatsApp", href: wa, style: "outline", external: true }],
-  },
-];
-
-export default function Home() {
+export default async function Home() {
+  const content = await getContent();
+  const { site } = content;
+  const products = visibleProducts(content);
+  const whatsappLink = (want = "") => whatsappHref(site, want);
+  const slides: HeroSlide[] = visibleSlides(content).map((s) => ({
+    id: s.id, kind: "photo", art: art(s.image, s.mobileImage ?? s.image), focus: s.focus, shade: s.shade === "left" ? "left" : undefined,
+    eyebrow: fillTokens(s.eyebrow, content), title: fillTokens(s.title, content), sub: fillTokens(s.sub, content),
+    ctas: s.ctas.map((c) => c.href === "whatsapp"
+      ? { label: c.label, href: whatsappLink(), style: c.style, external: true }
+      : { label: c.label, href: c.href, style: c.style, external: c.href.startsWith("https://") }),
+  }));
   return (
     <main id="main">
       <JsonLd data={{ "@context": "https://schema.org", "@type": "Store", name: site.name, url: siteUrl, logo: `${siteUrl}/icons/icon-512.png`, image: `${siteUrl}/opengraph-image.jpg`, description: "Handmade cork-footbed sandals, slides, palms and clogs.", sameAs: [site.instagram], areaServed: "NG" }} />
@@ -129,7 +106,7 @@ export default function Home() {
         </section>
 
         {/* Promo: Detty December. Discount and dates stay as [PLACEHOLDERS] in lib/site.ts until the client confirms them. */}
-        <Reveal as="section" className="pt-20 md:pt-32">
+        {site.promo.enabled && <Reveal as="section" className="pt-20 md:pt-32">
           <div className="grid grid-cols-1 overflow-hidden rounded-[24px] bg-sand md:grid-cols-[1.15fr_1fr]">
             <div className="cork-dots relative flex flex-col gap-5 p-7 md:p-12">
               <div className="flex items-start justify-between gap-4">
@@ -171,9 +148,19 @@ export default function Home() {
                 <a href={whatsappLink(`a pair from the ${site.promo.title}: `)} target="_blank" rel="noreferrer" className="btn btn-outline">Order on WhatsApp</a>
               </div>
             </div>
-            <Photo src={images.promo} alt="Model in festive Ankara wear wearing LP slides" sizes="(min-width: 768px) 46vw, 100vw" className="h-[320px] w-full md:h-full md:min-h-[560px]" />
+            <div className="relative">
+              <Photo src={images.promo} alt="Model in festive Ankara wear wearing LP slides" sizes="(min-width: 768px) 46vw, 100vw" className="h-[320px] w-full md:h-full md:min-h-[560px]" />
+              {/* Floating glass card over the photo */}
+              <div className="glass-dark absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-white md:bottom-6 md:left-6 md:right-auto md:w-[300px]">
+                <div className="flex flex-col">
+                  <span className="text-[11px] uppercase tracking-[0.22em] text-gold">{site.promo.title}</span>
+                  <span className="font-display text-2xl font-semibold uppercase leading-none tracking-[-0.01em]">{site.promo.discount}</span>
+                </div>
+                <span className="text-right text-xs leading-snug text-white/80">Handmade<br />to order</span>
+              </div>
+            </div>
           </div>
-        </Reveal>
+        </Reveal>}
 
         {/* Step into comfort */}
         <section className="flex flex-col gap-14 pt-20 md:pt-32">
@@ -203,7 +190,7 @@ export default function Home() {
           </Reveal>
           <div className="grid grid-cols-2 gap-x-3 gap-y-7 md:grid-cols-4 md:gap-5">
             {features.map((f, n) => (
-              <Reveal key={f.t} delay={n * 80} className="group flex flex-col items-center gap-3 text-center">
+              <Reveal key={f.t} delay={n * 80} className="glass group flex flex-col items-center gap-3 rounded-card px-3 py-6 text-center">
                 <span className="flex h-[58px] w-[58px] items-center justify-center rounded-full border border-[#B8964F] transition-[transform,background-color] duration-300 ease-out group-hover:-translate-y-1 group-hover:bg-gold/15 md:h-[68px] md:w-[68px]">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8C6B2A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{f.icon}</svg>
                 </span>
@@ -270,7 +257,7 @@ export default function Home() {
         <section className="pt-20 md:pt-28">
           <ul className="grid grid-cols-2 gap-x-3 gap-y-7 md:grid-cols-5 md:gap-5">
             {services.map((s, n) => (
-              <Reveal as="li" key={s.t} delay={n * 60} className="flex flex-col items-center gap-3 text-center">
+              <Reveal as="li" key={s.t} delay={n * 60} className="glass flex flex-col items-center gap-3 rounded-card px-3 py-5 text-center">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2A2724" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{s.icon}</svg>
                 <span className="text-sm font-medium">{s.t}</span>
               </Reveal>

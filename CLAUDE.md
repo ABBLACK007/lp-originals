@@ -14,9 +14,9 @@ Read README.md first. This file tells you how to keep working on the project.
 
 ## Next tasks, in order
 1. Done: site runs, real product photos are in, gallery page added.
-2. Replace placeholders in `lib/site.ts` and `lib/products.ts` with the client's real details.
+2. The client edits products, prices, slides, gallery and settings in /admin (see README). Sample prices are in `lib/content-defaults.ts`; promo and production time are still placeholders.
 3. Paystack checkout: replace the disabled button in `components/CartView.tsx` with Paystack Inline (public key in `NEXT_PUBLIC_PAYSTACK_KEY`). Verify payments on a server route before confirming orders. Add the Paystack domains to the CSP in next.config.mjs.
-4. Move the catalogue to a CMS (Sanity suggested) so the client can edit products.
+4. Done: /admin dashboard (Vercel Blob storage). Next: editable homepage section texts, order history.
 5. Add an Our Craft / About page (the Gallery page exists).
 6. SEO basics done (metadata, OG image, sitemap, robots, JSON-LD). Meta pixel if the client runs Instagram ads (add its domains to the CSP).
 7. Performance: images already go through next/image and fonts are self-hosted; aim for a Lighthouse mobile score of 90+.

@@ -2,9 +2,10 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/lib/products";
+import { getContent, visibleProducts } from "@/lib/content";
 
-export default function NotFound() {
+export default async function NotFound() {
+  const products = visibleProducts(await getContent());
   return (
     <main id="main">
       <Header />

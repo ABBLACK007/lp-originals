@@ -10,7 +10,7 @@ export type HeroCta = { label: string; href: string; style: "gold" | "outline"; 
 export type HeroArt = { desktop: string; mobile: string; src: string; width: number; height: number; sizes: string };
 type Base = { id: string; eyebrow: string; title: string; sub: string; ctas: HeroCta[] };
 export type HeroSlide =
-  | (Base & { kind: "photo"; art: HeroArt; position?: string; shade?: "left" })
+  | (Base & { kind: "photo"; art: HeroArt; position?: string; focus?: string; shade?: "left" })
   | (Base & { kind: "flyer"; tone: "ink" | "sand" | "cocoa" | "taupe"; photos: StaticImageData[]; word: string; layout?: "stack" | "lineup"; scene?: Scene });
 // Art direction for a flyer slide (inspired by poster/banner layouts, drawn in code around LP photos):
 // comfort: cream backdrop, palm-leaf shadow, display circle, boxed tag and feature tagline
@@ -135,6 +135,7 @@ function PhotoBg({ s, active, priority }: { s: Extract<HeroSlide, { kind: "photo
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={s.art.src} width={s.art.width} height={s.art.height} alt="" decoding="async"
           loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "low"}
+          style={s.focus ? { objectPosition: s.focus } : undefined}
           className={`h-full w-full object-cover transition-transform duration-[8000ms] ease-out ${s.position ?? ""} ${active ? "scale-100" : "scale-[1.08]"}`} />
       </picture>
       <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/20 to-ink/80" aria-hidden="true" />
@@ -294,9 +295,9 @@ function SlideText({ s, active }: { s: HeroSlide; active: boolean }) {
         </div>
       )}
       <div className="flex max-w-[640px] flex-col gap-3 md:gap-5">
-        <span {...rise(100)}><span className={`inline-block rounded-full px-3.5 py-1.5 text-[11px] tracking-[0.3em] md:text-[12px] ${light ? "bg-ink/50 text-gold backdrop-blur" : "bg-ink text-gold"}`}>{s.eyebrow}</span></span>
+        <span {...rise(100)}><span className={`inline-block rounded-full px-3.5 py-1.5 text-[11px] uppercase tracking-[0.3em] md:text-[12px] ${light ? "glass-dark text-gold" : "bg-ink text-gold"}`}>{s.eyebrow}</span></span>
         <h2 {...rise(180)}>
-          <span className={`block text-balance font-display text-[44px] font-medium uppercase leading-[0.95] sm:text-[52px] md:text-[92px] ${light ? "text-white" : "text-ink"}`}>{s.title}</span>
+          <span className={`block text-balance font-display text-[44px] font-medium uppercase leading-[0.95] tracking-[-0.01em] sm:text-[52px] md:text-[92px] ${light ? "text-white" : "text-ink"}`}>{s.title}</span>
         </h2>
         <p {...rise(260)}><span className={`block max-w-[520px] text-[15px] leading-relaxed md:text-lg ${light ? "text-white/85" : "text-text/80"}`}>{s.sub}</span></p>
         <div {...rise(340)}>

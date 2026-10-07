@@ -1,7 +1,8 @@
 // Order receipts generated from the cart, in the customer's browser. There is no payment yet, so a
 // receipt is an order summary marked "payment pending"; WhatsApp is how the order reaches LP Wears.
 import type { CartItem } from "@/components/CartProvider";
-import { getProduct } from "./products";
+import type { Product } from "./content-types";
+type GetProduct = (slug: string) => Product | undefined;
 import { formatNaira } from "./site";
 
 export type ReceiptLine = { slug: string; name: string; material: string; size: string; qty: number; unitPrice: number | null };
@@ -26,7 +27,7 @@ function newId(date: Date) {
   return `LPW-${ymd}-${Array.from(rnd, (b) => alphabet[b % alphabet.length]).join("")}`;
 }
 
-export function buildReceipt(items: CartItem[], customer = { name: "", phone: "" }): Receipt {
+export function buildReceipt(items: CartItem[], getProduct: GetProduct, customer = { name: "", phone: "" }): Receipt {
   const lines = items.flatMap((i) => {
     const p = getProduct(i.slug);
     return p ? [{ slug: i.slug, name: p.name, material: p.material, size: i.size, qty: i.qty, unitPrice: p.price }] : [];
@@ -44,16 +45,16 @@ export function buildReceipt(items: CartItem[], customer = { name: "", phone: ""
 }
 
 // Same cart -> same receipt (number and date stay put on refresh); a changed cart gets a new receipt.
-export function receiptForCart(items: CartItem[]): Receipt {
+export function receiptForCart(items: CartItem[], getProduct: GetProduct): Receipt {
   const sig = cartSignature(items);
   try {
     const saved = JSON.parse(localStorage.getItem(KEY) ?? "null") as Receipt | null;
     if (saved && saved.signature === sig && typeof saved.id === "string") return saved;
-    const r = buildReceipt(items, saved?.customer ?? { name: "", phone: "" });
+    const r = buildReceipt(items, getProduct, saved?.customer ?? { name: "", phone: "" });
     localStorage.setItem(KEY, JSON.stringify(r));
     return r;
   } catch {
-    return buildReceipt(items);
+    return buildReceipt(items, getProduct);
   }
 }
 

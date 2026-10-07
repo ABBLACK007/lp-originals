@@ -3,7 +3,22 @@
 @tailwind utilities;
 
 html { scroll-behavior: smooth; scroll-padding-top: 88px; }
-body { @apply bg-cream font-sans text-text antialiased; -webkit-tap-highlight-color: transparent; }
+body {
+  @apply bg-cream font-sans text-text antialiased;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+  /* Warm ambient light behind every page (static, no motion): gives the cream ground depth and gives the
+     glass surfaces something to blur. */
+  background-image:
+    radial-gradient(60rem 40rem at 100% 0%, rgba(201, 164, 92, 0.16), transparent 60%),
+    radial-gradient(50rem 36rem at 0% 30%, rgba(140, 107, 42, 0.10), transparent 60%),
+    radial-gradient(56rem 40rem at 100% 70%, rgba(201, 164, 92, 0.12), transparent 60%),
+    radial-gradient(48rem 36rem at 0% 100%, rgba(110, 75, 47, 0.10), transparent 60%);
+  background-repeat: no-repeat;
+}
+/* Size-specific tracking: big display type tightens, small caps labels stay open. */
+h1, h2 { text-wrap: balance; }
 a { color: inherit; }
 :focus-visible { outline: 2px solid #C9A45C; outline-offset: 3px; }
 .no-scrollbar { scrollbar-width: none; }
@@ -21,6 +36,27 @@ a { color: inherit; }
   .btn-outline { @apply border border-ink text-ink hover:bg-ink hover:text-white; }
   .btn-outline-light { @apply border border-white/50 text-white hover:border-white; }
   .link { @apply underline decoration-1 underline-offset-4 transition-colors hover:text-bronze; }
+
+  /* Glass materials. Light glass for controls/cards over the warm ground; dark glass over photos.
+     The bright top edge reads as light catching the material. Never stack light glass on light glass. */
+  .glass {
+    background: rgba(255, 252, 247, 0.62);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    backdrop-filter: blur(20px) saturate(170%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.35), 0 10px 30px -18px rgba(60, 40, 20, 0.35);
+  }
+  .glass-strong {
+    background: rgba(255, 252, 247, 0.78);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    backdrop-filter: blur(28px) saturate(180%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.4), 0 24px 60px -30px rgba(60, 40, 20, 0.45);
+  }
+  .glass-dark {
+    background: rgba(20, 18, 16, 0.46);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
 }
 
 /* Scroll reveal (components/Reveal.tsx). Only hidden when JS is running (html.js), so content
@@ -47,6 +83,12 @@ a { color: inherit; }
 
 /* Outlined display type for graphic backgrounds */
 .text-outline { -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.5px currentColor; }
+
+/* People who ask for less transparency get solid, high-contrast surfaces instead of glass. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass, .glass-strong { background: #FBF8F3; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .glass-dark { background: #1A1715; -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

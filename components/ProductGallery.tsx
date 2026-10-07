@@ -2,7 +2,7 @@
 import Image, { type StaticImageData } from "next/image";
 import { useState } from "react";
 import SandalArt from "./SandalArt";
-import type { Product } from "@/lib/products";
+import type { Product } from "@/lib/content-types";
 
 export default function ProductGallery({ images, alt, art }: { images: StaticImageData[]; alt: string; art: Product["art"] }) {
   const [i, setI] = useState(0);

@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Logo from "./Logo";
 import CartButton from "./CartButton";
-import { whatsappLink } from "@/lib/site";
+import { useWhatsapp } from "./StoreProvider";
 
 const nav = [
   { href: "/shop", label: "Shop" },
@@ -18,6 +18,7 @@ const nav = [
 // float: home page only; a fixed bar that slides down once the hero has scrolled away.
 export default function Header({ variant = "solid", onLight = false }: { variant?: "overlay" | "solid" | "float"; onLight?: boolean }) {
   const [open, setOpen] = useState(false);
+  const whatsappLink = useWhatsapp();
   const [shown, setShown] = useState(variant !== "float");
   useEffect(() => {
     if (variant !== "float") return;

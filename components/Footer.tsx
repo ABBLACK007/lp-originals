@@ -1,8 +1,11 @@
 import Link from "next/link";
 import Logo from "./Logo";
-import { site, whatsappLink } from "@/lib/site";
+import { getContent } from "@/lib/content";
+import { whatsappHref } from "@/lib/site";
 
-export default function Footer() {
+export default async function Footer() {
+  const { site } = await getContent();
+  const whatsappLink = (want = "") => whatsappHref(site, want);
   const col = "flex flex-col gap-3";
   const a = "text-sm text-white/70 no-underline hover:text-gold";
   return (

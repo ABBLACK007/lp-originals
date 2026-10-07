@@ -2,7 +2,8 @@ import Link from "next/link";
 import Photo from "./Photo";
 import SandalArt from "./SandalArt";
 import Reveal from "./Reveal";
-import { categories, countIn, type Category } from "@/lib/products";
+import { categories, type Category } from "@/lib/content-types";
+import { getContent, visibleProducts } from "@/lib/content";
 import { photos } from "@/lib/images";
 import type { StaticImageData } from "next/image";
 
@@ -13,7 +14,9 @@ const art: Record<Category, { image?: StaticImageData; alt: string; position?: s
   clogs: { image: photos.clogMocha, alt: "Mocha suede closed-toe clog with a cork footbed, held in hand", position: "object-[50%_45%]" },
 };
 
-export default function StyleFlyers() {
+export default async function StyleFlyers() {
+  const products = visibleProducts(await getContent());
+  const countIn = (c: Category) => products.filter((p) => p.category === c).length;
   return (
     <div className="grid gap-3 md:grid-cols-3 md:gap-5">
       {categories.map((c, i) => {

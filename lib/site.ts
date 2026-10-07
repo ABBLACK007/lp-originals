@@ -1,22 +1,12 @@
-// Brand + business settings. Replace every [PLACEHOLDER] with real client info.
-export const site = {
-  name: "LP Wears",
-  instagram: "https://www.instagram.com/_lp_originals_/",
-  instagramHandle: "@_lp_originals_",
-  // International format, no "+" or spaces (+234 706 170 2536)
-  whatsappNumber: "2347061702536",
-  productionDays: "[X]",
-  promo: { title: "Detty December Drop", discount: "[XX]% off", dates: "[DATES]" },
-};
+// Formatting and link helpers shared by server and client. Business settings (WhatsApp number, promo,
+// production time) are editable in /admin and come from the store content (see lib/content.ts).
+import type { SiteSettings } from "./content-types";
 
-// Every WhatsApp button opens a chat with LP Wears with this message already typed.
-export const whatsappGreeting = "Hi, I'm from the LP Wears website. I want to get ";
-
-// `want` fills in the blank (e.g. the product and size); leave it out and the message ends at
-// "I want to get " so the customer types the rest.
-export function whatsappLink(want = "") {
-  const n = site.whatsappNumber.replace(/\D/g, "");
-  return `https://wa.me/${n}?text=${encodeURIComponent(whatsappGreeting + want)}`;
+// Every WhatsApp button opens a chat with LP Wears with the greeting already typed. `want` fills in the
+// blank (e.g. the product and size); leave it out and the customer types the rest.
+export function whatsappHref(s: Pick<SiteSettings, "whatsappNumber" | "whatsappGreeting">, want = "") {
+  const n = s.whatsappNumber.replace(/\D/g, "");
+  return `https://wa.me/${n}?text=${encodeURIComponent(s.whatsappGreeting + want)}`;
 }
 
 export function formatNaira(amount: number | null) {

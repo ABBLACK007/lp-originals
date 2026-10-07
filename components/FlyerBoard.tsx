@@ -3,14 +3,19 @@ import Image, { type StaticImageData } from "next/image";
 import Reveal from "./Reveal";
 import RotatingStamp from "./RotatingStamp";
 import { photos } from "@/lib/images";
-import { sizes } from "@/lib/products";
-import { site, whatsappLink } from "@/lib/site";
+import { sizes } from "@/lib/content-types";
+import { getContent } from "@/lib/content";
+import { whatsappHref } from "@/lib/site";
+
+type Wa = (want?: string) => string;
 
 // Four poster-style flyers, each with its own layout, like prints pinned to a board.
 // Phones: a swipeable row. Desktop: a 4-up grid with a slight tilt that straightens on hover.
-export default function FlyerBoard() {
+export default async function FlyerBoard() {
+  const { site } = await getContent();
+  const wa: Wa = (want = "") => whatsappHref(site, want);
   const tilt = ["md:-rotate-[1.5deg]", "md:rotate-[1deg]", "md:-rotate-[0.5deg]", "md:rotate-[1.5deg]"];
-  const flyers = [<MadeToOrder key="a" />, <GiftAPair key="b" />, <DmToOrder key="c" />, <FindYourFit key="d" />];
+  const flyers = [<MadeToOrder key="a" />, <GiftAPair key="b" wa={wa} />, <DmToOrder key="c" wa={wa} />, <FindYourFit key="d" siteName={site.name} />];
   return (
     <div className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 md:mx-0 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0">
       {flyers.map((f, i) => (
@@ -78,7 +83,7 @@ function MadeToOrder() {
   );
 }
 
-function GiftAPair() {
+function GiftAPair({ wa }: { wa: Wa }) {
   return (
     <article className={`${card} cork-dots gap-4 bg-dune`}>
       <Wash src={photos.crossSlideBlack} className="opacity-20 saturate-0" />
@@ -97,12 +102,12 @@ function GiftAPair() {
         <h3 className="font-display text-[40px] font-semibold uppercase leading-[0.9] text-ink">Gift a pair</h3>
         <p className="text-sm text-muted">Gift packaging on request. Tell us the size and we&apos;ll handle the rest.</p>
       </div>
-      <a href={whatsappLink("a pair as a gift: ")} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm relative mt-auto self-start">Order a gift</a>
+      <a href={wa("a pair as a gift: ")} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm relative mt-auto self-start">Order a gift</a>
     </article>
   );
 }
 
-function DmToOrder() {
+function DmToOrder({ wa }: { wa: Wa }) {
   return (
     <article className={`${card} justify-between bg-gold text-ink`}>
       <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(255,255,255,0.35),transparent_55%)]" />
@@ -124,12 +129,12 @@ function DmToOrder() {
         </div>
         <span className="max-w-[78%] rounded-2xl rounded-bl-sm bg-white/85 px-3.5 py-2">Yes! Sending details now ✓✓</span>
       </div>
-      <a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn btn-ink btn-sm relative self-start">Chat on WhatsApp</a>
+      <a href={wa()} target="_blank" rel="noreferrer" className="btn btn-ink btn-sm relative self-start">Chat on WhatsApp</a>
     </article>
   );
 }
 
-function FindYourFit() {
+function FindYourFit({ siteName }: { siteName: string }) {
   return (
     <article className={`${card} cork-dots justify-between bg-cream ring-1 ring-inset ring-line`}>
       <Pin />
@@ -138,7 +143,7 @@ function FindYourFit() {
           <span className="text-[11px] tracking-[0.28em] text-bronze">FLYER · SIZING</span>
           <h3 className="font-display text-[44px] font-semibold uppercase leading-[0.9] text-ink">Find<br />your fit</h3>
         </div>
-        <RotatingStamp size={76} tone="bronze" text={`EU ${sizes[0]}–${sizes[sizes.length - 1]} · ${site.name.toUpperCase()} · `} />
+        <RotatingStamp size={76} tone="bronze" text={`EU ${sizes[0]}–${sizes[sizes.length - 1]} · ${siteName.toUpperCase()} · `} />
       </div>
       {/* Foot + ruler graphic */}
       <svg viewBox="0 0 200 90" className="w-full text-bronze" aria-hidden="true">

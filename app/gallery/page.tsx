@@ -3,12 +3,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SectionTitle from "@/components/SectionTitle";
 import GalleryGrid from "@/components/GalleryGrid";
-import { gallery } from "@/lib/gallery";
-import { site } from "@/lib/site";
+import { getContent } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Gallery", description: "LP Wears sandals and slides up close, and how they wear.", alternates: { canonical: "/gallery" } };
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const { site, gallery } = await getContent();
   return (
     <main id="main">
       <Header />

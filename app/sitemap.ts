@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
-import { products } from "@/lib/products";
+import { getContent, visibleProducts } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const products = visibleProducts(await getContent());
   const pages = ["", "/shop", "/gallery"].map((path) => ({ url: `${siteUrl}${path}`, changeFrequency: "weekly" as const, priority: path ? 0.8 : 1 }));
   const items = products.map((p) => ({
     url: `${siteUrl}/shop/${p.slug}`,

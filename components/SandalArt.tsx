@@ -1,4 +1,4 @@
-import type { SandalStyle } from "@/lib/products";
+import type { SandalStyle } from "@/lib/content-types";
 
 // Drawn top-view placeholder used until real product photos exist.
 export default function SandalArt({ style, strap, className = "" }: { style: SandalStyle; strap: string; className?: string }) {

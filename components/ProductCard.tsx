@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import SandalArt from "./SandalArt";
-import { categoryLabel, type Product } from "@/lib/products";
+import { categoryLabel, type Product } from "@/lib/content-types";
 import { formatNaira } from "@/lib/site";
 
 // Card image sizes: 2 columns on phones, 4 on desktop.
@@ -27,8 +27,8 @@ export default function ProductCard({ p }: { p: Product }) {
           </div>
         )}
         <div className="absolute left-3 top-3 flex gap-1.5">
-          {p.isNew && <span className="rounded-full bg-[#FAF7F2] px-3 py-1.5 text-xs font-medium">New</span>}
-          {p.audience && <span className="rounded-full bg-ink/75 px-3 py-1.5 text-xs font-medium text-white backdrop-blur">{p.audience}</span>}
+          {p.isNew && <span className="glass rounded-full px-3 py-1.5 text-xs font-semibold">New</span>}
+          {p.audience && <span className="glass-dark rounded-full px-3 py-1.5 text-xs font-semibold text-white">{p.audience}</span>}
         </div>
       </Link>
       <div className="flex flex-col gap-0.5">

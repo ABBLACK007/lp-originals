@@ -4,14 +4,18 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useCart } from "./CartProvider";
 import { receiptForCart, receiptText, saveReceipt, type Receipt } from "@/lib/receipt";
-import { formatNaira, site, whatsappLink } from "@/lib/site";
+import { formatNaira } from "@/lib/site";
+import { useProducts, useStore, useWhatsapp } from "./StoreProvider";
 import logoDark from "@/public/images/logo-dark.png";
 
 export default function ReceiptView() {
   const { items, ready } = useCart();
+  const { site } = useStore();
+  const { getProduct } = useProducts();
+  const whatsappLink = useWhatsapp();
   const [r, setR] = useState<Receipt | null>(null);
 
-  useEffect(() => { if (ready) setR(items.length ? receiptForCart(items) : null); }, [ready, items]);
+  useEffect(() => { if (ready) setR(items.length ? receiptForCart(items, getProduct) : null); }, [ready, items, getProduct]);
 
   const setCustomer = (k: "name" | "phone", v: string) => {
     if (!r) return;
@@ -22,7 +26,7 @@ export default function ReceiptView() {
   if (!ready) return <p className="text-muted">Preparing your receipt…</p>;
   if (!r) {
     return (
-      <div className="flex flex-col items-start gap-5 rounded-panel bg-dune p-8">
+      <div className="glass flex flex-col items-start gap-5 rounded-panel p-8">
         <p className="text-lg">Your cart is empty, so there&apos;s no receipt yet. Add a pair to get one.</p>
         <Link href="/shop" className="btn btn-gold">Shop all styles</Link>
       </div>
@@ -85,7 +89,7 @@ export default function ReceiptView() {
       </article>
 
       {/* Actions (hidden when printing) */}
-      <aside className="flex h-fit flex-col gap-4 rounded-panel bg-dune p-6 md:sticky md:top-24 print:hidden">
+      <aside className="glass-strong flex h-fit flex-col gap-4 rounded-panel p-6 md:sticky md:top-24 print:hidden">
         <h2 className="font-display text-2xl font-semibold uppercase text-bronze">Your details</h2>
         <p className="text-sm text-muted">Optional. They appear on the receipt so we can match your order.</p>
         <label className="flex flex-col gap-1.5 text-sm font-medium">Name
