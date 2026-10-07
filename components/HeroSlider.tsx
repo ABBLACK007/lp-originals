@@ -10,7 +10,7 @@ export type HeroCta = { label: string; href: string; style: "gold" | "outline"; 
 export type HeroArt = { desktop: string; mobile: string; src: string; width: number; height: number; sizes: string };
 type Base = { id: string; eyebrow: string; title: string; sub: string; ctas: HeroCta[] };
 export type HeroSlide =
-  | (Base & { kind: "photo"; art: HeroArt; position?: string })
+  | (Base & { kind: "photo"; art: HeroArt; position?: string; shade?: "left" })
   | (Base & { kind: "flyer"; tone: "ink" | "sand" | "cocoa" | "taupe"; photos: StaticImageData[]; word: string; layout?: "stack" | "lineup"; scene?: Scene });
 // Art direction for a flyer slide (inspired by poster/banner layouts, drawn in code around LP photos):
 // comfort: cream backdrop, palm-leaf shadow, display circle, boxed tag and feature tagline
@@ -138,6 +138,8 @@ function PhotoBg({ s, active, priority }: { s: Extract<HeroSlide, { kind: "photo
           className={`h-full w-full object-cover transition-transform duration-[8000ms] ease-out ${s.position ?? ""} ${active ? "scale-100" : "scale-[1.08]"}`} />
       </picture>
       <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/20 to-ink/80" aria-hidden="true" />
+      {/* Product shots on bright backgrounds: extra shade behind the text so white type stays readable */}
+      {s.shade === "left" && <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 to-transparent md:bg-gradient-to-r md:from-ink/90 md:via-ink/55 md:to-transparent" aria-hidden="true" />}
     </>
   );
 }
