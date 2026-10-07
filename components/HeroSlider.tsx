@@ -11,7 +11,12 @@ export type HeroArt = { desktop: string; mobile: string; src: string; width: num
 type Base = { id: string; eyebrow: string; title: string; sub: string; ctas: HeroCta[] };
 export type HeroSlide =
   | (Base & { kind: "photo"; art: HeroArt; position?: string })
-  | (Base & { kind: "flyer"; tone: "ink" | "sand" | "cocoa" | "taupe"; photos: StaticImageData[]; word: string; layout?: "stack" | "lineup" });
+  | (Base & { kind: "flyer"; tone: "ink" | "sand" | "cocoa" | "taupe"; photos: StaticImageData[]; word: string; layout?: "stack" | "lineup"; scene?: Scene });
+// Art direction for a flyer slide (inspired by poster/banner layouts, drawn in code around LP photos):
+// comfort: cream backdrop, palm-leaf shadow, display circle, boxed tag and feature tagline
+// studio:  white studio, plinth the shoes lean on, hard window shadow, big solid word
+// classic: caramel-to-brown gradient, pedestal, framed brand title
+type Scene = "comfort" | "studio" | "classic";
 
 // Light-background flyer tones get dark text and bronze accents.
 const isLight = (s: HeroSlide) => s.kind === "flyer" && (s.tone === "sand" || s.tone === "taupe");
@@ -148,6 +153,7 @@ function FlyerBg({ s, active }: { s: Extract<HeroSlide, { kind: "flyer" }>; acti
   const lineup = s.layout === "lineup";
   return (
     <div className={`absolute inset-0 overflow-hidden ${cocoa ? "bg-[#2A1C13]" : taupe ? "bg-[#E8E1DB]" : ink ? "bg-ink" : "bg-dune"}`}>
+      {s.scene ? <SceneLayers scene={s.scene} active={active} lineup={lineup} /> : <>
       {/* Ambient wash: a tiny (≈64px) version of the photo, blurred and scaled up. Costs a few KB. Cocoa slides use a pure gradient instead. */}
       {!cocoa && !taupe && (
       <div aria-hidden="true" className={`absolute inset-0 transition-transform duration-[8000ms] ease-out ${active ? "scale-110" : "scale-125"}`}>
@@ -162,20 +168,72 @@ function FlyerBg({ s, active }: { s: Extract<HeroSlide, { kind: "flyer" }>; acti
           <div className="absolute inset-[22%] rounded-full bg-gold/10" />
         </div>
       )}
+      </>}
       <div aria-hidden="true" className={`absolute inset-0 ${ink ? "cork-dots-light" : "cork-dots"}`} />
       {/* Soft spotlight behind the photos */}
-      <div aria-hidden="true" className={`absolute left-1/2 top-[30%] h-[60%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl md:left-[72%] md:top-1/2 md:w-[50%] ${ink ? "bg-gold/15" : "bg-white/50"}`} />
+      {!s.scene && <div aria-hidden="true" className={`absolute left-1/2 top-[30%] h-[60%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl md:left-[72%] md:top-1/2 md:w-[50%] ${ink ? "bg-gold/15" : "bg-white/50"}`} />}
       <span aria-hidden="true"
-        className={`text-outline pointer-events-none absolute right-3 top-[72px] select-none font-display text-[120px] font-bold uppercase leading-none md:bottom-[-3.5rem] md:left-[28%] md:right-auto md:top-auto md:text-[260px] ${ink ? "text-gold/35" : "text-bronze/35"} transition-transform duration-[8000ms] ease-out ${active ? "translate-x-0" : "translate-x-10"}`}>
+        className={`text-outline pointer-events-none absolute right-3 top-[72px] select-none font-display text-[120px] font-bold uppercase leading-none md:bottom-[-3.5rem] md:left-[28%] md:right-auto md:top-auto md:text-[260px] ${s.scene === "studio" ? "text-ink/[0.07] [-webkit-text-fill-color:currentColor] [-webkit-text-stroke:0]" : ink ? "text-gold/35" : "text-bronze/35"} transition-transform duration-[8000ms] ease-out ${active ? "translate-x-0" : "translate-x-10"}`}>
         {s.word}
       </span>
       <div className="absolute inset-y-0 right-[6%] hidden w-[46%] items-center justify-center md:flex">
         {lineup
-          ? <div className="aspect-[0.78] h-[80%] max-w-full"><Lineup photos={s.photos} active={active} sizes="20vw" /></div>
+          ? <div className={`aspect-[0.78] max-w-full ${s.scene === "classic" ? "mt-[18%] h-[64%]" : "h-[80%]"}`}><Lineup photos={s.photos} active={active} sizes="20vw" /></div>
           : <PhotoStack photos={s.photos} active={active} size="desktop" />}
-        <RotatingStamp size={112} tone={ink ? "gold" : "bronze"} filled className={`absolute ${lineup ? "-right-8 bottom-[22%]" : "right-[-2%] top-[17%]"}`} />
+        {(!s.scene || s.scene === "studio") && <RotatingStamp size={112} tone={ink ? "gold" : "bronze"} filled className={`absolute ${lineup ? "-right-8 bottom-[22%]" : "right-[-2%] top-[17%]"}`} />}
       </div>
     </div>
+  );
+}
+
+function SceneLayers({ scene, active, lineup }: { scene: Scene; active: boolean; lineup: boolean }) {
+  if (scene === "comfort") return (
+    <>
+      <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(160deg,#F6F2EC,#ECE4DA_60%,#E2D8CC)]" />
+      {/* Palm-leaf shadow falling across the top right */}
+      <svg aria-hidden="true" viewBox="0 0 400 400" className={`absolute -right-16 -top-10 w-[75%] max-w-[620px] text-[#8C7B66] opacity-[0.16] blur-[3px] transition-transform duration-[8000ms] ease-out md:-right-10 md:w-[48%] ${active ? "rotate-0" : "rotate-6"}`}>
+        <g fill="currentColor">
+          {Array.from({ length: 11 }, (_, n) => <ellipse key={n} cx="200" cy="120" rx="16" ry="120" transform={`rotate(${-75 + n * 15} 330 330)`} />)}
+        </g>
+      </svg>
+      {/* Display circle behind the shoes */}
+      <div aria-hidden="true" className="absolute left-1/2 top-[31%] h-[min(86vw,420px)] w-[min(86vw,420px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E3D9CD] shadow-[inset_0_-30px_60px_rgba(140,107,42,0.12)] md:left-[71%] md:top-[52%] md:h-[560px] md:w-[560px]" />
+      {/* Boxed tag + tagline (wide screens) */}
+      <div aria-hidden="true" className="absolute right-10 top-28 hidden w-[132px] flex-col items-center gap-1.5 border border-bronze/40 px-3 py-4 text-center text-[10px] font-semibold tracking-[0.22em] text-bronze lg:flex">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M20 4C11 4 5 10 5 19" /><path d="M20 4c0 9-6 14-13 14" /><path d="M5 19l7-7" /></svg>
+        <span>HANDMADE</span><span>CORK FOOTBED</span><span>MADE TO ORDER</span><span className="mt-1 h-px w-10 bg-bronze/50" />
+      </div>
+      <span aria-hidden="true" className="absolute bottom-[42px] left-1/2 hidden -translate-x-1/2 text-[11px] tracking-[0.42em] text-bronze/80 lg:block">COMFORT THAT MOVES WITH YOU</span>
+    </>
+  );
+  if (scene === "studio") return (
+    <>
+      <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(115deg,#FBFAF8,#F1EFEB_45%,#E2DFDA)]" />
+      {/* Hard window light falling across the wall */}
+      <div aria-hidden="true" className="absolute -right-1/4 top-0 h-full w-[70%] skew-x-[-24deg] bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+      {/* Plinth the shoes lean against, with a long shadow on the wall */}
+      <div aria-hidden="true" className={`absolute left-[30%] top-[22%] h-[34%] w-[44%] md:left-[63%] md:top-[26%] md:h-[66%] md:w-[24%] ${lineup ? "hidden" : ""}`}>
+        <div className="absolute inset-0 translate-x-[18%] translate-y-[6%] skew-x-[-18deg] bg-ink/10 blur-md" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white to-[#F1EFEB] shadow-[0_30px_60px_-30px_rgba(20,18,16,0.35)]" />
+        <div className="absolute inset-y-0 left-full w-[16%] origin-left skew-y-[-35deg] bg-gradient-to-b from-[#DAD6CF] to-[#C7C2BA]" />
+        <div className="absolute inset-x-0 bottom-full h-[5%] origin-bottom skew-x-[-55deg] bg-[#F7F6F3]" />
+      </div>
+      {/* Floor line */}
+      <div aria-hidden="true" className="absolute inset-x-0 top-[56%] h-px bg-ink/10 md:top-[96%]" />
+    </>
+  );
+  return (
+    <>
+      <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(to_bottom,#C29A78,#A47552_45%,#6E4127)]" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(70%_50%_at_75%_20%,rgba(255,240,220,0.35),transparent_70%)]" />
+      {/* Pedestal rising from the bottom behind the shoes */}
+      <div aria-hidden="true" className="absolute bottom-0 left-[12%] h-[52%] w-[76%] bg-gradient-to-b from-[#8A5A38] to-[#5E3820] shadow-[inset_0_20px_40px_rgba(0,0,0,0.15)] md:left-[56%] md:h-[58%] md:w-[30%]" />
+      {/* Framed brand title (wide screens) */}
+      <div aria-hidden="true" className="absolute right-[6%] top-[13%] hidden w-[46%] flex-col items-center lg:flex">
+        <span className="border border-white/50 px-6 pb-1 pt-2 font-display text-[44px] font-light uppercase leading-none tracking-[0.18em] text-white/90">LP Wears</span>
+        <span className="-mt-2.5 bg-[#B38563] px-3 text-[11px] tracking-[0.4em] text-white/90">HANDMADE FOOTWEAR</span>
+      </div>
+    </>
   );
 }
 

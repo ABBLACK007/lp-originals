@@ -75,7 +75,7 @@ const slides: HeroSlide[] = [
     ctas: [{ label: "Shop now", href: "/shop", style: "gold" }, { label: "WhatsApp order", href: wa, style: "outline", external: true }],
   },
   {
-    id: "buckle", kind: "flyer", tone: "ink", word: "Cork", photos: [photos.buckleRust, photos.buckleGroup],
+    id: "buckle", kind: "flyer", tone: "sand", scene: "comfort", word: "Cork", photos: [photos.buckleRust, photos.buckleGroup],
     eyebrow: "NEW DROP", title: "The two-buckle sandal",
     sub: "Rust suede on a contoured cork-latex footbed, with adjustable metal buckles.",
     ctas: [{ label: "Shop the sandal", href: "/shop/two-buckle-sandal-rust", style: "gold" }, { label: "All cork footbed", href: "/shop?category=cork", style: "outline" }],
@@ -87,13 +87,13 @@ const slides: HeroSlide[] = [
     ctas: [{ label: "Shop the sale", href: "/shop", style: "gold" }],
   },
   {
-    id: "slides", kind: "flyer", tone: "sand", word: "Palms", photos: [photos.perforatedBrown, photos.cutoutRed],
+    id: "slides", kind: "flyer", tone: "taupe", scene: "studio", word: "Slides", photos: [photos.perforatedBrown, photos.cutoutRed],
     eyebrow: "SLIDES & PALMS", title: "Flat out easy",
     sub: "Leather slides and palms for native and street wear, for men and women.",
     ctas: [{ label: "Shop slides & palms", href: "/shop?category=slides", style: "gold" }],
   },
   {
-    id: "order", kind: "flyer", tone: "taupe", layout: "lineup", word: "Yours",
+    id: "order", kind: "flyer", tone: "cocoa", scene: "classic", layout: "lineup", word: "Yours",
     photos: [photos.platformToePost, photos.stitchedBlack, photos.slidesTrio, photos.stitchedGreen],
     eyebrow: "MADE TO ORDER", title: "Your size, your pair",
     sub: "Choose your style and EU size, pay online or on WhatsApp, and we deliver nationwide.",
