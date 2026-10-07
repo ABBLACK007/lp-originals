@@ -43,26 +43,61 @@ export function SmallBtn({ onClick, children, danger, disabled, title }: { onCli
   );
 }
 
-// Shrinks a phone photo in the browser before upload (max 2000px, JPEG), so it fits Vercel's request limit.
-async function shrink(file: File): Promise<Blob> {
+// Photos are shrunk in the browser before upload, because Vercel rejects request bodies over ~4.5MB and
+// phone photos are often 3–12MB (iPhones also save HEIC, which the server can't read). Three decoders are
+// tried, so it works on iPhone Safari, Android and desktop browsers alike.
+const MAX_SEND = 3.5 * 1024 * 1024;
+
+async function decode(file: File): Promise<CanvasImageSource & { width: number; height: number }> {
+  try { return await createImageBitmap(file, { imageOrientation: "from-image" }); } catch {}
+  try { return await createImageBitmap(file); } catch {}
+  // <img> decoding: handles HEIC on Apple devices and applies the photo's rotation automatically.
+  const url = URL.createObjectURL(file);
   try {
-    const bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
-    const scale = Math.min(1, 2000 / Math.max(bmp.width, bmp.height));
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(bmp.width * scale);
-    canvas.height = Math.round(bmp.height * scale);
-    canvas.getContext("2d")!.drawImage(bmp, 0, 0, canvas.width, canvas.height);
-    return await new Promise((res, rej) => canvas.toBlob((b) => (b ? res(b) : rej(new Error("encode"))), "image/jpeg", 0.88));
-  } catch {
-    return file; // the server re-checks and re-encodes anyway
+    const img = document.createElement("img"); // not `new Image()`: Image is next/image in this file
+    img.decoding = "async";
+    img.src = url;
+    await img.decode();
+    return Object.assign(img, { width: img.naturalWidth, height: img.naturalHeight });
+  } finally {
+    setTimeout(() => URL.revokeObjectURL(url), 0);
   }
+}
+
+async function shrink(file: File): Promise<Blob> {
+  let src;
+  try {
+    src = await decode(file);
+  } catch {
+    // Can't read it here; a small JPG/PNG/WebP can still go as it is (the server re-checks it).
+    if (["image/jpeg", "image/png", "image/webp"].includes(file.type) && file.size <= MAX_SEND) return file;
+    throw new Error("This photo couldn't be opened. Save or export it as a JPG and try again.");
+  }
+  // Step the size and quality down until the photo is small enough to send.
+  for (const [max, quality] of [[2000, 0.86], [1600, 0.8], [1280, 0.72], [1024, 0.65]] as const) {
+    const scale = Math.min(1, max / Math.max(src.width, src.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(src.width * scale));
+    canvas.height = Math.max(1, Math.round(src.height * scale));
+    const ctx = canvas.getContext("2d");
+    if (!ctx) break;
+    ctx.drawImage(src, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, "image/jpeg", quality));
+    if (blob && blob.size <= MAX_SEND) return blob;
+  }
+  throw new Error("This photo is too large to upload. Try a smaller photo or a screenshot of it.");
 }
 
 export async function uploadFile(file: File): Promise<Img> {
   const blob = await shrink(file);
   const form = new FormData();
   form.append("file", new File([blob], "photo.jpg", { type: blob.type || "image/jpeg" }));
-  const res = await uploadImage(form);
+  let res;
+  try {
+    res = await uploadImage(form);
+  } catch {
+    throw new Error("The upload didn't go through. Check your connection and try again.");
+  }
   if (!res.ok) throw new Error(res.error);
   return res.img;
 }
@@ -90,7 +125,7 @@ export function UploadButton({ onUploaded, label = "Upload photo", multiple }: {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M12 16V4" /><path d="M6 10l6-6 6 6" /><path d="M4 20h16" /></svg>
         {busy ? "Uploading…" : label}
       </button>
-      <input ref={ref} type="file" accept="image/jpeg,image/png,image/webp" multiple={multiple} hidden onChange={(e) => pick(e.target.files)} />
+      <input ref={ref} type="file" accept="image/*" multiple={multiple} hidden onChange={(e) => pick(e.target.files)} />
       {error && <span role="alert" className="text-xs text-[#8A2E2E]">{error}</span>}
     </span>
   );
