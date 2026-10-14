@@ -46,12 +46,15 @@ const cartProduct = (p: Product): Product => ({ ...p, images: p.images.slice(0, 
 // Scroll reveal for [data-reveal] (components/Reveal.tsx). Plain JS, inlined so it runs while the page is still
 // loading: one IntersectionObserver for the elements in the HTML, plus a MutationObserver for elements React adds
 // later (page changes, shop filters). Old browsers without IntersectionObserver just show everything.
+// Whatever is already on screen when the page opens is shown before the first paint (no fade), so the main
+// content appears as soon as it has loaded; the fade-up is for content scrolled into view.
 const revealScript = `(function(){var d=document,s="[data-reveal]:not([data-in])";
 function show(e){e.setAttribute("data-in","")}
 if(!("IntersectionObserver" in window)){d.documentElement.classList.remove("js");return}
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){show(e.target);io.unobserve(e.target)}})},{rootMargin:"0px 0px -10% 0px"});
 function scan(n){if(n.nodeType!==1)return;if(n.matches(s))io.observe(n);n.querySelectorAll(s).forEach(function(e){io.observe(e)})}
-scan(d.body);
+var h=innerHeight;
+d.body.querySelectorAll(s).forEach(function(e){if(e.getBoundingClientRect().top<h)show(e);else io.observe(e)});
 new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(scan)})}).observe(d.body,{childList:true,subtree:true})})()`;
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
