@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getImageProps } from "next/image";
+import { preload } from "react-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Photo from "@/components/Photo";
@@ -59,10 +60,15 @@ const promoPicks = [
 const ticker = ["Handmade in Nigeria", "Cork-latex footbed", "Made to order", "EU sizes 36–46", "Delivered nationwide", "Order on WhatsApp"];
 
 // Art-directed, resized srcsets for photo slides (landscape on tablet/desktop, portrait on phones).
-function art(desktop: Img, mobile: Img = desktop): HeroArt {
+// The first slide's photo is the largest thing on screen, so it's preloaded from the <head> for each screen size.
+function art(desktop: Img, mobile: Img = desktop, first = false): HeroArt {
   const common = { alt: "", sizes: "100vw", quality: 75 };
   const d = getImageProps({ ...common, src: desktop }).props;
   const m = getImageProps({ ...common, src: mobile }).props;
+  if (first) {
+    preload(m.src, { as: "image", imageSrcSet: m.srcSet, imageSizes: "100vw", media: "(max-width: 767px)", fetchPriority: "high" });
+    preload(d.src, { as: "image", imageSrcSet: d.srcSet, imageSizes: "100vw", media: "(min-width: 768px)", fetchPriority: "high" });
+  }
   return { desktop: d.srcSet ?? d.src, mobile: m.srcSet ?? m.src, src: m.src, width: mobile.width, height: mobile.height, sizes: "100vw" };
 }
 
@@ -71,8 +77,8 @@ export default async function Home() {
   const { site } = content;
   const products = visibleProducts(content);
   const whatsappLink = (want = "") => whatsappHref(site, want);
-  const slides: HeroSlide[] = visibleSlides(content).map((s) => ({
-    id: s.id, kind: "photo", art: art(s.image, s.mobileImage ?? s.image), focus: s.focus, shade: s.shade === "left" ? "left" : undefined,
+  const slides: HeroSlide[] = visibleSlides(content).map((s, n) => ({
+    id: s.id, kind: "photo", art: art(s.image, s.mobileImage ?? s.image, n === 0), focus: s.focus, shade: s.shade === "left" ? "left" : undefined,
     eyebrow: fillTokens(s.eyebrow, content), title: fillTokens(s.title, content), sub: fillTokens(s.sub, content),
     ctas: s.ctas.map((c) => c.href === "whatsapp"
       ? { label: c.label, href: whatsappLink(), style: c.style, external: true }
@@ -81,6 +87,8 @@ export default async function Home() {
   return (
     <main id="main">
       <JsonLd data={{ "@context": "https://schema.org", "@type": "Store", name: site.name, url: siteUrl, logo: `${siteUrl}/icons/icon-512.png`, image: `${siteUrl}/opengraph-image.jpg`, description: "Handmade cork-footbed sandals, slides, palms and clogs.", sameAs: [site.instagram], areaServed: "NG" }} />
+      {/* The hero slides change, so the page's main heading is fixed text for search engines and screen readers. */}
+      <h1 className="sr-only">{site.name}: handmade cork-footbed sandals, slides, palms and clogs</h1>
       <Header variant="float" />
       <HeroSlider slides={slides} />
 

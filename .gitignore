@@ -25,3 +25,7 @@ Thumbs.db
 .playwright-cli
 
 .env*
+
+# Playwright test output
+/test-results
+/playwright-report

@@ -7,14 +7,15 @@ import { formatNaira } from "@/lib/site";
 // Card image sizes: 2 columns on phones, 4 on desktop.
 const SIZES = "(min-width: 768px) 25vw, 50vw";
 
-export default function ProductCard({ p }: { p: Product }) {
+// `eager`: the first row of the shop grid, on screen as the page opens.
+export default function ProductCard({ p, eager = false }: { p: Product; eager?: boolean }) {
   const [main, alt] = p.images;
   return (
     <article className="group flex flex-col gap-3.5">
       <Link href={`/shop/${p.slug}`} className="relative block aspect-[4/5] overflow-hidden rounded-card bg-sand" aria-label={`${p.name}, ${p.material}`}>
         {main ? (
           <>
-            <Image src={main} alt="" fill sizes={SIZES} placeholder="blur"
+            <Image src={main} alt="" fill sizes={SIZES} placeholder="blur" loading={eager ? "eager" : "lazy"} fetchPriority={eager ? "high" : "auto"}
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
             {/* Second photo fades in on hover (desktop only). */}
             {alt && <Image src={alt} alt="" fill sizes={SIZES}

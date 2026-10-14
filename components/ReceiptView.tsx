@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useCart } from "./CartProvider";
 import { receiptForCart, receiptText, saveReceipt, type Receipt } from "@/lib/receipt";
-import { formatNaira } from "@/lib/site";
+import { formatNaira, formatPhone } from "@/lib/site";
 import { useProducts, useStore, useWhatsapp } from "./StoreProvider";
 import logoDark from "@/public/images/logo-dark.png";
 
@@ -41,9 +41,9 @@ export default function ReceiptView() {
         <div className="flex flex-wrap items-start justify-between gap-6 border-b border-dashed border-line pb-6">
           <div className="flex flex-col items-start gap-2">
             <Image src={logoDark} alt="LP Wears" className="h-14 w-auto" />
-            <span className="text-xs text-muted">Handmade in Nigeria · WhatsApp +234 706 170 2536</span>
+            <span className="text-xs text-muted">Handmade in Nigeria · WhatsApp {formatPhone(site.whatsappNumber)}</span>
           </div>
-          <div className="flex flex-col items-end gap-1 text-right">
+          <div className="flex w-full flex-col items-start gap-1 sm:w-auto sm:items-end sm:text-right print:w-auto print:items-end print:text-right">
             <span className="font-display text-3xl font-semibold uppercase leading-none text-ink">Receipt</span>
             <span className="font-mono text-sm">{r.id}</span>
             <span className="text-sm text-muted">{date.toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" })}, {date.toLocaleTimeString("en-NG", { hour: "2-digit", minute: "2-digit" })}</span>

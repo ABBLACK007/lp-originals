@@ -15,11 +15,12 @@ Read README.md first. This file tells you how to keep working on the project.
 ## Next tasks, in order
 1. Done: site runs, real product photos are in, gallery page added.
 2. The client edits products, prices, slides, gallery and settings in /admin (see README). Sample prices are in `lib/content-defaults.ts`; promo and production time are still placeholders.
-3. Paystack checkout: replace the disabled button in `components/CartView.tsx` with Paystack Inline (public key in `NEXT_PUBLIC_PAYSTACK_KEY`). Verify payments on a server route before confirming orders. Add the Paystack domains to the CSP in next.config.mjs.
+3. Paystack checkout: add Paystack Inline to the cart summary in `components/CartView.tsx` (and update the "card payment coming soon" copy there and in `components/OrderingSteps.tsx`) (public key in `NEXT_PUBLIC_PAYSTACK_KEY`). Verify payments on a server route before confirming orders. Add the Paystack domains to the CSP in next.config.mjs.
 4. Done: /admin dashboard (Vercel Blob storage). Next: editable homepage section texts, order history.
 5. Add an Our Craft / About page (the Gallery page exists).
 6. SEO basics done (metadata, OG image, sitemap, robots, JSON-LD). Meta pixel if the client runs Instagram ads (add its domains to the CSP).
-7. Performance: images already go through next/image and fonts are self-hosted; aim for a Lighthouse mobile score of 90+.
+7. Performance: images go through next/image, fonts are self-hosted, every public page is static (ISR), scroll reveals run from an inline script before hydration. Keep it that way: don't read searchParams/cookies in public pages.
+9. Tests: `npm run build && npm test` (Playwright, tests/). Run them before every deploy and add tests with new features.
 8. Done: deployed to https://lp-originals.vercel.app. Next: connect a custom domain and set NEXT_PUBLIC_SITE_URL.
 
 <!-- BEGIN:nextjs-agent-rules -->

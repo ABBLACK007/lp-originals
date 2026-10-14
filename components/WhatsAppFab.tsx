@@ -11,6 +11,10 @@ export default function WhatsAppFab() {
   const whatsappLink = useWhatsapp();
   const home = path === "/";
   const [pastHero, setPastHero] = useState(false);
+  // Decided in the browser only: /shop?category=… is pre-built under another path, so the server can't know
+  // the address the visitor sees (and rendering it there would make the HTML differ from the browser's).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (!home) return;
     const onScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.8);
@@ -18,7 +22,7 @@ export default function WhatsAppFab() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [home]);
-  if (path.startsWith("/shop/") || path === "/cart" || path === "/receipt" || path.startsWith("/admin") || (home && !pastHero)) return null;
+  if (!mounted || path.startsWith("/shop/") || path === "/cart" || path === "/receipt" || path.startsWith("/admin") || (home && !pastHero)) return null;
   return (
     <a href={whatsappLink()} target="_blank" rel="noreferrer"
       aria-label="Chat with LP Wears on WhatsApp"

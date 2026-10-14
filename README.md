@@ -16,19 +16,29 @@ npm run dev      # http://localhost:3000
 
 `npm run photos` re-crops the client's product photos (see below).
 
+## Tests
+
+```bash
+npm run build && npm test                              # unit tests + every page on desktop and phone (Playwright)
+BASE_URL=https://lp-originals.vercel.app npm test      # the same checks against the live site
+```
+
+Tests live in `tests/` and use the Chrome installed on the machine (no browser download). They cover the pages and navigation, shop filters, sizes, cart, receipts, WhatsApp messages, the hero slider, gallery viewer, scroll reveals, security headers, the image optimizer allowlist, admin sign-in protection and the content validation rules. Any console error fails a test. The admin editor test only runs when `ADMIN_PASSWORD` is set and never saves (local runs share the production Blob store).
+
 ## Pages
 
 | Route | What it is |
 |---|---|
 | `/` | Homepage: hero with product teaser, new-drops carousel, Shop by style flyers, promo, Step Into Comfort, ordering steps, craft details, From the workshop strip, services |
-| `/shop` | All styles, filter by category (`/shop?category=cork|slides|clogs`), size guide |
+| `/shop` | All styles, filter by category, size guide. `/shop?category=cork|slides|clogs` is served from the pre-built `/shop/category/[category]` pages (rewrite in `next.config.mjs`), so the shop stays static |
 | `/shop/[slug]` | Product page: photo gallery, size picker, add to cart, order on WhatsApp |
 | `/gallery` | Masonry gallery with lightbox (keyboard arrows, Esc), Products / Campaign filter |
-| `/cart` | Cart (saved in the browser), WhatsApp order message, Paystack button stub |
+| `/cart` | Cart (saved in the browser), WhatsApp order message, receipt link (card payment not connected yet) |
+| `/receipt` | Order receipt generated from the cart (number, date, customer details), send on WhatsApp or print/PDF |
 
 ## Admin dashboard (/admin)
 
-The store owner edits products and prices (add, hide, reorder, photos), hero slides (photos, text, buttons, focus point), the gallery and settings (WhatsApp number and greeting, promo, production time, Instagram) at **/admin**.
+The store owner edits products and prices (add, hide, reorder, photos), hero slides (photos, text, buttons, focus point), the gallery and settings (WhatsApp number and greeting, promo, production time, size guide foot lengths, Instagram) at **/admin**.
 
 - Login: one password, `ADMIN_PASSWORD` (12+ chars), plus `ADMIN_SESSION_SECRET` (32+ chars). Both are Vercel environment variables and live in `.env.local` for local work (git-ignored). Changing the password signs everyone out. Sessions last 12 hours (signed httpOnly cookie, `lib/admin-auth.ts`); `proxy.ts` guards /admin and every server action re-checks (`app/admin/actions.ts`).
 - Storage: Vercel Blob store `lp-wears-content` (`BLOB_READ_WRITE_TOKEN`). Each save writes `content/store-<time>.json` (never overwritten: Blob overwrites are eventually consistent); the newest wins, the last 3 are kept. Photos go to `uploads/`, re-encoded by sharp (EXIF/GPS stripped, max 2000px).
@@ -51,9 +61,9 @@ The store owner edits products and prices (add, hide, reorder, photos), hero sli
 ## Before launch, fill in
 
 Search the codebase for `[` to find every placeholder:
-- `[X]` production days, promo `[XX]%` and `[DATES]` (WhatsApp: +234 706 170 2536 is set in `lib/site.ts`; every button opens a chat with "Hi, I'm from the LP Wears website. I want to get …")
+- `[X]` production days, promo `[XX]%` and `[DATES]` are set in admin › Settings (WhatsApp +234 706 170 2536 is set there too; every button opens a chat with "Hi, I'm from the LP Wears website. I want to get …")
 - Prices (`price: null` shows ₦ [PRICE]), clog material and photo
-- Size guide foot lengths `[cm]`
+- Size guide foot lengths (admin › Settings › Size guide; the table on /shop stays hidden until filled in)
 - Confirm product names, materials and prices in /admin (names were written from the photos; prices are samples)
 - Confirm product claims with the client: cork-latex footbed, metal buckles, anti-slip sole, lightweight, breathable, "handmade in Nigeria", nationwide delivery, size exchange
 

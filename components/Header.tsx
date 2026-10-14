@@ -30,6 +30,9 @@ export default function Header({ variant = "solid", onLight = false }: { variant
   }, [variant]);
   useEffect(() => { if (!shown) setOpen(false); }, [shown]);
   const path = usePathname();
+  // Section-based, so /shop, /shop?category=… (served from /shop/category/…) and product pages all mark "Shop"
+  // and the server-rendered HTML matches the browser.
+  const current = (href: string) => (href === "/shop" ? path.startsWith("/shop") : path === href);
   useEffect(() => setOpen(false), [path]);
   useEffect(() => {
     if (!open) return;
@@ -49,7 +52,7 @@ export default function Header({ variant = "solid", onLight = false }: { variant
           <Logo dark={onLight} />
           <nav aria-label="Main" className={`hidden gap-1 rounded-full p-1.5 backdrop-blur lg:flex ${variant === "overlay" ? "bg-ink/45 ring-1 ring-inset ring-white/15" : "bg-white/15"}`}>
             {nav.map((n) => (
-              <Link key={n.href} href={n.href} aria-current={path === n.href ? "page" : undefined}
+              <Link key={n.href} href={n.href} aria-current={current(n.href) ? "page" : undefined}
                 className="rounded-full px-4 py-2.5 text-[15px] text-white no-underline transition-colors hover:bg-white/10 aria-[current=page]:bg-white/15">{n.label}</Link>
             ))}
           </nav>

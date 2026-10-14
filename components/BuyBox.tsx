@@ -38,10 +38,11 @@ export default function BuyBox({ product }: { product: Product }) {
     <div ref={box} className="flex flex-col gap-5">
       <fieldset ref={sizeGroup} className="flex flex-col gap-3">
         <legend className="mb-3 text-sm font-semibold">EU size {size && <span className="font-normal text-muted">· {size} selected</span>}</legend>
-        <div className="flex flex-wrap gap-2">
+        {/* 6 per row on phones, all 11 in one row on wide screens */}
+        <div className="grid grid-cols-6 gap-2 xl:grid-cols-11">
           {sizes.map((s) => (
             <button key={s} type="button" onClick={() => { setSize(s); setError(false); setAdded(false); }} aria-pressed={size === s}
-              className={`h-12 w-12 rounded-xl border text-sm transition-[transform,background-color,color] duration-150 ease-out active:scale-[0.94] ${size === s ? "border-ink bg-ink text-white" : "border-[#CFC6B9] bg-[#F6F3EE] hover:border-ink"}`}>{s}</button>
+              className={`h-12 w-full rounded-xl border text-sm transition-[transform,background-color,color] duration-150 ease-out active:scale-[0.94] ${size === s ? "border-ink bg-ink text-white" : "border-[#CFC6B9] bg-[#F6F3EE] hover:border-ink"}`}>{s}</button>
           ))}
         </div>
         {error && <p role="alert" className="text-sm text-[#8A2E2E]">Choose a size to add this pair to your cart.</p>}

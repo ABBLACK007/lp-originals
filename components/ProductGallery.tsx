@@ -18,7 +18,7 @@ export default function ProductGallery({ images, alt, art }: { images: StaticIma
     <div className="flex flex-col gap-3">
       <div className="relative aspect-[4/5] overflow-hidden rounded-hero bg-sand">
         {images.map((src, n) => (
-          <Image key={n} src={src} alt={n === i ? alt : ""} fill priority={n === 0} placeholder="blur"
+          <Image key={n} src={src} alt={n === i ? alt : ""} fill preload={n === 0} placeholder="blur"
             sizes="(min-width: 768px) 50vw, 100vw"
             className={`object-cover transition-opacity duration-300 ease-out ${n === i ? "opacity-100" : "opacity-0"}`} />
         ))}

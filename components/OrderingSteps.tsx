@@ -8,7 +8,7 @@ import { useStore } from "./StoreProvider";
 
 const makeSteps = (productionDays: string) => [
   { label: "Choose", title: "Choose your pair", body: "Pick a style, colour and your EU size. Not sure of your size? Check the size guide or send us your foot length on WhatsApp.", cta: "Shop now", href: "/shop", photo: photos.corkCollection, position: "object-[50%_40%]" },
-  { label: "Pay", title: "Pay your way", body: "Pay by card or bank transfer at checkout, or place your order directly with us on WhatsApp.", cta: "Go to cart", href: "/cart", photo: photos.crossSlideBlack, position: "object-center" },
+  { label: "Pay", title: "Pay your way", body: "Send your cart or receipt on WhatsApp and we'll confirm payment and delivery with you. Card payment at checkout is coming soon.", cta: "Go to cart", href: "/cart", photo: photos.crossSlideBlack, position: "object-center" },
   { label: "Delivery", title: "Handmade and delivered", body: `Every pair is made to order, then delivered to your door. Production takes ${productionDays} working days.`, cta: "See sizes", href: "/shop#size-guide", photo: photos.buckleWorn, position: "object-[50%_70%]" },
 ];
 

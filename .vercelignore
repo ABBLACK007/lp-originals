@@ -1,3 +1,8 @@
 # Keep source-only material out of Vercel uploads (never served, but no need to upload it).
 assets/photos/originals
 design
+# Tests run locally, not on Vercel.
+tests
+playwright.config.ts
+test-results
+playwright-report

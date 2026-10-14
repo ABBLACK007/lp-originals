@@ -82,7 +82,7 @@ export default async function ProductPage({ params }: Props) {
             <ul className="flex flex-col gap-3 border-t border-line pt-6 text-[15px] leading-relaxed text-muted">
               <li className="flex gap-3"><Tick /><span>Made to order: production takes {site.productionDays} working days, then we deliver nationwide.</span></li>
               <li className="flex gap-3"><Tick /><span>Wrong size? We&apos;ll exchange unworn pairs. See the <Link href="/shop#size-guide" className="link">size guide</Link>.</span></li>
-              <li className="flex gap-3"><Tick /><span>Pay by card or transfer, or order directly on WhatsApp.</span></li>
+              <li className="flex gap-3"><Tick /><span>Add to cart for a receipt, or order directly on WhatsApp. We confirm payment and delivery with you.</span></li>
             </ul>
           </div>
         </div>

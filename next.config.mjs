@@ -47,6 +47,13 @@ const nextConfig = {
   async redirects() {
     return [{ source: "/shop/closed-toe-clog", destination: "/shop/closed-toe-clog-mocha", permanent: true }];
   },
+  // /shop?category=<id> is served from a pre-built page per category (app/shop/category/[category]), so the
+  // shop stays static and fast instead of rendering on every request. The address bar keeps the ?category= URL.
+  async rewrites() {
+    return {
+      beforeFiles: [{ source: "/shop", has: [{ type: "query", key: "category", value: "(?<category>cork|slides|clogs)" }], destination: "/shop/category/:category" }],
+    };
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

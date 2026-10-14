@@ -46,6 +46,8 @@ export type SiteSettings = {
   whatsappGreeting: string;
   productionDays: string;
   promo: { enabled: boolean; title: string; discount: string; dates: string };
+  // Foot length (cm) for each EU size, shown in the shop's size guide; the table is hidden until one is filled in.
+  footLength?: Partial<Record<string, string>>;
 };
 
 export type Content = {

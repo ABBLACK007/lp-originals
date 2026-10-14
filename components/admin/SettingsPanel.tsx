@@ -1,5 +1,5 @@
 "use client";
-import type { SiteSettings } from "@/lib/content-types";
+import { sizes, type SiteSettings } from "@/lib/content-types";
 import { whatsappHref } from "@/lib/site";
 import { Field, Text, Toggle, inputCls } from "./fields";
 
@@ -32,6 +32,19 @@ export default function SettingsPanel({ site, update }: { site: SiteSettings; up
         <Field label="Production time (working days)" hint="Shown on product pages, receipts and the ordering steps, e.g. 5–7">
           <Text value={site.productionDays} max={20} onChange={(v) => set({ productionDays: v })} />
         </Field>
+      </section>
+
+      <section className="flex flex-col gap-4 rounded-panel bg-white p-5 ring-1 ring-line lg:col-span-2">
+        <h3 className="font-display text-2xl font-semibold uppercase">Size guide</h3>
+        <p className="text-sm text-muted">Foot length in centimetres for each EU size, shown in the size guide on the shop page. The table stays hidden until you fill it in.</p>
+        <div className="grid grid-cols-3 gap-3 sm:grid-cols-6 lg:grid-cols-11">
+          {sizes.map((s) => (
+            <Field key={s} label={`EU ${s}`}>
+              <input value={site.footLength?.[s] ?? ""} inputMode="decimal" maxLength={12} placeholder="cm" className={inputCls}
+                onChange={(e) => set({ footLength: { ...site.footLength, [s]: e.target.value } })} />
+            </Field>
+          ))}
+        </div>
       </section>
 
       <section className="flex flex-col gap-4 rounded-panel bg-white p-5 ring-1 ring-line">

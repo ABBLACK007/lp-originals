@@ -1,6 +1,7 @@
 // Validation for everything saved from /admin. Content is rendered on the public site, so every field is
 // bounded and links/images are restricted to safe values (no javascript: URLs, no images from other hosts).
 import { z } from "zod";
+import { sizes } from "./content-types";
 
 const text = (max: number) => z.string().trim().max(max);
 const line = (max: number) => text(max).regex(/^[^\r\n]*$/, "One line only");
@@ -68,6 +69,7 @@ export const siteSchema = z.object({
   whatsappGreeting: line(160).min(1),
   productionDays: line(20).min(1),
   promo: z.object({ enabled: z.boolean(), title: line(40).min(1), discount: line(30).min(1), dates: line(60) }),
+  footLength: z.partialRecord(z.enum(sizes), z.string().trim().max(12).regex(/^[0-9.,\s–-]*$/, "Centimetres, e.g. 24.5")).optional(),
 });
 
 export const contentSchema = z.object({
