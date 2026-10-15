@@ -21,7 +21,7 @@ function resolveImg(i: Img): Img {
 function resolve(c: Content): Content {
   return {
     ...c,
-    products: c.products.map((p) => ({ ...p, images: p.images.map(resolveImg) })),
+    products: c.products.map((p) => ({ ...p, images: p.images.map(resolveImg), cutout: p.cutout && resolveImg(p.cutout) })),
     slides: c.slides.map((s) => ({ ...s, image: resolveImg(s.image), mobileImage: s.mobileImage && resolveImg(s.mobileImage) })),
     gallery: c.gallery.map((g) => ({ ...g, src: resolveImg(g.src) })),
   };

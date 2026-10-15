@@ -18,7 +18,7 @@ export default function SlidesPanel({ slides, update }: { slides: Slide[]; updat
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-muted">
-        Slides play in this order. Photos fill the whole slide: use a wide photo for computers and, if you have one, a tall photo for phones.
+        The shop&apos;s opening screen shows the <strong>first visible slide</strong>: its photo in black &amp; white (the tall phone photo if it has one), the headline, the text and a &ldquo;Next&rdquo; button that moves on to the shop. Use Show and the arrows to choose which slide opens the shop.
         In any text you can write <code className="rounded bg-tile px-1">{"{promo.discount}"}</code>, <code className="rounded bg-tile px-1">{"{promo.dates}"}</code> or <code className="rounded bg-tile px-1">{"{promo.title}"}</code> to show the promo settings.
       </p>
       {slides.map((s, i) => {
@@ -62,14 +62,7 @@ export default function SlidesPanel({ slides, update }: { slides: Slide[]; updat
               <div className="flex flex-col gap-3">
                 <Field label="Headline"><Text value={s.title} max={80} onChange={(v) => set(s.id, { title: v })} /></Field>
                 <Field label="Text"><Text value={s.sub} max={220} multiline onChange={(v) => set(s.id, { sub: v })} /></Field>
-                {s.ctas.map((c, n) => (
-                  <div key={n} className="grid grid-cols-[1fr_1.2fr_auto] items-end gap-2">
-                    <Field label={n === 0 ? "Main button (white)" : "Second button"}><Text value={c.label} max={30} onChange={(v) => set(s.id, { ctas: s.ctas.map((x, k) => (k === n ? { ...x, label: v } : x)) })} /></Field>
-                    <Field label="Goes to"><Text value={c.href} max={300} placeholder="/shop, #ordering, whatsapp" onChange={(v) => set(s.id, { ctas: s.ctas.map((x, k) => (k === n ? { ...x, href: v } : x)) })} /></Field>
-                    <SmallBtn danger title="Remove button" onClick={() => set(s.id, { ctas: s.ctas.filter((_, k) => k !== n) })}><Icon name="close" size={14} /></SmallBtn>
-                  </div>
-                ))}
-                {s.ctas.length < 2 && <div><SmallBtn onClick={() => set(s.id, { ctas: [...s.ctas, { label: "Chat on WhatsApp", href: "whatsapp", style: "outline" }] })}><span className="inline-flex items-center gap-1"><Icon name="plus" size={14} />Add button</span></SmallBtn></div>}
+                {/* Slide buttons aren't shown on the opening screen (it has one "Next" button), so they aren't edited here. */}
               </div>
             </div>
           </section>

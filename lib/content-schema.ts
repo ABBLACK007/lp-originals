@@ -39,6 +39,7 @@ export const productSchema = z.object({
   isNew: z.boolean().optional(),
   hidden: z.boolean().optional(),
   images: z.array(imgSchema).max(8),
+  cutout: imgSchema.optional(),
   art: z.object({ style: z.enum(["two", "one", "clog"]), strap: z.string().regex(/^#[0-9a-fA-F]{6}$/) }),
 });
 

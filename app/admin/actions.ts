@@ -89,13 +89,16 @@ export async function uploadImage(form: FormData): Promise<UploadResult> {
   if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) return { ok: false, error: "Use a JPG, PNG or WebP photo." };
   if (file.size > MAX_UPLOAD) return { ok: false, error: "That photo is too large (max 4MB)." };
   try {
-    // Re-encode everything: strips EXIF (incl. GPS location), fixes orientation, caps size.
-    const input = sharp(Buffer.from(await file.arrayBuffer()), { limitInputPixels: 50_000_000 }).rotate();
-    const { data, info } = await input.resize({ width: 2000, height: 2000, fit: "inside", withoutEnlargement: true })
-      .jpeg({ quality: 84, mozjpeg: true }).toBuffer({ resolveWithObject: true });
+    // Re-encode everything: strips EXIF (incl. GPS location), fixes orientation, caps size. Photos with a
+    // transparent background (product cut-outs) stay transparent as WebP; everything else becomes JPEG.
+    const buf = Buffer.from(await file.arrayBuffer());
+    const meta = await sharp(buf, { limitInputPixels: 50_000_000 }).metadata();
+    const clear = !!meta.hasAlpha && (await sharp(buf).stats()).channels[3]?.min < 250;
+    const input = sharp(buf, { limitInputPixels: 50_000_000 }).rotate().resize({ width: 2000, height: 2000, fit: "inside", withoutEnlargement: true });
+    const { data, info } = await (clear ? input.webp({ quality: 88, alphaQuality: 95 }) : input.jpeg({ quality: 84, mozjpeg: true })).toBuffer({ resolveWithObject: true });
     const blur = await sharp(data).resize(12, 12, { fit: "inside" }).png().toBuffer();
-    const blob = await put(`${UPLOAD_PREFIX}${crypto.randomUUID()}.jpg`, data, {
-      access: "public", addRandomSuffix: false, contentType: "image/jpeg", cacheControlMaxAge: 31536000,
+    const blob = await put(`${UPLOAD_PREFIX}${crypto.randomUUID()}.${clear ? "webp" : "jpg"}`, data, {
+      access: "public", addRandomSuffix: false, contentType: clear ? "image/webp" : "image/jpeg", cacheControlMaxAge: 31536000,
     });
     return { ok: true, img: { src: blob.url, width: info.width, height: info.height, blurDataURL: `data:image/png;base64,${blur.toString("base64")}` } };
   } catch (e) {

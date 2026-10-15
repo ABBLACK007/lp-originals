@@ -4,12 +4,13 @@ import { test, expect, allowConsoleErrors, hydrated, isPhone } from "./fixtures"
 const pages = [
   { path: "/", h1: /LP Wears/ },
   { path: "/shop", h1: /Shop all styles/i },
-  { path: "/shop?category=clogs", h1: /Shop all styles/i },
+  { path: "/shop?category=clogs", h1: /Shop clogs/i },
   { path: "/shop/two-buckle-sandal-rust", h1: /Two-Buckle Sandal/ },
   { path: "/gallery", h1: /gallery/i },
   { path: "/cart", h1: /cart/i },
   { path: "/receipt", h1: /receipt/i },
   { path: "/saved", h1: /Saved styles/i },
+  { path: "/help", h1: /Help/ },
 ];
 
 test.describe("pages", () => {
@@ -45,7 +46,7 @@ test.describe("pages", () => {
       localStorage.setItem("lp-cart-v2", JSON.stringify([{ slug: "stitched-cut-out-slide-green", size: "41", qty: 2 }]));
       localStorage.setItem("lp-saved-v1", JSON.stringify(["perforated-cut-out-slide-brown"]));
     });
-    for (const path of ["/", "/shop", "/shop/stitched-cut-out-slide-black", "/shop/category/slides", "/cart", "/receipt", "/saved", "/gallery", "/nope"]) {
+    for (const path of ["/", "/shop", "/shop/stitched-cut-out-slide-black", "/shop/category/slides", "/cart", "/receipt", "/saved", "/gallery", "/help", "/nope"]) {
       await page.goto(path);
       await page.waitForTimeout(300);
       const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
@@ -62,28 +63,6 @@ test.describe("pages", () => {
 });
 
 test.describe("navigation", () => {
-  test("header links reach the main pages", async ({ page }) => {
-    await page.goto("/shop");
-    await hydrated(page);
-    const header = page.locator("header").first();
-    const go = async (label: string) => {
-      if (isPhone()) {
-        await header.getByRole("button", { name: "Open menu" }).click();
-        await page.getByRole("navigation", { name: "Mobile" }).getByRole("link", { name: label }).click();
-      } else {
-        await header.getByRole("navigation", { name: "Main" }).getByRole("link", { name: label }).click();
-      }
-    };
-    await go("Gallery");
-    await expect(page).toHaveURL(/\/gallery$/);
-    await expect(page.locator("h1")).toHaveText(/gallery/i);
-    await go("Shop");
-    await expect(page).toHaveURL(/\/shop$/);
-    await expect(page.getByRole("navigation", { name: "Mobile" })).toHaveCount(0); // menu closes after navigating
-    await page.locator("header").first().getByRole("link", { name: "LP Wears home" }).click();
-    await expect(page).toHaveURL(/\/$/);
-  });
-
   test("skip link moves focus to the content", async ({ page }) => {
     test.skip(isPhone(), "keyboard only");
     await page.goto("/shop");

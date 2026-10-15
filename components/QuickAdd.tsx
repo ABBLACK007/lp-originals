@@ -9,8 +9,7 @@ import { sizes, type Product } from "@/lib/content-types";
 import { formatNaira } from "@/lib/site";
 
 // The cart button on a product tile opens this sheet: pick a size, add to cart, without leaving the grid.
-// A native <dialog> gives focus trapping, Esc to close and an inert page for free. Bottom sheet on phones,
-// centred card on wider screens.
+// A native <dialog> gives focus trapping, Esc to close and an inert page for free. A bottom sheet in the app column.
 const QuickAddContext = createContext<(p: Product) => void>(() => {});
 export const useQuickAdd = () => useContext(QuickAddContext);
 
@@ -23,8 +22,7 @@ export function QuickAddProvider({ children }: { children: React.ReactNode }) {
       {children}
       <dialog ref={dialog} aria-label="Choose a size" onClose={() => setProduct(null)}
         onClick={(e) => { if (e.target === dialog.current) dialog.current?.close(); }}
-        className="sheet fixed inset-x-0 bottom-0 top-auto m-0 max-h-[88dvh] w-full max-w-none overflow-y-auto rounded-t-[24px] bg-white p-0 text-ink shadow-float open:animate-sheet-up
-          md:inset-0 md:m-auto md:max-w-[440px] md:rounded-panel md:open:animate-pop-in">
+        className="sheet fixed inset-x-0 bottom-0 top-auto m-0 mx-auto max-h-[88dvh] w-full max-w-app overflow-y-auto rounded-t-[24px] bg-white p-0 text-ink shadow-float open:animate-sheet-up">
         {product && <Sheet key={product.slug} p={product} close={() => dialog.current?.close()} />}
       </dialog>
     </QuickAddContext.Provider>
@@ -48,11 +46,11 @@ function Sheet({ p, close }: { p: Product; close: () => void }) {
   };
 
   return (
-    <div className="flex flex-col gap-5 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 md:p-6">
-      <span aria-hidden="true" className="mx-auto h-1 w-10 rounded-full bg-line md:hidden" />
+    <div className="flex flex-col gap-5 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3">
+      <span aria-hidden="true" className="mx-auto h-1 w-10 rounded-full bg-line" />
       <div className="flex items-start gap-4">
-        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-chip bg-tile">
-          {p.images[0] && <Image src={p.images[0]} alt="" fill sizes="80px" className="object-cover" />}
+        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[10px] bg-tile">
+          {(p.cutout ?? p.images[0]) && <Image src={(p.cutout ?? p.images[0])!} alt="" fill sizes="80px" className={p.cutout ? "object-contain p-1.5" : "object-cover"} />}
         </div>
         <div className="flex min-w-0 flex-grow flex-col">
           <span className="text-base font-semibold leading-snug">{p.name}</span>
@@ -77,13 +75,14 @@ function Sheet({ p, close }: { p: Product; close: () => void }) {
             <div className="grid grid-cols-6 gap-2">
               {sizes.map((s, n) => (
                 <button key={s} ref={n === 0 ? firstSize : undefined} type="button" aria-pressed={size === s}
-                  onClick={() => { setSize(s); setError(false); }} className="chip px-0">{s}</button>
+                  onClick={() => { setSize(s); setError(false); }}
+                  className={`h-11 rounded-[4px] border font-read text-[14px] transition-[background-color,color,border-color,transform] duration-150 ease-out active:scale-[0.94] ${size === s ? "border-ink bg-ink text-white" : "border-[#C8C8C8] bg-[#F2F2F2] text-ink"}`}>{s}</button>
               ))}
             </div>
             {error && <p role="alert" className="text-sm text-bad">Choose a size first.</p>}
           </fieldset>
           <div className="flex flex-col gap-3">
-            <button type="button" onClick={onAdd} className="btn btn-primary w-full">Add to cart</button>
+            <button type="button" onClick={onAdd} className="flex h-[46px] w-full items-center justify-center rounded-[5px] bg-ink text-[15px] font-medium text-white transition-transform duration-150 ease-out active:scale-[0.97]">Add to cart</button>
             <div className="flex items-center justify-between gap-3 text-sm">
               <Link href={`/shop/${p.slug}`} onClick={close} className="link">See full details</Link>
               <a href={whatsappLink(`the ${p.name} (${p.material})${size ? `, EU size ${size}.` : ", EU size "}`)} target="_blank" rel="noreferrer" className="link">Order on WhatsApp</a>

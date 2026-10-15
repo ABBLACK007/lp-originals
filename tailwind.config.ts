@@ -9,6 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        canvas: "#ECECEC", // around the app column on wide screens
         paper: "#FFFFFF",  // page ground
         mist: "#F6F6F6",   // quiet bands and inputs
         tile: "#F1F1F1",   // product tiles, chips
@@ -17,13 +18,14 @@ const config: Config = {
         ink: "#111111",    // text and primary controls
         char: "#2B2B2B",   // ink hover / pressed
         muted: "#666666",  // secondary text (≥4.5:1 on white and on tile)
-        heart: "#E5484D",  // saved heart only
+        heart: "#EF4627",  // saved heart only (the mockup's orange-red)
         ok: "#1F7A45",     // success text
         bad: "#B42318",    // error text
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-sans)", "system-ui", "sans-serif"],
+        read: ["var(--font-read)", "system-ui", "sans-serif"], // Roboto: paragraphs and small labels, as on the mockup
       },
       borderRadius: { btn: "8px", chip: "10px", card: "16px", panel: "16px", hero: "24px" }, // hero: the hero frame and footer only
       boxShadow: {
@@ -31,7 +33,7 @@ const config: Config = {
         float: "0 12px 32px -12px rgba(17,17,17,0.28)",
         bar: "0 -10px 30px -18px rgba(17,17,17,0.35)",
       },
-      maxWidth: { page: "1280px" },
+      maxWidth: { page: "1280px", app: "430px" }, // app: the phone-width store column on every screen
       transitionTimingFunction: {
         out: "cubic-bezier(0.23, 1, 0.32, 1)",      // UI enter / press feedback
         "in-out": "cubic-bezier(0.77, 0, 0.175, 1)", // on-screen movement

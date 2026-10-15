@@ -1,16 +1,14 @@
 // Shopping: filters, choosing a size, cart, receipt and the WhatsApp order messages.
-import { test, expect, hydrated, isPhone, whatsappText, GREETING } from "./fixtures";
+import { test, expect, hydrated, whatsappText, GREETING } from "./fixtures";
 import type { Page } from "@playwright/test";
 
 const SANDAL = "/shop/two-buckle-sandal-rust";
 const cards = (page: Page) => page.locator("main article");
-// The round cart button (header on wide screens, product top bar on phones); the tab bar is checked separately.
-const cartButton = (page: Page) => page.getByRole("link", { name: /^Cart, \d+ items?$/ }).filter({ visible: true }).first();
+
 const naira = (s: string) => Number(s.replace(/[^\d]/g, ""));
-// The cart count as visitors see it: the round cart button on wide screens, the tab bar on phones.
-const expectCartCount = (page: Page, n: number) => isPhone()
-  ? expect(page.getByRole("navigation", { name: "Tab bar" }).getByRole("link", { name: n ? `Cart, ${n}` : "Cart", exact: true })).toBeVisible()
-  : expect(cartButton(page)).toHaveAccessibleName(`Cart, ${n} ${n === 1 ? "item" : "items"}`);
+// The cart count as visitors see it, on the tab bar.
+const expectCartCount = (page: Page, n: number) =>
+  expect(page.getByRole("navigation", { name: "Tab bar" }).getByRole("link", { name: n ? `Cart, ${n}` : "Cart", exact: true })).toBeVisible();
 
 async function addToCart(page: Page, path: string, size: string) {
   await page.goto(path);
@@ -27,21 +25,21 @@ test.describe("shop", () => {
     const filters = page.getByRole("group", { name: "Filter by style" });
     const all = await cards(page).count();
     expect(all).toBeGreaterThan(5);
-    await expect(filters.getByRole("button", { name: /^All/ })).toContainText(String(all));
+    await expect(filters.getByRole("button", { name: /^All styles/ })).toHaveAccessibleName(`All styles ${all}`);
 
     await filters.getByRole("button", { name: /^Clogs/ }).click();
     await expect(page).toHaveURL(/\/shop\/category\/clogs$/);
     const clogs = await cards(page).count();
     expect(clogs).toBeGreaterThan(0);
     expect(clogs).toBeLessThan(all);
-    await expect(filters.getByRole("button", { name: /^Clogs/ })).toContainText(String(clogs));
+    await expect(filters.getByRole("button", { name: /^Clogs/ })).toHaveAccessibleName(`Clogs ${clogs}`);
 
     await page.reload();
     await expect(filters.getByRole("button", { name: /^Clogs/ })).toHaveAttribute("aria-pressed", "true");
     await expect(cards(page)).toHaveCount(clogs);
 
     await hydrated(page);
-    await filters.getByRole("button", { name: /^All/ }).click();
+    await filters.getByRole("button", { name: /^All styles/ }).click();
     await expect(page).toHaveURL(/\/shop$/);
     await expect(cards(page)).toHaveCount(all);
   });
@@ -61,13 +59,6 @@ test.describe("shop", () => {
     await expect(page).toHaveURL(/\/shop\/[a-z0-9-]+$/);
     await expect(page.locator("h1")).toContainText(name!);
   });
-
-  test("category links from a product open the filtered shop", async ({ page }) => {
-    await page.goto(SANDAL);
-    await page.getByRole("link", { name: "Cork footbed", exact: true }).filter({ visible: true }).first().click();
-    await expect(page).toHaveURL(/\/shop\/category\/cork$/);
-    await expect(page.getByRole("group", { name: "Filter by style" }).getByRole("button", { name: /^Cork footbed/ })).toHaveAttribute("aria-pressed", "true");
-  });
 });
 
 test.describe("product page", () => {
@@ -82,28 +73,18 @@ test.describe("product page", () => {
   test("adds the chosen size to the cart and fills in the WhatsApp message", async ({ page }) => {
     await addToCart(page, SANDAL, "41");
     await expectCartCount(page, 1);
-    const text = whatsappText(await page.getByRole("link", { name: "Order on WhatsApp" }).last().getAttribute("href"));
+    await page.locator("details", { hasText: "Delivery and returns" }).locator("summary").click();
+    const text = whatsappText(await page.getByRole("link", { name: "Order on WhatsApp" }).getAttribute("href"));
     expect(text).toBe(`${GREETING}the Two-Buckle Sandal (Rust suede), EU size 41.`);
   });
 
-  test("photo thumbnails switch the main photo", async ({ page }) => {
-    await page.goto(SANDAL);
-    await hydrated(page);
-    const thumbs = page.getByRole("group", { name: "Product photos" }).getByRole("button");
-    test.skip((await thumbs.count()) < 2, "product has one photo");
-    await thumbs.nth(1).click();
-    await expect(thumbs.nth(1)).toHaveAttribute("aria-pressed", "true");
-    await expect(thumbs.nth(0)).toHaveAttribute("aria-pressed", "false");
-  });
 
-  test("phones get a sticky add-to-cart bar after scrolling", async ({ page }) => {
-    test.skip(!isPhone(), "phones only");
+  test("Buy now and Add to cart stay above the tab bar while scrolling", async ({ page }) => {
     await page.goto(SANDAL);
     await hydrated(page);
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
-    const bar = page.locator("div.fixed").filter({ hasText: "choose a size" });
-    await expect(bar).toBeVisible();
-    await bar.getByRole("button", { name: "Choose size" }).click();
+    await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+    await expect(page.getByRole("button", { name: /^Buy now/ })).toBeInViewport();
+    await page.getByRole("button", { name: "Add to cart" }).click();
     await expect(page.getByRole("alert").filter({ hasText: "Choose a size to add" })).toBeInViewport(); // scrolled back to the sizes
   });
 });

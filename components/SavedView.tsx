@@ -23,7 +23,7 @@ export default function SavedView() {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-muted" aria-live="polite">{items.length} saved {items.length === 1 ? "style" : "styles"}</p>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-5 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3">
         {items.map((p) => <ProductCard key={p.slug} p={p} />)}
       </div>
     </div>

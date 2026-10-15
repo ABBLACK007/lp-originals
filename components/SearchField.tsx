@@ -1,36 +1,23 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import Icon from "./Icon";
 
-// Pill search field with a filter button on the right (the mockup's search bar).
-// Controlled (`value` + `onChange`): filters in place, as on /shop. Uncontrolled: submitting opens /shop?q=…
-export default function SearchField({ value, onChange, filter, autoFocus }: {
-  value?: string; onChange?: (v: string) => void; filter: React.ReactNode; autoFocus?: boolean;
-}) {
-  const router = useRouter();
-  const [own, setOwn] = useState("");
-  const controlled = value !== undefined;
-  const q = controlled ? value : own;
+// The mockup's search pill: light grey, search icon, placeholder, and a filter button behind a divider.
+// Filters the products on the same screen as you type.
+export default function SearchField({ value, onChange, filter }: { value: string; onChange: (v: string) => void; filter: React.ReactNode }) {
   return (
-    <form role="search" onSubmit={(e) => {
-      e.preventDefault();
-      if (!controlled) router.push(q.trim() ? `/shop?q=${encodeURIComponent(q.trim())}` : "/shop");
-      else (document.activeElement as HTMLElement | null)?.blur(); // phones: close the keyboard to show results
-    }}
-      className="flex h-14 items-center rounded-full border border-edge bg-white pl-5 pr-2 transition-colors focus-within:border-ink">
-      <Icon name="search" size={20} className="shrink-0 text-muted" />
+    <form role="search" onSubmit={(e) => { e.preventDefault(); (document.activeElement as HTMLElement | null)?.blur(); }}
+      className="flex h-[50px] items-center rounded-full border border-[#E9E9E9] bg-[#F8F8F8] pl-4 shadow-[inset_0_1px_2px_rgba(17,17,17,0.04)] transition-colors focus-within:border-ink">
+      <Icon name="search" size={21} strokeWidth={1.7} className="shrink-0 text-[#555]" />
       <label htmlFor="store-search" className="sr-only">Search the shop</label>
-      <input id="store-search" type="search" name="q" value={q} autoFocus={autoFocus} enterKeyHint="search" autoComplete="off" maxLength={60}
-        onChange={(e) => (controlled ? onChange?.(e.target.value) : setOwn(e.target.value))}
-        placeholder="Search sandals, slides, clogs"
-        className="h-full min-w-0 flex-grow bg-transparent px-3 text-[15px] outline-none [&::-webkit-search-cancel-button]:hidden" />
-      {q && controlled && (
-        <button type="button" onClick={() => onChange?.("")} aria-label="Clear search" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted hover:text-ink">
-          <Icon name="close" size={18} />
+      <input id="store-search" type="search" name="q" value={value} enterKeyHint="search" autoComplete="off" maxLength={60}
+        onChange={(e) => onChange(e.target.value)} placeholder="Search sandals, slides, clogs"
+        className="h-full min-w-0 flex-grow bg-transparent px-2.5 text-[15px] outline-none placeholder:text-[#8A8A8A] [&::-webkit-search-cancel-button]:hidden" />
+      {value && (
+        <button type="button" onClick={() => onChange("")} aria-label="Clear search" className="flex h-10 w-9 shrink-0 items-center justify-center text-muted hover:text-ink">
+          <Icon name="close" size={17} />
         </button>
       )}
-      <span aria-hidden="true" className="mx-1 h-7 w-px bg-line" />
+      <span aria-hidden="true" className="h-full w-px bg-[#E6E6E6]" />
       {filter}
     </form>
   );

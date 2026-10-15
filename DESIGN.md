@@ -1,7 +1,8 @@
 ---
 name: LP Wears
-description: Monochrome shoe-shop storefront where the client's photographs carry all the colour.
+description: The store as the owner's monochrome shoe-shop app mockup, on every screen.
 colors:
+  canvas: "#ECECEC"
   paper: "#FFFFFF"
   mist: "#F6F6F6"
   tile: "#F1F1F1"
@@ -10,7 +11,7 @@ colors:
   ink: "#111111"
   char: "#2B2B2B"
   muted: "#666666"
-  heart: "#E5484D"
+  heart: "#EF4627"
   ok: "#1F7A45"
   bad: "#B42318"
 typography:
@@ -41,6 +42,11 @@ typography:
     fontSize: "13px"
     fontWeight: 500
     lineHeight: 1.4
+  read:
+    fontFamily: "Roboto, Arial, system-ui, sans-serif"
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: 1.6
 rounded:
   btn: "8px"
   chip: "10px"
@@ -102,11 +108,11 @@ components:
 
 **Creative North Star: "The Shop in Your Hand"**
 
-The storefront behaves like a shoe-shop app held on a phone: the catalogue is the interface. Grey product tiles carry two round controls (add to cart, save), a pill search sits above a row of category chips, and a tab bar with a raised black Home disc anchors every page on phones. Nothing is decorative for its own sake; every visible control works.
+The storefront is the owner's shoe-shop app mockup, built exactly (owner's decision, 2026-10-15): one 430px phone-width column on every screen, centred on a grey canvas on computers. Home is the mockup's two screens in a row: a black & white opening screen with a white "Next" button, then the store screen (store name with a wave, location, search pill, Categories row, product cards). The product screen, cart, saved, gallery and help screens follow the same app grammar with a round back button. The catalogue is the interface. Grey product tiles carry two round controls (add to cart, save), a pill search sits above a row of category chips, and a tab bar with a raised black Home disc anchors every page on phones. Nothing is decorative for its own sake; every visible control works.
 
 The world is monochrome on purpose. White pages, light-grey tiles and ink-black controls stay quiet so the client's photographs of real leather, suede and cork supply all the colour. The only other hue is the red of a saved heart. Hero photography is shown in black and white; product photography never is.
 
-Density is phone-first and generous: 44px touch targets, 48px buttons, two-up product grids on phones growing to four on desktop. Motion is small and physical: presses shrink to 97%, a saved heart pops once, and the product stand turns to its next photo.
+Density is the mockup's: two product cards per row everywhere, 44px touch areas around small round controls. Motion is small and physical: presses shrink to 97%, a saved heart pops once, and the product stand turns to its next photo.
 
 **Key Characteristics:**
 - Monochrome chrome, full-colour product photos, black and white hero photos.
@@ -120,11 +126,12 @@ Density is phone-first and generous: 44px touch targets, 48px buttons, two-up pr
 A strictly neutral palette with one emotional accent (the saved heart); the photographs are the colour.
 
 ### Primary
-- **Workshop Ink** (#111111): every primary action (Buy now, Order on WhatsApp, Add to cart in sheets), selected chips and sizes, the tab bar's Home disc, the footer slab and dark panels. Also body text.
+- **Workshop Ink** (#111111): every primary action (Buy now, Order on WhatsApp, Add to cart in sheets), selected chips and sizes, the tab bar's Home disc. Also body text.
 
 ### Neutral
-- **Paper White** (#FFFFFF): page ground, cards that sit on grey (stand photo frame, search field, chips).
-- **Mist** (#F6F6F6): quiet section bands (featured stand, size guide, empty states).
+- **Canvas** (#ECECEC): the background around the app column on computers.
+- **Paper White** (#FFFFFF): the app column, chips, the menu and size sheets.
+- **Mist** (#F6F6F6): inputs and quiet bands.
 - **Tile Grey** (#F1F1F1): product tiles, secondary buttons, icon circles.
 - **Hairline** (#E4E4E4): dividers, fold-out rows, round icon-button rings.
 - **Edge Grey** (#D2D2D2): borders of unselected chips, inputs and secondary buttons.
@@ -132,7 +139,7 @@ A strictly neutral palette with one emotional accent (the saved heart); the phot
 - **Quiet Text** (#666666): secondary text; passes 4.5:1 on white and on Tile Grey.
 
 ### Tertiary
-- **Saved Red** (#E5484D): the filled heart of a saved style. Nothing else.
+- **Saved Red** (#EF4627): the hearts on product cards (outline; filled once saved). Nothing else.
 - **Confirm Green** (#1F7A45) / **Error Red** (#B42318): status text only.
 
 ### Named Rules
@@ -143,21 +150,24 @@ A strictly neutral palette with one emotional accent (the saved heart); the phot
 ## Typography
 
 **Display Font:** Poppins (with Arial, system-ui), self-hosted, weights 400–700
-**Body Font:** Poppins
+**Body Font:** Poppins for interface text; Roboto (variable, self-hosted) for paragraphs and small grey labels, as on the mockup
 
 **Character:** One geometric sans in four weights, as on the mockup. Hierarchy comes from weight and size, never from a second family.
 
 ### Hierarchy
-- **Display** (700, 34px phone to 68px desktop, 1.04, -0.02em, uppercase): hero headlines and a few display moments (Step into comfort, info-card titles, the promo figure).
-- **Headline** (600, 22–30px, 1.25, -0.02em): section headings in sentence case. Page titles (h1) use 28–40px.
+- **Display** (600, 38px, 1.22, uppercase): the opening screen's headline only.
+- **Headline** (500–600, 16–19px): Categories, product name and price, fold-out titles, screen titles in the top bar.
 - **Title** (500, 14–15px): product names on tiles and in the cart.
 - **Body** (400, 15px, 1.625): paragraphs; keep to about 65ch.
 - **Label** (500, 13px): chip counts, meta lines, prices use tabular figures.
 
 ### Named Rules
-**The No Kicker Rule.** No small label or eyebrow above a heading. Supporting facts go below the heading (for example "Handmade to order · Slides & palms" under a product name).
+**The No Kicker Rule.** No small label or eyebrow above a heading, with one owner-pinned exception copied from the mockup: the product screen's grey "Handmade quality" / category line above the product name.
 
 ## Layout
+
+**The App Column Rule.** Every store page lives in one column of at most 430px (`max-w-app`), centred on the Canvas grey on wider screens, with the tab bar fixed to its bottom. The admin is the only full-width surface. Inside the column there are no viewport breakpoints (sm:/md:/lg:), because they would fire on a computer and break the phone layout.
+
 
 Phone-first single column inside a 20px gutter; 32px gutter from 768px; content capped at 1280px. Product grids run 2 columns on phones, 3 from 640px, 4 from 1024px, with 12px gaps (20px on desktop). Sections are separated by 64px on phones and 96px on desktop; headings sit closer to their content than to the section above. On phones the page keeps 76px of bottom padding (plus the safe area) so the fixed tab bar never covers content; product pages add a compact buy bar above the tab bar once the buy buttons scroll away. Single-column grids use minmax(0, 1fr) columns so one-line text can never widen the page (checked at 320px by the test suite).
 
@@ -203,11 +213,17 @@ Slab buttons with gently softened corners (8px), chips at 10px, cards and panels
 - **Phones:** fixed white tab bar with rounded top corners: Shop, Saved, a raised black Home disc, Cart (with count) and WhatsApp chat. The active item is ink with a 4px dot; others are Quiet Text. The header holds the logo and a menu for secondary links.
 - **Desktop:** white sticky header with the dark logo, pill navigation (active item filled ink), Saved and Cart icon buttons and a primary "Order on WhatsApp" button. Over the hero the header turns light: white logo, translucent dark pill.
 
-### Product Tile (signature)
-Tile Grey card: round black add-to-cart button top left (opens the size sheet), round white heart top right, a square photo in a white 10px frame, then name, material and price centred. A faint white ring sits in the top-right corner. The whole tile opens the product.
+### Product Card (signature)
+The mockup's card: Tile Grey with a soft shadow and 10px corners, two thin grey arcs (top-left and bottom-right corners), a 26px black cart button top left (opens the size sheet), a 26px white heart button top right, the product's cut-out photo floating in the middle (scripts/make-cutouts.py; a framed photo when there is no cut-out), then name and price centred. The whole card opens the product.
 
 ### Product Stand (signature)
-The product photo stands on an elliptical ring: the far half is drawn behind the photo with a soft contact shadow, the near half in front. A black turn disc on the front of the ring shows the next photo; a marker travels along the ring as it turns and the photos crossfade with a slight blur.
+The cut-out shoe floats over a thin oval ring with a soft contact shadow; a small black disc on the front of the ring turns to the product's other photos (shown framed on the same ring), crossfading with a slight blur.
+
+### Opening Screen
+Full-height black & white photo in a 24px-rounded frame, gradient to black at the bottom, centred bold uppercase headline, one line of Roboto text, and a white 5px-radius "Next" button with a long arrow that scrolls to the store.
+
+### Tab Bar
+White bar with a round bump in the middle holding the 58px black Home disc; outline icons (Shop, Cart, WhatsApp chat, Saved) at 1.5 stroke; the active item gets a 4px dot; badges for cart count and saved count.
 
 ### Size Sheet
 Bottom sheet on phones (rounded top, drag handle), centred card on desktop: product thumbnail, size grid, Add to cart, then an "Added" state with Keep shopping / View cart.

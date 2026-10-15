@@ -20,6 +20,7 @@ export type Product = {
   isNew?: boolean;
   hidden?: boolean; // kept in the admin, not shown in the shop
   images: Img[]; // first image is the main one
+  cutout?: Img; // the shoe on its own (transparent PNG): product cards and the product stand
   art: { style: SandalStyle; strap: string }; // drawn placeholder when there are no photos yet
 };
 

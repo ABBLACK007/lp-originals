@@ -16,7 +16,7 @@ test.describe("search", () => {
     const n = await cards(page).count();
     expect(n).toBeGreaterThan(0);
     expect(n).toBeLessThan(all);
-    await expect(page.getByText(new RegExp(`^${n} styles? for “black”`))).toBeVisible();
+    await expect(page.getByText(new RegExp(`^“black” · ${n} styles?$`))).toBeVisible();
 
     await search.fill("zzzz");
     await expect(page.getByText("No styles match “zzzz”")).toBeVisible();
@@ -29,16 +29,22 @@ test.describe("search", () => {
     await expect(page).toHaveURL(/\/shop$/);
   });
 
-  test("searching from the home page opens the shop with the results", async ({ page }) => {
+  test("searching on the home screen filters the products there", async ({ page }) => {
     await page.goto("/");
     await hydrated(page);
-    const search = page.getByRole("searchbox", { name: "Search the shop" });
-    await search.fill("clog");
-    await search.press("Enter");
-    await expect(page).toHaveURL(/\/shop\?q=clog$/);
-    await expect(page.getByRole("searchbox", { name: "Search the shop" })).toHaveValue("clog");
+    await page.getByRole("searchbox", { name: "Search the shop" }).fill("clog");
     await expect(cards(page)).toHaveCount(1);
     await expect(cards(page).first()).toContainText("Clog");
+    await expect(page).toHaveURL(/\/$/); // home keeps its address
+  });
+
+  test("Men and Women chips filter the grid", async ({ page }) => {
+    await page.goto("/shop");
+    await hydrated(page);
+    const all = await cards(page).count();
+    await page.getByRole("group", { name: "Filter by style" }).getByRole("button", { name: /^For women/ }).click();
+    await expect(page.getByText(/^For women · \d+ styles?$/)).toBeVisible();
+    expect(await cards(page).count()).toBeLessThan(all);
   });
 });
 
@@ -161,11 +167,11 @@ test.describe("product page", () => {
     await page.goto("/shop/two-buckle-sandal-rust");
     await hydrated(page);
     await page.getByRole("button", { name: /^Turn to photo 2 of/ }).click();
-    await expect(page.getByRole("group", { name: "Product photos" }).getByRole("button", { name: "Show photo 2" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByText(/^Photo 2 of \d$/)).toBeAttached();
+    await expect(page.getByRole("button", { name: /^Turn to photo 3 of/ })).toBeVisible();
   });
 
-  test("phones: back button and save in the top bar", async ({ page }) => {
-    test.skip(!isPhone(), "phones only");
+  test("the back button returns to the shop", async ({ page }) => {
     await page.goto("/shop");
     await hydrated(page);
     await cards(page).first().getByRole("link").click();

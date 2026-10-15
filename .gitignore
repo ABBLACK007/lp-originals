@@ -32,3 +32,6 @@ Thumbs.db
 
 # impeccable review captures (regenerated each review)
 /.impeccable/review
+
+# local Python environments (scripts/make-cutouts.py)
+.venv*

@@ -14,7 +14,7 @@ npm run assets   # downloads the Higgsfield campaign photos into assets/generate
 npm run dev      # http://localhost:3000
 ```
 
-`npm run photos` re-crops the client's product photos (see below).
+`npm run photos` re-crops the client's product photos (see below). Product cut-outs (`assets/cutouts`, shoe on a transparent background) are made from those photos with `scripts/make-cutouts.py` (rembg, run locally; instructions in the file). New products can get a cut-out in admin (Products › Cut-out photo, a transparent PNG).
 
 ## Tests
 
@@ -29,12 +29,13 @@ Tests live in `tests/` and use the Chrome installed on the machine (no browser d
 
 | Route | What it is |
 |---|---|
-| `/` | Homepage: black & white hero slider, store row with search and category chips, new drops grid, featured pair on its stand, promo, Made the LP way, ordering steps, Good to know cards, craft details, From the workshop |
+| `/` | The owner's app mockup: opening screen (first visible hero slide, black & white, "Next"), then the store screen: name, search, Categories chips, product cards. Every store page is a 430px phone-width app, centred on computers, with a tab bar (Shop, Cart, Home, WhatsApp, Saved) |
 | `/shop`, `/shop/category/[category]` | All styles with live search (`?q=`), sort by price, men/women filter, category chips, size guide. Category pages are pre-built; old `/shop?category=…` links are rewritten to them (`next.config.mjs`) and also honoured in the browser |
-| `/shop/[slug]` | Product page: photo on its stand (turns through photos), colour swatches (products with the same name), quantity, sizes, Buy now / Add to cart, WhatsApp order, Description and Delivery fold-outs |
+| `/shop/[slug]` | Product screen: cut-out shoe on its stand (the disc turns through the photos), colour swatches (products with the same name), quantity, sizes, Description and Delivery fold-outs (WhatsApp order inside), Buy now / Add to cart above the tab bar |
 | `/gallery` | Masonry gallery with lightbox (keyboard arrows, Esc), Products / Campaign filter |
 | `/cart` | Cart (saved in the browser), WhatsApp order message, receipt link (card payment not connected yet) |
 | `/saved` | Saved styles (heart buttons), kept in the browser |
+| `/help` | How to order, size guide (foot lengths from admin), delivery and exchanges, contact links |
 | `/receipt` | Order receipt generated from the cart (number, date, customer details), send on WhatsApp or print/PDF |
 
 ## Admin dashboard (/admin)

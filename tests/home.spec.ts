@@ -1,83 +1,30 @@
-// Home page: hero slideshow, WhatsApp buttons, scroll reveals.
-import { test, expect, hydrated, isPhone, whatsappText, GREETING } from "./fixtures";
+// Home (the mockup's app): opening screen, store screen, tab bar, menu and WhatsApp links.
+import { test, expect, hydrated, whatsappText, GREETING } from "./fixtures";
 
-test.describe("hero slideshow", () => {
-  test("shows one slide at a time and the dots switch slides", async ({ page }) => {
+test.describe("opening screen", () => {
+  test("photo, headline and Next, which moves on to the store", async ({ page }) => {
     await page.goto("/");
-    await hydrated(page);
-    const hero = page.locator('[aria-roledescription="carousel"]');
-    const slides = hero.locator('[aria-roledescription="slide"]');
-    const n = await slides.count();
-    expect(n).toBeGreaterThan(1);
-    await expect(hero.locator('[aria-roledescription="slide"]:not([aria-hidden="true"])')).toHaveCount(1);
-    await expect(slides.first()).not.toHaveAttribute("aria-hidden", "true");
-
-    await hero.getByRole("button", { name: /^Show slide 2:/ }).click();
-    await expect(slides.nth(1)).not.toHaveAttribute("aria-hidden", "true");
-    await expect(slides.first()).toHaveAttribute("aria-hidden", "true");
-    await expect(hero.getByRole("button", { name: /^Show slide 2:/ })).toHaveAttribute("aria-current", "true");
+    const opening = page.getByRole("region", { name: "Welcome" });
+    await expect(opening.getByRole("heading", { level: 2 })).toBeVisible();
+    await expect(opening.locator("img")).toHaveJSProperty("complete", true);
+    await opening.getByRole("link", { name: "Next" }).click();
+    await expect(page).toHaveURL(/#store$/);
+    await expect(page.getByRole("searchbox", { name: "Search the shop" })).toBeInViewport();
   });
 
-  test("previous/next buttons and keyboard arrows (desktop)", async ({ page }) => {
-    test.skip(isPhone(), "desktop controls");
+  test("the store screen: name, search, categories and product cards", async ({ page }) => {
     await page.goto("/");
-    await hydrated(page);
-    const hero = page.locator('[aria-roledescription="carousel"]');
-    const slides = hero.locator('[aria-roledescription="slide"]');
-    const n = await slides.count();
-    await hero.getByRole("button", { name: "Next slide" }).click();
-    await expect(slides.nth(1)).not.toHaveAttribute("aria-hidden", "true");
-    await hero.getByRole("button", { name: "Previous slide" }).click();
-    await hero.getByRole("button", { name: "Previous slide" }).click();
-    await expect(slides.nth(n - 1)).not.toHaveAttribute("aria-hidden", "true"); // wraps around
-    await page.keyboard.press("ArrowRight");
-    await expect(slides.first()).not.toHaveAttribute("aria-hidden", "true");
-  });
-
-  test("swiping changes slides (phones)", async ({ page }) => {
-    test.skip(!isPhone(), "touch");
-    await page.goto("/");
-    await hydrated(page);
-    const hero = page.locator('[aria-roledescription="carousel"]');
-    const box = (await hero.boundingBox())!;
-    const y = box.y + box.height / 2;
-    await hero.dispatchEvent("pointerdown", { pointerType: "touch", clientX: box.x + box.width - 40, clientY: y, isPrimary: true });
-    await hero.dispatchEvent("pointerup", { pointerType: "touch", clientX: box.x + 40, clientY: y, isPrimary: true });
-    await expect(hero.locator('[aria-roledescription="slide"]').nth(1)).not.toHaveAttribute("aria-hidden", "true");
-  });
-
-  test("autoplay can be paused", async ({ page }) => {
-    await page.goto("/");
-    await hydrated(page);
-    const pause = page.getByRole("button", { name: "Pause slideshow" });
-    await pause.click();
-    await expect(page.getByRole("button", { name: "Play slideshow" })).toBeVisible();
-  });
-
-  test("no autoplay for people who prefer reduced motion", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/");
-    await hydrated(page);
-    await expect(page.getByRole("button", { name: "Pause slideshow" })).toHaveCount(0);
+    const store = page.locator("#store");
+    await expect(store).toContainText("LP Wears");
+    await expect(store.getByRole("searchbox", { name: "Search the shop" })).toBeVisible();
+    await expect(store.getByRole("heading", { name: "Categories" })).toBeVisible();
+    await expect(store.getByRole("group", { name: "Filter by style" }).getByRole("button")).toHaveCount(6);
+    expect(await store.locator("article").count()).toBeGreaterThan(5);
   });
 });
 
-test.describe("WhatsApp", () => {
-  test("every WhatsApp link opens the LP chat with the greeting typed", async ({ page }) => {
-    await page.goto("/");
-    const links = page.locator('a[href^="https://wa.me/"]');
-    expect(await links.count()).toBeGreaterThan(2);
-    for (const href of await links.evaluateAll((as) => as.map((a) => a.getAttribute("href")))) {
-      expect(whatsappText(href)).toMatch(new RegExp(`^${GREETING.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
-    }
-    for (const a of await links.all()) {
-      await expect(a).toHaveAttribute("target", "_blank");
-      await expect(a).toHaveAttribute("rel", /noreferrer/);
-    }
-  });
-
-  test("phone tab bar: shop, saved, home, cart and WhatsApp chat", async ({ page }) => {
-    test.skip(!isPhone(), "phones only");
+test.describe("app shell", () => {
+  test("tab bar: shop, cart, home, WhatsApp chat and saved", async ({ page }) => {
     await page.goto("/");
     await hydrated(page);
     const bar = page.getByRole("navigation", { name: "Tab bar" });
@@ -91,49 +38,54 @@ test.describe("WhatsApp", () => {
     await expect(page).toHaveURL(/\/saved$/);
     await bar.getByRole("link", { name: /^Cart/ }).click();
     await expect(page).toHaveURL(/\/cart$/);
+    await bar.getByRole("link", { name: "Home" }).click();
+    await expect(page).toHaveURL(/\/$/);
   });
 
-  test("the tab bar never covers the end of the page", async ({ page }) => {
-    test.skip(!isPhone(), "phones only");
-    await page.goto("/cart");
+  test("the store is a phone-width app on every screen", async ({ page }) => {
+    await page.goto("/shop");
+    const width = await page.locator("main#main").evaluate((m) => m.getBoundingClientRect().width);
+    expect(width).toBeLessThanOrEqual(430);
+  });
+
+  test("the tab bar never covers the last products", async ({ page }) => {
+    await page.goto("/shop");
     await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
-    const footerBottom = await page.locator("footer").evaluate((f) => f.getBoundingClientRect().bottom);
+    const lastBottom = await page.locator("main article").last().evaluate((a) => a.getBoundingClientRect().bottom);
     const barTop = await page.getByRole("navigation", { name: "Tab bar" }).evaluate((n) => n.getBoundingClientRect().top);
-    expect(footerBottom).toBeLessThanOrEqual(barTop);
+    expect(lastBottom).toBeLessThanOrEqual(barTop);
+  });
+
+  test("menu: gallery, help, saved and the links out", async ({ page }) => {
+    await page.goto("/shop");
+    await hydrated(page);
+    await page.getByRole("button", { name: "Menu" }).click();
+    const menu = page.getByRole("dialog", { name: "Menu" });
+    await expect(menu).toBeVisible();
+    whatsappText(await menu.getByRole("link", { name: "Track my order" }).getAttribute("href"));
+    await menu.getByRole("link", { name: "Gallery" }).click();
+    await expect(page).toHaveURL(/\/gallery$/);
+    await expect(page.locator("h1")).toHaveText(/gallery/i);
+    await page.goBack();
+    await hydrated(page);
+    await page.getByRole("button", { name: "Menu" }).click();
+    await page.getByRole("dialog", { name: "Menu" }).getByRole("link", { name: "Size guide" }).click();
+    await expect(page).toHaveURL(/\/help#sizes$/);
+    await expect(page.getByRole("heading", { name: "Size guide" })).toBeInViewport();
   });
 });
 
-test.describe("scroll reveals", () => {
-  test("sections fade in as they come into view, and everything is visible by the end", async ({ page }) => {
-    await page.goto("/");
-    const below = page.locator("#ordering [data-reveal]").first();
-    await expect(below).not.toHaveAttribute("data-in", ""); // not revealed while off screen
-    // Scroll through the page the way a visitor would.
-    const height = await page.evaluate(() => document.body.scrollHeight);
-    for (let y = 0; y < height; y += 500) {
-      await page.evaluate((top) => window.scrollTo(0, top), y);
-      await page.waitForTimeout(40);
+test.describe("WhatsApp", () => {
+  test("every WhatsApp link opens the LP chat with the greeting typed", async ({ page }) => {
+    for (const path of ["/", "/shop/two-buckle-sandal-rust", "/help"]) {
+      await page.goto(path);
+      const hrefs = await page.locator('a[href^="https://wa.me/"]').evaluateAll((as) => as.map((a) => [a.getAttribute("href"), a.getAttribute("target"), a.getAttribute("rel")]));
+      expect(hrefs.length, path).toBeGreaterThan(0);
+      for (const [href, target, rel] of hrefs) {
+        expect(whatsappText(href)).toMatch(new RegExp(`^${GREETING.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+        expect(target).toBe("_blank");
+        expect(rel).toMatch(/noreferrer/);
+      }
     }
-    await expect(below).toHaveAttribute("data-in", "");
-    // Everything left hidden must be off to the side in a swipe row (those reveal as they're swiped in).
-    const hidden = await page.locator("[data-reveal]:not([data-in])").evaluateAll((els) =>
-      els.filter((e) => { const r = e.getBoundingClientRect(); return r.right > 0 && r.left < innerWidth; }).length);
-    expect(hidden).toBe(0);
-  });
-
-  test("content on screen shows without waiting for the page's JavaScript", async ({ page }) => {
-    // Block the page's script files: the inline reveal script alone must show the shop.
-    await page.route(/\/_next\/static\/chunks\/.*\.js$/, (r) => r.abort());
-    await page.goto("/shop");
-    await expect(page.locator("main [data-reveal]").first()).toHaveAttribute("data-in", "");
-    await expect(page.locator("main article").first()).toBeVisible();
-    test.info().annotations.push({ type: "allow-console-errors" }); // the blocked scripts
-  });
-
-  test("with reduced motion everything is shown immediately", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/");
-    const opacity = await page.locator("#details [data-reveal]").first().evaluate((el) => getComputedStyle(el).opacity);
-    expect(opacity).toBe("1");
   });
 });

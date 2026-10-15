@@ -107,6 +107,22 @@ export default function ProductsPanel({ products, update }: { products: Product[
                       {p.images.length < 8 && <UploadButton multiple onUploaded={(img) => set(p.slug, (x) => ({ images: [...x.images, img].slice(0, 8) }))} />}
                     </div>
                   </div>
+                  <div className="flex flex-col gap-2 md:col-span-2">
+                    <span className="text-sm font-medium">Cut-out photo <span className="font-normal text-muted">(the shoe on a transparent background: shown on product cards and on the product stand)</span></span>
+                    <div className="flex flex-wrap items-center gap-3">
+                      {p.cutout && (
+                        <div className="flex flex-col items-center gap-1.5">
+                          <div className="relative h-28 w-28 overflow-hidden rounded-lg bg-tile ring-1 ring-line">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={p.cutout.src} alt="" className="h-full w-full object-contain p-2" />
+                          </div>
+                          <SmallBtn title="Remove cut-out" danger onClick={() => set(p.slug, { cutout: undefined })}><Icon name="close" size={14} /></SmallBtn>
+                        </div>
+                      )}
+                      <UploadButton label={p.cutout ? "Replace cut-out" : "Upload cut-out (PNG)"} onUploaded={(img) => set(p.slug, { cutout: img })} />
+                      {!p.cutout && <span className="text-xs text-muted">Without one, cards show the first photo in a frame. Make a cut-out with any background-remover app and save it as PNG.</span>}
+                    </div>
+                  </div>
                   <div className="flex flex-wrap justify-between gap-2 border-t border-line pt-3 md:col-span-2">
                     <div className="flex gap-2">
                       <SmallBtn title="Move up in the shop" disabled={i === 0} onClick={() => update((ps) => move(ps, i, -1))}><span className="inline-flex items-center gap-1"><Icon name="arrowUp" size={14} />Up</span></SmallBtn>

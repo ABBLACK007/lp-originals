@@ -32,12 +32,14 @@ export default function CartView() {
   const message = "these pairs:\n" + lines.map((l) => `- ${l.qty} x ${l.p.name} (${l.p.material}), EU ${l.size}`).join("\n");
 
   return (
-    <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_380px] md:gap-10">
+    <div className="grid grid-cols-1 gap-8">
       <ul className="flex flex-col gap-3">
         {lines.map((l) => (
-          <li key={l.slug + l.size} className="flex gap-3 rounded-card bg-tile p-3 sm:gap-4">
-            <Link href={`/shop/${l.slug}`} className="relative flex aspect-square w-20 shrink-0 items-center justify-center overflow-hidden rounded-chip bg-white sm:w-24 md:w-28">
-              {l.p.images[0]
+          <li key={l.slug + l.size} className="flex gap-3 rounded-card bg-tile p-3">
+            <Link href={`/shop/${l.slug}`} className="relative flex aspect-square w-20 shrink-0 items-center justify-center overflow-hidden rounded-[8px] bg-white">
+              {l.p.cutout
+                ? <Image src={l.p.cutout} alt={`${l.p.name}, ${l.p.material}`} fill sizes="112px" className="object-contain p-1.5" />
+                : l.p.images[0]
                 ? <Image src={l.p.images[0]} alt={`${l.p.name}, ${l.p.material}`} fill sizes="112px" className="object-cover" />
                 : <SandalArt style={l.p.art.style} strap={l.p.art.strap} className="w-20" />}
             </Link>
@@ -58,7 +60,7 @@ export default function CartView() {
           </li>
         ))}
       </ul>
-      <aside className="flex h-fit flex-col gap-4 rounded-panel bg-white p-6 shadow-tile md:sticky md:top-24">
+      <aside className="flex h-fit flex-col gap-4 rounded-panel bg-white p-6 shadow-tile">
         <div className="flex justify-between text-sm text-muted"><span>{pairs} {pairs === 1 ? "pair" : "pairs"}</span><span>Delivery confirmed on WhatsApp</span></div>
         <div className="flex items-baseline justify-between border-t border-line pt-4 text-lg"><span className="font-medium">Total</span><span className="tabular font-semibold">{formatNaira(total)}</span></div>
         {/* Ordering happens on WhatsApp for now, so that's the main action. */}

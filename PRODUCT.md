@@ -31,7 +31,7 @@ Handmade in Nigeria, made to order in the customer's size, by a small workshop t
 ## Brand Commitments
 - Name: **LP Wears** (formerly LP Originals; the Vercel project, URL and Instagram handle @_lp_originals_ keep the old name). Logo files: public/images/logo-light.png, logo-dark.png.
 - Never use "Birkenstock" or any other brand's name, logo or imagery (no REEF, Nike, Adidas, etc.), and no images showing other brands' marks.
-- Visual direction pinned by the owner (2026-10-15): a monochrome sneaker-shop app mockup. Black, white and greys; LP gold appears only inside the logo; hero photos in black & white; product photos stay in colour; working heart/favourites.
+- Visual direction pinned by the owner (2026-10-15): a monochrome sneaker-shop app mockup, to be matched exactly. The store is a phone-width app on every device (centred on computers); home is the opening screen plus the store screen only; product shoes are shown as cut-outs. Black, white and greys; LP gold appears only inside the logo; opening photo in black & white; working heart/favourites.
 
 ## Evidence on Hand
 - Real product photos: assets/photos (client's own, cropped by scripts/prepare-photos.mjs).
