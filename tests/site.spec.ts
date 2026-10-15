@@ -9,6 +9,7 @@ const pages = [
   { path: "/gallery", h1: /gallery/i },
   { path: "/cart", h1: /cart/i },
   { path: "/receipt", h1: /receipt/i },
+  { path: "/saved", h1: /Saved styles/i },
 ];
 
 test.describe("pages", () => {
@@ -35,6 +36,22 @@ test.describe("pages", () => {
       expect(res?.status(), path).toBe(404);
       await expect(page.getByRole("heading", { level: 1 })).toContainText(/walked off/i);
     }
+  });
+
+  test("no page is wider than a small phone (320px)", async ({ page }) => {
+    test.skip(!isPhone(), "phones");
+    await page.setViewportSize({ width: 320, height: 640 });
+    await page.addInitScript(() => {
+      localStorage.setItem("lp-cart-v2", JSON.stringify([{ slug: "stitched-cut-out-slide-green", size: "41", qty: 2 }]));
+      localStorage.setItem("lp-saved-v1", JSON.stringify(["perforated-cut-out-slide-brown"]));
+    });
+    for (const path of ["/", "/shop", "/shop/stitched-cut-out-slide-black", "/shop/category/slides", "/cart", "/receipt", "/saved", "/gallery", "/nope"]) {
+      await page.goto(path);
+      await page.waitForTimeout(300);
+      const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
+      expect(scroll, path).toBeLessThanOrEqual(client);
+    }
+    allowConsoleErrors(); // the 404 page
   });
 
   test("old product link redirects to the new one", async ({ request }) => {
@@ -110,12 +127,17 @@ test.describe("security", () => {
     expect(login.headers()["cache-control"]).toMatch(/no-store|private/);
   });
 
-  test("search engines skip admin, cart and receipt; sitemap lists the products", async ({ request }) => {
+  test("search engines skip admin, cart, receipt and saved; sitemap lists the products", async ({ request }) => {
     const robots = await (await request.get("/robots.txt")).text();
-    for (const path of ["/admin", "/cart", "/receipt"]) expect(robots).toContain(`Disallow: ${path}`);
+    for (const path of ["/admin", "/cart", "/receipt", "/saved"]) expect(robots).toContain(`Disallow: ${path}`);
     const sitemap = await (await request.get("/sitemap.xml")).text();
     expect(sitemap).toContain("/shop/two-buckle-sandal-rust</loc>");
     expect(sitemap).not.toContain("/admin");
+  });
+
+  test("favicon.ico exists (browsers ask for it during navigation)", async ({ request }) => {
+    const res = await request.get("/favicon.ico");
+    expect(res.status()).toBe(200);
   });
 
   test("product pages carry structured data", async ({ page }) => {

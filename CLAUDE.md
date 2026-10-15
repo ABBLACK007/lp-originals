@@ -2,11 +2,11 @@
 
 Read README.md first. This file tells you how to keep working on the project.
 
-## Design rules (match the Claude Design canvas in design/)
-- Palette comes from the logo: black `ink #141210` and gold `gold #C9A45C` on a cream ground `cream #F2EDE6`. Use `bronze #8C6B2A` for gold-coloured text on cream (gold itself fails contrast on cream).
-- Type: Barlow Condensed (display, uppercase headings), Instrument Sans (body).
-- Section headings: light word(s) + semibold word(s), via `components/SectionTitle.tsx`.
-- Primary buttons: gold pill with ink text. Secondary: ink outline. Every primary action has a WhatsApp alternative, since most customers order there.
+## Design rules (the visual system is in DESIGN.md; product facts in PRODUCT.md)
+- Redesigned 2026-10-15 to the owner's monochrome shoe-shop app mockup: white ground, grey tiles (`tile`), ink (`ink #111111`) for every primary control, colour only from product photos and the saved heart. LP gold appears only inside the logo. Hero photos render in black and white. Tokens: `tailwind.config.ts`; full rules and named do's/don'ts: `DESIGN.md` (+ `.impeccable/design.json`).
+- Type: Poppins only (self-hosted, `app/fonts`). Sentence-case headings via `components/SectionTitle.tsx`; bold uppercase only for the hero and display moments. No kicker/eyebrow labels above headings.
+- Buttons: `.btn` + `.btn-primary` (ink), `.btn-secondary` (grey), `.btn-light` / `.btn-ghost-light` (on photos and ink panels); chips: `.chip` (selected via aria-pressed); round icon buttons: `.icon-btn`. Icons only from `components/Icon.tsx` (no emoji or text glyphs).
+- Every primary action has a WhatsApp alternative, since most customers order there. Every visible control must work.
 - Mobile first: most traffic will come from Instagram on phones. Keep pages light for mobile data: every image goes through next/image (`components/Photo.tsx`), imported from `lib/images.ts`.
 - Buttons: use the `.btn` classes in `app/globals.css` (press feedback, hover only on hover-capable devices).
 - Never use images from `../image_gallery` or any photo showing another brand’s name or logo.

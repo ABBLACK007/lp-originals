@@ -33,6 +33,7 @@ export const productSchema = z.object({
   material: line(80).min(1),
   category: z.enum(["cork", "slides", "clogs"]),
   footbed: line(60).optional(),
+  description: text(600).optional(),
   audience: z.enum(["Men", "Women"]).optional(),
   price: z.number().int().min(0).max(100_000_000).nullable(),
   isNew: z.boolean().optional(),

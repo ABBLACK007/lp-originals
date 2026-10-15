@@ -37,7 +37,7 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
 export function SmallBtn({ onClick, children, danger, disabled, title }: { onClick: () => void; children: React.ReactNode; danger?: boolean; disabled?: boolean; title?: string }) {
   return (
     <button type="button" onClick={onClick} disabled={disabled} title={title} aria-label={title}
-      className={`rounded-full px-3 py-1.5 text-xs font-medium ring-1 ring-inset transition-colors disabled:opacity-40 ${danger ? "text-[#8A2E2E] ring-[#8A2E2E]/30 hover:bg-[#8A2E2E]/10" : "ring-line hover:bg-sand"}`}>
+      className={`rounded-full px-3 py-1.5 text-xs font-medium ring-1 ring-inset transition-colors disabled:opacity-40 ${danger ? "text-bad ring-bad/30 hover:bg-bad/10" : "ring-line hover:bg-tile"}`}>
       {children}
     </button>
   );
@@ -126,14 +126,14 @@ export function UploadButton({ onUploaded, label = "Upload photo", multiple }: {
         {busy ? "Uploading…" : label}
       </button>
       <input ref={ref} type="file" accept="image/*" multiple={multiple} hidden onChange={(e) => pick(e.target.files)} />
-      {error && <span role="alert" className="text-xs text-[#8A2E2E]">{error}</span>}
+      {error && <span role="alert" className="text-xs text-bad">{error}</span>}
     </span>
   );
 }
 
 export function Thumb({ img, className = "h-20 w-16", children }: { img: Img; className?: string; children?: React.ReactNode }) {
   return (
-    <div className={`relative shrink-0 overflow-hidden rounded-lg bg-sand ring-1 ring-line ${className}`}>
+    <div className={`relative shrink-0 overflow-hidden rounded-lg bg-tile ring-1 ring-line ${className}`}>
       <Image src={img} alt="" fill sizes="120px" className="object-cover" />
       {children}
     </div>

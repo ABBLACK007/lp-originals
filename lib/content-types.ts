@@ -14,6 +14,7 @@ export type Product = {
   material: string;
   category: Category;
   footbed?: string;
+  description?: string; // shown under Description on the product page; a default is written from the fields when empty
   audience?: "Men" | "Women";
   price: number | null; // NGN; null shows "[PRICE]"
   isNew?: boolean;

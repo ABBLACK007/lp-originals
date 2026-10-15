@@ -29,11 +29,12 @@ Tests live in `tests/` and use the Chrome installed on the machine (no browser d
 
 | Route | What it is |
 |---|---|
-| `/` | Homepage: hero with product teaser, new-drops carousel, Shop by style flyers, promo, Step Into Comfort, ordering steps, craft details, From the workshop strip, services |
-| `/shop` | All styles, filter by category, size guide. `/shop?category=cork|slides|clogs` is served from the pre-built `/shop/category/[category]` pages (rewrite in `next.config.mjs`), so the shop stays static |
-| `/shop/[slug]` | Product page: photo gallery, size picker, add to cart, order on WhatsApp |
+| `/` | Homepage: black & white hero slider, store row with search and category chips, new drops grid, featured pair on its stand, promo, Made the LP way, ordering steps, Good to know cards, craft details, From the workshop |
+| `/shop`, `/shop/category/[category]` | All styles with live search (`?q=`), sort by price, men/women filter, category chips, size guide. Category pages are pre-built; old `/shop?category=…` links are rewritten to them (`next.config.mjs`) and also honoured in the browser |
+| `/shop/[slug]` | Product page: photo on its stand (turns through photos), colour swatches (products with the same name), quantity, sizes, Buy now / Add to cart, WhatsApp order, Description and Delivery fold-outs |
 | `/gallery` | Masonry gallery with lightbox (keyboard arrows, Esc), Products / Campaign filter |
 | `/cart` | Cart (saved in the browser), WhatsApp order message, receipt link (card payment not connected yet) |
+| `/saved` | Saved styles (heart buttons), kept in the browser |
 | `/receipt` | Order receipt generated from the cart (number, date, customer details), send on WhatsApp or print/PDF |
 
 ## Admin dashboard (/admin)
@@ -48,15 +49,17 @@ The store owner edits products and prices (add, hide, reorder, photos), hero sli
 
 ## Where things live
 
+- `PRODUCT.md` (who it's for, product truth) and `DESIGN.md` (visual system, tokens, rules); `tailwind.config.ts` holds the tokens
+
 - `lib/content-defaults.ts`: built-in catalogue, slides, gallery and settings (what /admin edits)
 - `lib/content.ts`, `lib/content-types.ts`, `lib/content-schema.ts`: reading, types and validation of store content
 - `lib/site.ts`: WhatsApp link, price formatting, site URL
 - `lib/images.ts`: every photo, imported statically so next/image serves resized WebP with blur placeholders
 - `assets/photos/originals/`: the client's product photos as received. `scripts/prepare-photos.mjs` crops them into `assets/photos/` (`npm run photos`)
 - `assets/generated/`: Higgsfield campaign photos (AI-generated; labelled "Campaign" in the gallery)
-- `app/fonts/`: self-hosted Barlow Condensed and Instrument Sans (latin subset, OFL)
-- `tailwind.config.ts`: design tokens (colours, fonts, radii, easing). `app/globals.css`: `.btn` button classes
-- `design/`: Claude Design canvas source and reference images
+- `app/fonts/`: self-hosted Poppins 400–700 (latin subset, OFL)
+- `app/globals.css`: `.btn`, `.chip`, `.icon-btn`, `.field` classes, scroll reveal and fold-out styles; `components/Icon.tsx`: the icon set
+- `design/`: the original Claude Design canvas (previous look, kept for reference)
 
 ## Before launch, fill in
 

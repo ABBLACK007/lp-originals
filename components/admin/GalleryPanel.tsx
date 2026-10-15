@@ -1,4 +1,5 @@
 "use client";
+import Icon from "@/components/Icon";
 import type { GalleryItem, Product } from "@/lib/content-types";
 import { SmallBtn, Thumb, UploadButton, inputCls, move } from "./fields";
 
@@ -28,8 +29,8 @@ export default function GalleryPanel({ gallery, products, update }: { gallery: G
                 </select>
               </div>
               <div className="flex gap-1.5">
-                <SmallBtn title="Move earlier" disabled={i === 0} onClick={() => update((x) => move(x, i, -1))}>←</SmallBtn>
-                <SmallBtn title="Move later" disabled={i === gallery.length - 1} onClick={() => update((x) => move(x, i, 1))}>→</SmallBtn>
+                <SmallBtn title="Move earlier" disabled={i === 0} onClick={() => update((x) => move(x, i, -1))}><Icon name="arrowLeft" size={14} /></SmallBtn>
+                <SmallBtn title="Move later" disabled={i === gallery.length - 1} onClick={() => update((x) => move(x, i, 1))}><Icon name="arrowRight" size={14} /></SmallBtn>
                 <SmallBtn danger title="Remove photo" onClick={() => update((x) => x.filter((_, k) => k !== i))}>Remove</SmallBtn>
               </div>
             </div>

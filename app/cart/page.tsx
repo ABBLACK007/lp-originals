@@ -9,8 +9,8 @@ export default function CartPage() {
   return (
     <main id="main">
       <Header />
-      <div className="mx-auto max-w-page px-5 pt-14 md:px-8 md:pt-20">
-        <h1 className="mb-10 font-display text-5xl font-light uppercase text-bronze md:text-[56px]">Your <strong className="font-semibold">cart</strong></h1>
+      <div className="mx-auto max-w-page px-5 pt-8 md:px-8 md:pt-14">
+        <h1 className="mb-8 text-[28px] font-semibold md:text-[40px]">Your cart</h1>
         <CartView />
       </div>
       <Footer />

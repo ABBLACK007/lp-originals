@@ -76,15 +76,30 @@ test.describe("WhatsApp", () => {
     }
   });
 
-  test("floating chat button appears once the hero is scrolled past", async ({ page }) => {
+  test("phone tab bar: shop, saved, home, cart and WhatsApp chat", async ({ page }) => {
+    test.skip(!isPhone(), "phones only");
     await page.goto("/");
     await hydrated(page);
-    const fab = page.getByRole("link", { name: "Chat with LP Wears on WhatsApp" });
-    await expect(fab).toHaveCount(0);
-    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.5));
-    await expect(fab).toBeVisible();
-    await page.evaluate(() => window.scrollTo(0, 0));
-    await expect(fab).toHaveCount(0);
+    const bar = page.getByRole("navigation", { name: "Tab bar" });
+    await expect(bar).toBeVisible();
+    await expect(bar.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
+    whatsappText(await bar.getByRole("link", { name: "Chat on WhatsApp" }).getAttribute("href"));
+    await bar.getByRole("link", { name: "Shop" }).click();
+    await expect(page).toHaveURL(/\/shop$/);
+    await expect(bar.getByRole("link", { name: "Shop" })).toHaveAttribute("aria-current", "page");
+    await bar.getByRole("link", { name: /^Saved/ }).click();
+    await expect(page).toHaveURL(/\/saved$/);
+    await bar.getByRole("link", { name: /^Cart/ }).click();
+    await expect(page).toHaveURL(/\/cart$/);
+  });
+
+  test("the tab bar never covers the end of the page", async ({ page }) => {
+    test.skip(!isPhone(), "phones only");
+    await page.goto("/cart");
+    await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+    const footerBottom = await page.locator("footer").evaluate((f) => f.getBoundingClientRect().bottom);
+    const barTop = await page.getByRole("navigation", { name: "Tab bar" }).evaluate((n) => n.getBoundingClientRect().top);
+    expect(footerBottom).toBeLessThanOrEqual(barTop);
   });
 });
 

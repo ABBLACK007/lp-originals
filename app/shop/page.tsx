@@ -3,7 +3,7 @@ import ShopView from "./ShopView";
 
 export const metadata: Metadata = { title: "Shop all styles", description: "Cork-footbed sandals, slides, palms and clogs, handmade to order in EU sizes 36 to 46.", alternates: { canonical: "/shop" } };
 
-// Static: /shop?category=<id> is rewritten to the pre-built category pages (next.config.mjs).
+// Static. Categories have their own pages (app/shop/category/[category]); old ?category= links are rewritten there.
 export default function Shop() {
   return <ShopView initial="all" />;
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useCart } from "./CartProvider";
+import Icon from "./Icon";
 import { receiptForCart, receiptText, saveReceipt, type Receipt } from "@/lib/receipt";
 import { formatNaira, formatPhone } from "@/lib/site";
 import { useProducts, useStore, useWhatsapp } from "./StoreProvider";
@@ -26,28 +27,29 @@ export default function ReceiptView() {
   if (!ready) return <p className="text-muted">Preparing your receipt…</p>;
   if (!r) {
     return (
-      <div className="glass flex flex-col items-start gap-5 rounded-panel p-8">
-        <p className="text-lg">Your cart is empty, so there&apos;s no receipt yet. Add a pair to get one.</p>
-        <Link href="/shop" className="btn btn-gold">Shop all styles</Link>
+      <div className="flex flex-col items-center gap-4 rounded-panel bg-mist px-6 py-14 text-center">
+        <p className="text-base font-semibold">No receipt yet</p>
+        <p className="max-w-sm text-sm text-muted">Your cart is empty, so there&apos;s no receipt yet. Add a pair to get one.</p>
+        <Link href="/shop" className="btn btn-primary">Shop all styles</Link>
       </div>
     );
   }
 
   const date = new Date(r.createdAt);
   return (
-    <div className="grid gap-8 md:grid-cols-[1fr_320px] print:block">
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_320px] print:block">
       {/* The receipt (this is all that prints) */}
-      <article aria-label={`Receipt ${r.id}`} className="relative overflow-hidden rounded-panel bg-white p-6 shadow-[0_24px_60px_-30px_rgba(20,18,16,0.4)] ring-1 ring-line md:p-10 print:rounded-none print:p-0 print:shadow-none print:ring-0">
+      <article aria-label={`Receipt ${r.id}`} className="relative overflow-hidden rounded-panel bg-white p-6 ring-1 ring-line md:p-10 print:rounded-none print:p-0 print:shadow-none print:ring-0">
         <div className="flex flex-wrap items-start justify-between gap-6 border-b border-dashed border-line pb-6">
           <div className="flex flex-col items-start gap-2">
             <Image src={logoDark} alt="LP Wears" className="h-14 w-auto" />
             <span className="text-xs text-muted">Handmade in Nigeria · WhatsApp {formatPhone(site.whatsappNumber)}</span>
           </div>
           <div className="flex w-full flex-col items-start gap-1 sm:w-auto sm:items-end sm:text-right print:w-auto print:items-end print:text-right">
-            <span className="font-display text-3xl font-semibold uppercase leading-none text-ink">Receipt</span>
+            <span className="text-2xl font-bold uppercase leading-none">Receipt</span>
             <span className="font-mono text-sm">{r.id}</span>
             <span className="text-sm text-muted">{date.toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" })}, {date.toLocaleTimeString("en-NG", { hour: "2-digit", minute: "2-digit" })}</span>
-            <span className="mt-1 rounded-full bg-gold/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-bronze">Payment pending</span>
+            <span className="mt-1 rounded-full bg-tile px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]">Payment pending</span>
           </div>
         </div>
 
@@ -89,19 +91,19 @@ export default function ReceiptView() {
       </article>
 
       {/* Actions (hidden when printing) */}
-      <aside className="glass-strong flex h-fit flex-col gap-4 rounded-panel p-6 md:sticky md:top-24 print:hidden">
-        <h2 className="font-display text-2xl font-semibold uppercase text-bronze">Your details</h2>
+      <aside className="flex h-fit flex-col gap-4 rounded-panel bg-white p-6 shadow-tile md:sticky md:top-24 print:hidden">
+        <h2 className="text-lg font-semibold">Your details</h2>
         <p className="text-sm text-muted">Optional. They appear on the receipt so we can match your order.</p>
         <label className="flex flex-col gap-1.5 text-sm font-medium">Name
           <input value={r.customer.name} onChange={(e) => setCustomer("name", e.target.value)} autoComplete="name"
-            className="rounded-xl border border-line bg-white px-4 py-3 text-base font-normal outline-none focus:border-ink" />
+            className="field font-normal" />
         </label>
         <label className="flex flex-col gap-1.5 text-sm font-medium">Phone
           <input value={r.customer.phone} onChange={(e) => setCustomer("phone", e.target.value)} type="tel" inputMode="tel" autoComplete="tel"
-            className="rounded-xl border border-line bg-white px-4 py-3 text-base font-normal outline-none focus:border-ink" />
+            className="field font-normal" />
         </label>
-        <a href={whatsappLink(receiptText(r))} target="_blank" rel="noreferrer" className="btn btn-gold mt-2">Send receipt on WhatsApp</a>
-        <button type="button" onClick={() => window.print()} className="btn btn-outline">Download / print (PDF)</button>
+        <a href={whatsappLink(receiptText(r))} target="_blank" rel="noreferrer" className="btn btn-primary mt-2 gap-2"><Icon name="chat" size={18} />Send receipt on WhatsApp</a>
+        <button type="button" onClick={() => window.print()} className="btn btn-secondary gap-2"><Icon name="print" size={18} />Download / print (PDF)</button>
         <Link href="/cart" className="link text-center text-sm">Back to cart</Link>
       </aside>
     </div>

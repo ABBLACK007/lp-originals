@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import ShopView from "../../ShopView";
 import { categories, type Category } from "@/lib/content-types";
 
-// Reached through the /shop?category=<id> rewrite in next.config.mjs; one static page per category.
+// One static page per category: /shop/category/<id>. Old /shop?category=<id> links are rewritten here (next.config.mjs).
 export const dynamicParams = false;
 export const generateStaticParams = () => categories.map((c) => ({ category: c.id }));
 
@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   return {
     title: c ? `Shop ${c.label.toLowerCase()}` : "Shop all styles",
     description: c?.blurb,
-    alternates: { canonical: c ? `/shop?category=${c.id}` : "/shop" },
+    alternates: { canonical: c ? `/shop/category/${c.id}` : "/shop" },
   };
 }
 

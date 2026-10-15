@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T11:15:45.675Z",
+  "title": "Design System: LP Wears",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Workshop Ink",
+        "canonical": "#111111",
+        "tonalRamp": [
+          "#1A1A1A",
+          "#333333",
+          "#4D4D4D",
+          "#666666",
+          "#8C8C8C",
+          "#B3B3B3",
+          "#D9D9D9",
+          "#F2F2F2"
+        ]
+      },
+      "char": {
+        "role": "primary",
+        "displayName": "Graphite",
+        "canonical": "#2B2B2B",
+        "tonalRamp": [
+          "#1A1A1A",
+          "#333333",
+          "#4D4D4D",
+          "#666666",
+          "#8C8C8C",
+          "#B3B3B3",
+          "#D9D9D9",
+          "#F2F2F2"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#1A1A1A",
+          "#333333",
+          "#4D4D4D",
+          "#666666",
+          "#8C8C8C",
+          "#B3B3B3",
+          "#D9D9D9",
+          "#F2F2F2"
+        ]
+      },
+      "mist": {
+        "role": "neutral",
+        "displayName": "Mist",
+        "canonical": "#F6F6F6",
+        "tonalRamp": [
+          "#1A1A1A",
+          "#333333",
+          "#4D4D4D",
+          "#666666",
+          "#8C8C8C",
+          "#B3B3B3",
+          "#D9D9D9",
+          "#F2F2F2"
+        ]
+      },
+      "tile": {
+        "role": "neutral",
+        "displayName": "Tile Grey",
+        "canonical": "#F1F1F1",
+        "tonalRamp": [
+          "#1A1A1A",
+          "#333333",
+          "#4D4D4D",
+          "#666666",
+          "#8C8C8C",
+          "#B3B3B3",
+          "#D9D9D9",
+          "#F2F2F2"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#E4E4E4",
+        "tonalRamp": [
+          "#1A1A1A",
+          "#333333",
+          "#4D4D4D",
+          "#666666",
+          "#8C8C8C",
+          "#B3B3B3",
+          "#D9D9D9",
+          "#F2F2F2"
+        ]
+      },
+      "edge": {
+        "role": "neutral",
+        "displayName": "Edge Grey",
+        "canonical": "#D2D2D2",
+        "tonalRamp": [
+          "#1A1A1A",
+          "#333333",
+          "#4D4D4D",
+          "#666666",
+          "#8C8C8C",
+          "#B3B3B3",
+          "#D9D9D9",
+          "#F2F2F2"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Quiet Text",
+        "canonical": "#666666",
+        "tonalRamp": [
+          "#1A1A1A",
+          "#333333",
+          "#4D4D4D",
+          "#666666",
+          "#8C8C8C",
+          "#B3B3B3",
+          "#D9D9D9",
+          "#F2F2F2"
+        ]
+      },
+      "heart": {
+        "role": "tertiary",
+        "displayName": "Saved Red",
+        "canonical": "#E5484D",
+        "tonalRamp": [
+          "#4A1012",
+          "#7A1C20",
+          "#A8272D",
+          "#D33A40",
+          "#E5484D",
+          "#EE7A7E",
+          "#F6B3B5",
+          "#FCE8E8"
+        ]
+      },
+      "ok": {
+        "role": "tertiary",
+        "displayName": "Confirm Green",
+        "canonical": "#1F7A45"
+      },
+      "bad": {
+        "role": "tertiary",
+        "displayName": "Error Red",
+        "canonical": "#B42318"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headlines and display moments, bold uppercase."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings in sentence case; page titles one step larger."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product names on tiles and in the cart."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Paragraphs, about 65ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Meta lines and chip counts; prices use tabular figures."
+      }
+    },
+    "shadows": [
+      {
+        "name": "tile",
+        "value": "0 1px 2px rgba(17,17,17,0.04), 0 10px 24px -14px rgba(17,17,17,0.18)",
+        "purpose": "Product tiles, cart summary, the stand's photo frame."
+      },
+      {
+        "name": "float",
+        "value": "0 12px 32px -12px rgba(17,17,17,0.28)",
+        "purpose": "Sheets, menus, raised discs, tile hover."
+      },
+      {
+        "name": "bar",
+        "value": "0 -10px 30px -18px rgba(17,17,17,0.35)",
+        "purpose": "Phone tab bar."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Presses, entrances, the stand marker."
+      },
+      {
+        "name": "ease-drawer",
+        "value": "cubic-bezier(0.32, 0.72, 0, 1)",
+        "purpose": "The size sheet rising on phones (320ms)."
+      },
+      {
+        "name": "press",
+        "value": "scale(0.97) over 150ms",
+        "purpose": "Every button and chip."
+      },
+      {
+        "name": "heart",
+        "value": "420ms scale 1 > 0.82 > 1.18 > 1",
+        "purpose": "Saving a style (not unsaving)."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Every primary action.",
+      "html": "<button class=\"ds-btn-primary\">Buy now for ₦28,000</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border:0;border-radius:8px;background:#111;color:#fff;font:500 15px/1 Poppins, Arial, sans-serif;transition:transform 150ms cubic-bezier(.23,1,.32,1),background-color 150ms}.ds-btn-primary:hover{background:#2B2B2B}.ds-btn-primary:active{transform:scale(.97)}.ds-btn-primary:focus-visible{outline:2px solid #111;outline-offset:3px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The quieter partner (Add to cart, Get your receipt).",
+      "html": "<button class=\"ds-btn-secondary\">Add to cart</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border:1px solid #D2D2D2;border-radius:8px;background:#F1F1F1;color:#111;font:500 15px/1 Poppins, Arial, sans-serif;transition:transform 150ms,border-color 150ms}.ds-btn-secondary:hover{border-color:#111}.ds-btn-secondary:active{transform:scale(.97)}.ds-btn-secondary:focus-visible{outline:2px solid #111;outline-offset:3px}"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Sizes, filters and categories; selected fills with ink.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\">40</button><button class=\"ds-chip\" aria-pressed=\"true\">41</button><button class=\"ds-chip\">42</button></div>",
+      "css": ".ds-chips{display:flex;gap:8px}.ds-chip{min-height:44px;min-width:52px;padding:0 14px;border:1px solid #D2D2D2;border-radius:10px;background:#fff;color:#111;font:400 14px/1 Poppins, Arial, sans-serif;transition:transform 150ms,background-color 150ms,color 150ms}.ds-chip:hover{border-color:#111}.ds-chip[aria-pressed=true]{background:#111;border-color:#111;color:#fff}.ds-chip:active{transform:scale(.96)}"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search-field",
+      "description": "Pill search with a filter button.",
+      "html": "<label class=\"ds-search\"><span class=\"ds-ico-muted\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"11\" cy=\"11\" r=\"6.5\"/><path d=\"M20 20l-4.2-4.2\"/></svg></span><input placeholder=\"Search sandals, slides, clogs\"><span class=\"ds-divider\"></span><button aria-label=\"Sort and filter\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 7h9M17 7h3M4 17h3M11 17h9\"/><circle cx=\"15\" cy=\"7\" r=\"2\"/><circle cx=\"9\" cy=\"17\" r=\"2\"/></svg></button></label>",
+      "css": ".ds-search{display:flex;align-items:center;width:340px;height:56px;padding:0 8px 0 20px;border:1px solid #D2D2D2;border-radius:9999px;background:#fff;color:#111;transition:border-color 150ms}.ds-search:focus-within{border-color:#111}.ds-ico-muted{color:#666;display:flex}.ds-search input{flex:1;min-width:0;border:0;outline:0;padding:0 12px;font:400 15px Poppins, Arial, sans-serif;background:transparent}.ds-divider{width:1px;height:28px;background:#E4E4E4;margin:0 4px}.ds-search button{width:40px;height:40px;border:0;border-radius:50%;background:transparent;color:#111;display:flex;align-items:center;justify-content:center}.ds-search button:hover{background:#F1F1F1}"
+    },
+    {
+      "name": "Product Tile",
+      "kind": "card",
+      "refersTo": "product-tile",
+      "description": "Grey tile: cart button, heart, framed photo, name, material, price.",
+      "html": "<article class=\"ds-tile\"><div class=\"ds-tile-top\"><button class=\"ds-round ds-round-ink\" aria-label=\"Add to cart\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5.5 8h13l-1 12h-11z\"/><path d=\"M9 8V7a3 3 0 0 1 6 0v1\"/><path d=\"M12 11.5v5M9.5 14h5\"/></svg></button><button class=\"ds-round\" aria-label=\"Saved\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"#E5484D\" stroke=\"#E5484D\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20s-7.5-4.6-7.5-10.1A4.4 4.4 0 0 1 12 7.3a4.4 4.4 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z\"/></svg></button></div><div class=\"ds-tile-photo\"></div><p class=\"ds-tile-name\">Two-Buckle Sandal</p><p class=\"ds-tile-meta\">Rust suede</p><p class=\"ds-tile-price\">₦28,000</p></article>",
+      "css": ".ds-tile{width:200px;padding:8px;border-radius:16px;background:#F1F1F1;box-shadow:0 1px 2px rgba(17,17,17,.04),0 10px 24px -14px rgba(17,17,17,.18);font-family:Poppins, Arial, sans-serif;text-align:center;transition:box-shadow 200ms}.ds-tile:hover{box-shadow:0 12px 32px -12px rgba(17,17,17,.28)}.ds-tile-top{display:flex;justify-content:space-between;padding:4px}.ds-round{width:36px;height:36px;border-radius:50%;border:1px solid #E4E4E4;background:#fff;display:flex;align-items:center;justify-content:center}.ds-round svg{width:17px;height:17px}.ds-round-ink{background:#111;border-color:#111}.ds-tile-photo{aspect-ratio:1;margin:4px;border-radius:10px;background:#fff}.ds-tile-name{margin:12px 0 0;font:500 14px/1.4 Poppins, Arial, sans-serif}.ds-tile-meta{margin:2px 0 0;font-size:12px;color:#666}.ds-tile-price{margin:6px 0 10px;font:600 14px/1 Poppins, Arial, sans-serif;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Tab Bar",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Phone navigation with the raised Home disc.",
+      "html": "<nav class=\"ds-tabbar\"><span class=\"ds-tab ds-on\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/><rect x=\"13.5\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/><rect x=\"4\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/><rect x=\"13.5\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/></svg></span><span class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20s-7.5-4.6-7.5-10.1A4.4 4.4 0 0 1 12 7.3a4.4 4.4 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z\"/></svg></span><span class=\"ds-home\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11l8-7 8 7\"/><path d=\"M6 9.5V20h4.5v-5.5h3V20H18V9.5\"/></svg></span><span class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5.5 8h13l-1 12h-11z\"/><path d=\"M9 8V7a3 3 0 0 1 6 0v1\"/></svg></span><span class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7.9 20A9 9 0 1 0 4 16.1L2.5 21.5z\"/><path d=\"M8.5 12h.01M12 12h.01M15.5 12h.01\"/></svg></span></nav>",
+      "css": ".ds-tabbar{display:grid;grid-template-columns:repeat(5,1fr);align-items:end;width:360px;height:56px;padding:0 12px;border-radius:22px 22px 0 0;background:#fff;box-shadow:0 -10px 30px -18px rgba(17,17,17,.35)}.ds-tab{display:flex;justify-content:center;align-items:center;height:56px;color:#666}.ds-on{color:#111}.ds-home{justify-self:center;margin:-24px 0 8px;width:58px;height:58px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 5px #fff,0 12px 32px -12px rgba(17,17,17,.28)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Shop in Your Hand",
+    "overview": "The storefront behaves like a shoe-shop app held on a phone: the catalogue is the interface. Grey product tiles carry two round controls (add to cart, save), a pill search sits above a row of category chips, and a tab bar with a raised black Home disc anchors every page on phones. Nothing is decorative for its own sake; every visible control works.\n\nThe world is monochrome on purpose. White pages, light-grey tiles and ink-black controls stay quiet so the client's photographs of real leather, suede and cork supply all the colour. The only other hue is the red of a saved heart. Hero photography is shown in black and white; product photography never is.\n\nDensity is phone-first and generous: 44px touch targets, 48px buttons, two-up product grids on phones growing to four on desktop. Motion is small and physical: presses shrink to 97%, a saved heart pops once, and the product stand turns to its next photo.",
+    "keyCharacteristics": [
+      "Monochrome chrome, full-colour product photos, black and white hero photos.",
+      "Poppins throughout; bold uppercase only for the hero and display moments.",
+      "Small-radius slab buttons, pill search and stepper, round icon buttons.",
+      "Product tiles with a cart button top left and a heart top right.",
+      "A ring \"stand\" under the product photo on product pages."
+    ],
+    "rules": [
+      {
+        "name": "The Photos Carry Colour Rule",
+        "body": "Interface colour is ink, white and grey. Colour on a screen comes from product photography or the saved heart, never from fills, gradients or accents.",
+        "section": "colors"
+      },
+      {
+        "name": "The Gold Stays In The Logo Rule",
+        "body": "LP gold appears only inside the logo artwork (owner's decision, 2026-10-15).",
+        "section": "colors"
+      },
+      {
+        "name": "The No Kicker Rule",
+        "body": "No small label or eyebrow above a heading. Supporting facts go below the heading (for example \"Handmade to order · Slides & palms\" under a product name).",
+        "section": "typography"
+      },
+      {
+        "name": "The One Elevation Rule",
+        "body": "A surface declares depth once: hairline border (filters panel, receipt) or shadow (tiles, cart summary), never a border under a soft shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** use Workshop Ink (#111111) for every primary action and selected state.",
+      "**Do** show hero photography in black and white and product photography in full colour.",
+      "**Do** give every control a 44px touch target and a working action; hide what would do nothing.",
+      "**Do** put supporting facts under headings, and use tabular figures for prices and counts.",
+      "**Do** keep bottom space for the phone tab bar on every page."
+    ],
+    "donts": [
+      "**Don't** add colour fills, gradients or accent hues to the interface; the photos carry the colour.",
+      "**Don't** use LP gold outside the logo.",
+      "**Don't** put a kicker or eyebrow label above a heading.",
+      "**Don't** stack a border under a soft shadow, or round cards beyond 16px.",
+      "**Don't** use emoji or text glyphs as icons; use the shared 24px, 1.8-stroke icon set (components/Icon.tsx).",
+      "**Don't** show ratings, review counts or badges the shop doesn't have."
+    ]
+  }
+}

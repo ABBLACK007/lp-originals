@@ -2,93 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 body {
-  @apply bg-cream font-sans text-text antialiased;
+  @apply bg-paper font-sans text-[15px] leading-relaxed text-ink antialiased;
   -webkit-tap-highlight-color: transparent;
-  text-rendering: optimizeLegibility;
   font-kerning: normal;
-  /* Warm ambient light behind every page (static, no motion): gives the cream ground depth and gives the
-     glass surfaces something to blur. */
-  background-image:
-    radial-gradient(60rem 40rem at 100% 0%, rgba(201, 164, 92, 0.16), transparent 60%),
-    radial-gradient(50rem 36rem at 0% 30%, rgba(140, 107, 42, 0.10), transparent 60%),
-    radial-gradient(56rem 40rem at 100% 70%, rgba(201, 164, 92, 0.12), transparent 60%),
-    radial-gradient(48rem 36rem at 0% 100%, rgba(110, 75, 47, 0.10), transparent 60%);
-  background-repeat: no-repeat;
+  caret-color: #111111;
 }
-/* Size-specific tracking: big display type tightens, small caps labels stay open. */
-h1, h2 { text-wrap: balance; }
+h1, h2, h3 { text-wrap: balance; letter-spacing: -0.02em; }
 a { color: inherit; }
-:focus-visible { outline: 2px solid #C9A45C; outline-offset: 3px; }
+::selection { background: #111111; color: #FFFFFF; }
+:focus-visible { outline: 2px solid #111111; outline-offset: 3px; border-radius: 4px; }
+input::placeholder, textarea::placeholder { color: #767676; }
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+/* Thin neutral scrollbars where the page itself scrolls */
+html { scrollbar-color: #C4C4C4 transparent; }
+/* Prices and counts line up */
+.tabular { font-variant-numeric: tabular-nums; }
 
 @layer components {
-  /* Buttons: press feedback via scale, only transform/colour transitions. */
+  /* Buttons: small-radius slabs like the mockup; press feedback via scale, only transform/colour transitions. */
   .btn {
-    @apply inline-flex select-none items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-medium no-underline
-      transition-[transform,background-color,border-color,color] duration-150 ease-out active:scale-[0.97];
+    @apply inline-flex min-h-[48px] select-none items-center justify-center gap-2 rounded-btn px-6 text-center text-[15px] font-medium no-underline
+      transition-[transform,background-color,border-color,color] duration-150 ease-out active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40;
   }
-  .btn-sm { @apply px-5 py-3 text-[15px]; }
-  .btn-gold { @apply bg-gold text-ink hover:bg-goldhover; }
-  .btn-ink { @apply bg-ink text-white hover:bg-char; }
-  .btn-outline { @apply border border-ink text-ink hover:bg-ink hover:text-white; }
-  .btn-outline-light { @apply border border-white/50 text-white hover:border-white; }
-  .link { @apply underline decoration-1 underline-offset-4 transition-colors hover:text-bronze; }
+  .btn-sm { @apply min-h-[44px] px-4 text-sm; }
+  .btn-primary { @apply bg-ink text-white hover:bg-char; }
+  .btn-secondary { @apply border border-edge bg-tile text-ink hover:border-ink; }
+  .btn-light { @apply bg-white text-ink hover:bg-mist; }
+  .btn-ghost-light { @apply border border-white/60 text-white hover:border-white hover:bg-white/10; }
+  .link { @apply underline decoration-1 underline-offset-4 transition-colors hover:text-muted; }
 
-  /* Glass materials. Light glass for controls/cards over the warm ground; dark glass over photos.
-     The bright top edge reads as light catching the material. Never stack light glass on light glass. */
-  .glass {
-    background: rgba(255, 252, 247, 0.62);
-    -webkit-backdrop-filter: blur(20px) saturate(170%);
-    backdrop-filter: blur(20px) saturate(170%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.35), 0 10px 30px -18px rgba(60, 40, 20, 0.35);
+  /* Round icon button (back, cart, heart): 44px target, hairline ring. */
+  .icon-btn {
+    @apply inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-white text-ink
+      transition-[transform,background-color,border-color] duration-150 ease-out hover:border-ink active:scale-[0.94];
   }
-  .glass-strong {
-    background: rgba(255, 252, 247, 0.78);
-    -webkit-backdrop-filter: blur(28px) saturate(180%);
-    backdrop-filter: blur(28px) saturate(180%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.4), 0 24px 60px -30px rgba(60, 40, 20, 0.45);
+  /* Size chips, filter chips */
+  .chip {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-chip border border-edge bg-white px-3.5 text-sm text-ink
+      transition-[transform,background-color,border-color,color] duration-150 ease-out hover:border-ink active:scale-[0.96];
   }
-  .glass-dark {
-    background: rgba(20, 18, 16, 0.46);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    backdrop-filter: blur(20px) saturate(160%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  .chip[aria-pressed="true"], .chip[aria-current="page"] { @apply border-ink bg-ink text-white; }
+  .field {
+    @apply w-full rounded-chip border border-edge bg-white px-4 py-3 text-base outline-none transition-colors focus:border-ink;
   }
 }
 
-/* Scroll reveal (components/Reveal.tsx). Only hidden when JS is running (html.js), so content
-   never disappears if scripts fail. */
+/* Scroll reveal (components/Reveal.tsx + the inline script in app/layout.tsx). Only hidden when JS runs. */
 .js [data-reveal] {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 800ms cubic-bezier(0.23, 1, 0.32, 1), transform 800ms cubic-bezier(0.23, 1, 0.32, 1);
+  transform: translateY(20px);
+  transition: opacity 700ms cubic-bezier(0.23, 1, 0.32, 1), transform 700ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .js [data-reveal][data-in] { opacity: 1; transform: none; }
 
-/* Zoom-out on reveal (Details down to the stitch): photo eases from 135% to 100%, caption follows. */
-.js [data-reveal] .zoom-out { transform: scale(1.35); transition: transform 1800ms cubic-bezier(0.16, 1, 0.3, 1); }
+/* Zoom-out on reveal (Details down to the stitch): photo eases from 130% to 100%, caption follows. */
+.js [data-reveal] .zoom-out { transform: scale(1.3); transition: transform 1600ms cubic-bezier(0.16, 1, 0.3, 1); }
 .js [data-reveal][data-in] .zoom-out { transform: scale(1); }
-.js [data-reveal] .zoom-caption { opacity: 0; transform: translateY(14px); transition: opacity 700ms ease-out 450ms, transform 700ms cubic-bezier(0.23, 1, 0.32, 1) 450ms; }
+.js [data-reveal] .zoom-caption { opacity: 0; transform: translateY(12px); transition: opacity 600ms ease-out 400ms, transform 600ms cubic-bezier(0.23, 1, 0.32, 1) 400ms; }
 .js [data-reveal][data-in] .zoom-caption { opacity: 1; transform: none; }
 
-/* Pause looping decoration while hovered (marquees) */
-.pause-on-hover:hover > * { animation-play-state: paused; }
+/* Fold-out sections (<details>): the panel eases open where the browser can animate to auto height. */
+details.fold::details-content { block-size: 0; overflow: hidden; transition: block-size 260ms cubic-bezier(0.23, 1, 0.32, 1), content-visibility 260ms allow-discrete; }
+details.fold[open]::details-content { block-size: auto; }
+@supports (interpolate-size: allow-keywords) { :root { interpolate-size: allow-keywords; } }
+details.fold > summary { list-style: none; cursor: pointer; }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold .fold-chevron { transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1); }
+details.fold[open] .fold-chevron { transform: rotate(180deg); }
 
-/* Cork texture: fine dot grain used on panels and flyers */
-.cork-dots { background-image: radial-gradient(rgba(140, 107, 42, 0.16) 1px, transparent 1.2px); background-size: 14px 14px; }
-.cork-dots-light { background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1.2px); background-size: 14px 14px; }
-
-/* Outlined display type for graphic backgrounds */
-.text-outline { -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.5px currentColor; }
-
-/* People who ask for less transparency get solid, high-contrast surfaces instead of glass. */
-@media (prefers-reduced-transparency: reduce) {
-  .glass, .glass-strong { background: #FBF8F3; -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .glass-dark { background: #1A1715; -webkit-backdrop-filter: none; backdrop-filter: none; }
-}
+/* Bottom sheet (<dialog>) backdrop */
+dialog.sheet::backdrop { background: rgba(17, 17, 17, 0.45); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

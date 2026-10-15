@@ -1,16 +1,16 @@
 "use client";
 import Link from "next/link";
+import Icon from "./Icon";
 import { useCart } from "./CartProvider";
 
-export default function CartButton({ tone = "dark" }: { tone?: "dark" | "light" | "glass" }) {
+// Round cart button with the item count (header, product page top bar).
+export default function CartButton({ className = "" }: { className?: string }) {
   const { count } = useCart();
-  const stroke = tone === "light" ? "#2A2724" : "#FFFFFF";
   return (
-    <Link href="/cart" aria-label={`Cart, ${count} ${count === 1 ? "item" : "items"}`}
-      className={`relative flex h-11 w-11 items-center justify-center rounded-full backdrop-blur transition-transform duration-150 ease-out active:scale-[0.94] ${tone === "light" ? "bg-sand" : tone === "glass" ? "bg-ink/45 ring-1 ring-inset ring-white/15" : "bg-white/15"}`}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7z" /><path d="M9 7a3 3 0 0 1 6 0" /></svg>
+    <Link href="/cart" aria-label={`Cart, ${count} ${count === 1 ? "item" : "items"}`} className={`icon-btn relative ${className}`}>
+      <Icon name="bag" size={20} />
       {/* key={count}: the badge re-mounts and pops each time an item is added. */}
-      {count > 0 && <span key={count} className="absolute -right-1 -top-1 flex h-5 min-w-5 animate-pop-in items-center justify-center rounded-full bg-gold px-1 text-[11px] font-semibold text-ink">{count}</span>}
+      {count > 0 && <span key={count} className="tabular absolute -right-1 -top-1 flex h-5 min-w-5 animate-pop-in items-center justify-center rounded-full bg-ink px-1 text-[11px] font-semibold text-white">{count}</span>}
     </Link>
   );
 }

@@ -12,11 +12,9 @@ export default async function GalleryPage() {
   return (
     <main id="main">
       <Header />
-      <div className="mx-auto flex max-w-page flex-col gap-10 px-5 pt-14 md:px-8 md:pt-20">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <SectionTitle level={1} light="The LP" strong="gallery" sub="Our pairs up close, and how they wear. Tap any photo to see it full size." />
-          <a href={site.instagram} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm self-start md:self-auto">Follow {site.instagramHandle}</a>
-        </div>
+      <div className="mx-auto flex max-w-page flex-col gap-8 px-5 pt-8 md:px-8 md:pt-14">
+        <SectionTitle level={1} title="The LP gallery" sub="Our pairs up close, and how they wear. Tap any photo to see it full size."
+          action={<a href={site.instagram} target="_blank" rel="noreferrer" className="btn btn-secondary btn-sm hidden sm:inline-flex">Follow {site.instagramHandle}</a>} />
         <GalleryGrid items={gallery} />
       </div>
       <Footer />

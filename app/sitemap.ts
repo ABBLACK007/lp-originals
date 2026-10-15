@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getContent, visibleProducts } from "@/lib/content";
+import { categories } from "@/lib/content-types";
 import { siteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -11,5 +12,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
     images: p.images.map((i) => new URL(i.src, siteUrl).toString()),
   }));
-  return [...pages, ...items];
+  const shelves = categories.map((c) => ({ url: `${siteUrl}/shop/category/${c.id}`, changeFrequency: "weekly" as const, priority: 0.8 }));
+  return [...pages, ...shelves, ...items];
 }

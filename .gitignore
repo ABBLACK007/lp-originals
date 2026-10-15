@@ -29,3 +29,6 @@ Thumbs.db
 # Playwright test output
 /test-results
 /playwright-report
+
+# impeccable review captures (regenerated each review)
+/.impeccable/review

@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Logo from "./Logo";
 import CartButton from "./CartButton";
+import Icon from "./Icon";
+import { useSaved } from "./SavedProvider";
 import { useWhatsapp } from "./StoreProvider";
 
 const nav = [
@@ -14,12 +16,15 @@ const nav = [
   { href: "/#ordering", label: "How to Order" },
 ];
 
-// overlay: sits on top of the dark hero photo. solid: sticky dark bar for inner pages.
-// float: home page only; a fixed bar that slides down once the hero has scrolled away.
-export default function Header({ variant = "solid", onLight = false }: { variant?: "overlay" | "solid" | "float"; onLight?: boolean }) {
+// overlay: on top of the home hero photo (light logo, white controls).
+// solid: sticky white bar on inner pages. float: home only, a white bar that slides down once the hero is gone.
+// Phones navigate with the tab bar (components/TabBar.tsx); the menu holds the secondary links.
+export default function Header({ variant = "solid", className = "" }: { variant?: "overlay" | "solid" | "float"; className?: string }) {
   const [open, setOpen] = useState(false);
   const whatsappLink = useWhatsapp();
+  const { slugs } = useSaved();
   const [shown, setShown] = useState(variant !== "float");
+  const overlay = variant === "overlay";
   useEffect(() => {
     if (variant !== "float") return;
     let raf = 0;
@@ -30,7 +35,7 @@ export default function Header({ variant = "solid", onLight = false }: { variant
   }, [variant]);
   useEffect(() => { if (!shown) setOpen(false); }, [shown]);
   const path = usePathname();
-  // Section-based, so /shop, /shop?category=… (served from /shop/category/…) and product pages all mark "Shop"
+  // Section-based, so /shop, the category pages, rewritten /shop?category=… links and product pages all mark "Shop"
   // and the server-rendered HTML matches the browser.
   const current = (href: string) => (href === "/shop" ? path.startsWith("/shop") : path === href);
   useEffect(() => setOpen(false), [path]);
@@ -44,37 +49,42 @@ export default function Header({ variant = "solid", onLight = false }: { variant
   return (
     <header
       inert={!shown} aria-hidden={!shown || undefined}
-      className={variant === "overlay" ? "relative z-20"
-        : variant === "float" ? `fixed inset-x-0 top-0 z-30 bg-ink/90 px-5 py-3 backdrop-blur-md transition-[transform,box-shadow] duration-300 ease-out md:px-10 ${shown ? "translate-y-0 shadow-[0_8px_30px_rgba(20,18,16,0.25)]" : "-translate-y-full shadow-none"}`
-        : "sticky top-0 z-30 bg-ink/95 px-5 py-3 backdrop-blur md:px-10"}>
-      <div className="relative">
-        <div className="flex items-center justify-between">
-          <Logo dark={onLight} />
-          <nav aria-label="Main" className={`hidden gap-1 rounded-full p-1.5 backdrop-blur lg:flex ${variant === "overlay" ? "bg-ink/45 ring-1 ring-inset ring-white/15" : "bg-white/15"}`}>
+      className={overlay ? "relative z-20"
+        : variant === "float" ? `fixed inset-x-0 top-0 z-30 border-b border-line bg-white px-5 py-2.5 transition-transform duration-300 ease-out md:px-8 ${shown ? "translate-y-0" : "-translate-y-full"}`
+        : `sticky top-0 z-30 border-b border-line bg-white px-5 py-2.5 md:px-8 ${className}`}>
+      <div className={`relative ${overlay ? "" : "mx-auto max-w-page"}`}>
+        <div className="flex items-center justify-between gap-4">
+          <Logo dark={!overlay} />
+          <nav aria-label="Main" className={`hidden items-center gap-1 rounded-full p-1 lg:flex ${overlay ? "bg-black/35 backdrop-blur-md" : ""}`}>
             {nav.map((n) => (
               <Link key={n.href} href={n.href} aria-current={current(n.href) ? "page" : undefined}
-                className="rounded-full px-4 py-2.5 text-[15px] text-white no-underline transition-colors hover:bg-white/10 aria-[current=page]:bg-white/15">{n.label}</Link>
+                className={`rounded-full px-4 py-2.5 text-[14px] font-medium no-underline transition-colors ${overlay
+                  ? "text-white hover:bg-white/15 aria-[current=page]:bg-white aria-[current=page]:text-ink"
+                  : "text-ink hover:bg-tile aria-[current=page]:bg-ink aria-[current=page]:text-white"}`}>{n.label}</Link>
             ))}
           </nav>
-          <div className="flex items-center gap-2.5">
-            <CartButton tone={variant === "overlay" ? "glass" : "dark"} />
-            <a href={whatsappLink()} target="_blank" rel="noreferrer"
-              className="btn btn-gold btn-sm hidden lg:inline-flex">Order on WhatsApp</a>
+          <div className="flex items-center gap-2">
+            <Link href="/saved" aria-label={`Saved styles, ${slugs.length}`} className="icon-btn relative hidden md:inline-flex">
+              <Icon name="heart" size={20} />
+              {slugs.length > 0 && <span key={slugs.length} className="tabular absolute -right-1 -top-1 flex h-5 min-w-5 animate-pop-in items-center justify-center rounded-full bg-ink px-1 text-[11px] font-semibold text-white">{slugs.length}</span>}
+            </Link>
+            <CartButton className="hidden md:inline-flex" />
+            <a href={whatsappLink()} target="_blank" rel="noreferrer" className={`btn btn-sm hidden lg:inline-flex ${overlay ? "btn-light" : "btn-primary"}`}>Order on WhatsApp</a>
             <button type="button" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(!open)}
-              className={`flex h-11 w-11 items-center justify-center rounded-full backdrop-blur transition-transform duration-150 ease-out active:scale-[0.94] lg:hidden ${variant === "overlay" ? "bg-ink/45 ring-1 ring-inset ring-white/15" : "bg-white/15"}`}>
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-                {open ? (<><path d="M6 6l12 12" /><path d="M18 6L6 18" /></>) : (<><path d="M4 8h16" /><path d="M4 16h16" /></>)}
-              </svg>
+              className="icon-btn lg:hidden">
+              <Icon name={open ? "close" : "menu"} size={20} />
             </button>
           </div>
         </div>
         {/* Floats over the page instead of pushing it down. */}
         {open && (
-          <nav id="mobile-nav" aria-label="Mobile" className="absolute inset-x-0 top-full z-30 mt-3 flex origin-top animate-pop-in flex-col gap-1 rounded-panel bg-char p-3 shadow-2xl lg:hidden">
-            {nav.map((n) => (
-              <Link key={n.href} href={n.href} onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-white no-underline hover:bg-white/10">{n.label}</Link>
+          <nav id="mobile-nav" aria-label="Mobile" className="absolute inset-x-0 top-full z-30 mt-3 flex origin-top animate-pop-in flex-col gap-0.5 rounded-panel bg-white p-2 shadow-float lg:hidden">
+            {[...nav, { href: "/saved", label: "Saved" }, { href: "/shop#size-guide", label: "Size guide" }].map((n) => (
+              <Link key={n.href} href={n.href} onClick={() => setOpen(false)} className="flex min-h-[48px] items-center justify-between rounded-chip px-4 text-[15px] font-medium text-ink no-underline hover:bg-tile">
+                {n.label}<Icon name="chevronRight" size={18} className="text-muted" />
+              </Link>
             ))}
-            <a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn btn-gold mt-2 py-3">Order on WhatsApp</a>
+            <a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn btn-primary mt-2">Order on WhatsApp</a>
           </nav>
         )}
       </div>

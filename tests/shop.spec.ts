@@ -4,8 +4,13 @@ import type { Page } from "@playwright/test";
 
 const SANDAL = "/shop/two-buckle-sandal-rust";
 const cards = (page: Page) => page.locator("main article");
-const cartButton = (page: Page) => page.locator("header").first().getByRole("link", { name: /^Cart, / });
+// The round cart button (header on wide screens, product top bar on phones); the tab bar is checked separately.
+const cartButton = (page: Page) => page.getByRole("link", { name: /^Cart, \d+ items?$/ }).filter({ visible: true }).first();
 const naira = (s: string) => Number(s.replace(/[^\d]/g, ""));
+// The cart count as visitors see it: the round cart button on wide screens, the tab bar on phones.
+const expectCartCount = (page: Page, n: number) => isPhone()
+  ? expect(page.getByRole("navigation", { name: "Tab bar" }).getByRole("link", { name: n ? `Cart, ${n}` : "Cart", exact: true })).toBeVisible()
+  : expect(cartButton(page)).toHaveAccessibleName(`Cart, ${n} ${n === 1 ? "item" : "items"}`);
 
 async function addToCart(page: Page, path: string, size: string) {
   await page.goto(path);
@@ -25,11 +30,11 @@ test.describe("shop", () => {
     await expect(filters.getByRole("button", { name: /^All/ })).toContainText(String(all));
 
     await filters.getByRole("button", { name: /^Clogs/ }).click();
-    await expect(page).toHaveURL(/\?category=clogs$/);
+    await expect(page).toHaveURL(/\/shop\/category\/clogs$/);
     const clogs = await cards(page).count();
     expect(clogs).toBeGreaterThan(0);
     expect(clogs).toBeLessThan(all);
-    for (const label of await cards(page).locator("span.uppercase").allTextContents()) expect(label).toBe("Clogs");
+    await expect(filters.getByRole("button", { name: /^Clogs/ })).toContainText(String(clogs));
 
     await page.reload();
     await expect(filters.getByRole("button", { name: /^Clogs/ })).toHaveAttribute("aria-pressed", "true");
@@ -41,19 +46,26 @@ test.describe("shop", () => {
     await expect(cards(page)).toHaveCount(all);
   });
 
+  test("old ?category= links open the filtered shop", async ({ page }) => {
+    await page.goto("/shop?category=slides");
+    await hydrated(page);
+    await expect(page.getByRole("group", { name: "Filter by style" }).getByRole("button", { name: /^Slides & palms/ })).toHaveAttribute("aria-pressed", "true");
+    await expect(page).toHaveURL(/\/shop\/category\/slides$/);
+  });
+
   test("product cards open the product page", async ({ page }) => {
     await page.goto("/shop");
     const first = cards(page).first();
-    const name = (await first.getByRole("link").nth(1).textContent())?.trim(); // photo, name, "Choose size"
-    await first.getByRole("link").first().click();
+    const name = (await first.getByRole("link").textContent())?.trim(); // the name link covers the whole tile
+    await first.getByRole("link").click();
     await expect(page).toHaveURL(/\/shop\/[a-z0-9-]+$/);
     await expect(page.locator("h1")).toContainText(name!);
   });
 
   test("category links from a product open the filtered shop", async ({ page }) => {
     await page.goto(SANDAL);
-    await page.getByRole("link", { name: "Cork footbed" }).first().click();
-    await expect(page).toHaveURL(/\/shop\?category=cork$/);
+    await page.getByRole("link", { name: "Cork footbed", exact: true }).filter({ visible: true }).first().click();
+    await expect(page).toHaveURL(/\/shop\/category\/cork$/);
     await expect(page.getByRole("group", { name: "Filter by style" }).getByRole("button", { name: /^Cork footbed/ })).toHaveAttribute("aria-pressed", "true");
   });
 });
@@ -64,12 +76,12 @@ test.describe("product page", () => {
     await hydrated(page);
     await page.getByRole("button", { name: "Add to cart" }).first().click();
     await expect(page.getByRole("alert").filter({ hasText: "Choose a size to add" })).toBeVisible();
-    await expect(cartButton(page)).toHaveAccessibleName("Cart, 0 items");
+    await expectCartCount(page, 0);
   });
 
   test("adds the chosen size to the cart and fills in the WhatsApp message", async ({ page }) => {
     await addToCart(page, SANDAL, "41");
-    await expect(cartButton(page)).toHaveAccessibleName("Cart, 1 item");
+    await expectCartCount(page, 1);
     const text = whatsappText(await page.getByRole("link", { name: "Order on WhatsApp" }).last().getAttribute("href"));
     expect(text).toBe(`${GREETING}the Two-Buckle Sandal (Rust suede), EU size 41.`);
   });
@@ -89,7 +101,7 @@ test.describe("product page", () => {
     await page.goto(SANDAL);
     await hydrated(page);
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
-    const bar = page.locator("div.fixed.bottom-0").filter({ hasText: "Two-Buckle Sandal" });
+    const bar = page.locator("div.fixed").filter({ hasText: "choose a size" });
     await expect(bar).toBeVisible();
     await bar.getByRole("button", { name: "Choose size" }).click();
     await expect(page.getByRole("alert").filter({ hasText: "Choose a size to add" })).toBeInViewport(); // scrolled back to the sizes
@@ -103,12 +115,12 @@ test.describe("cart", () => {
     await hydrated(page);
     const line = page.locator("main li").filter({ hasText: "Two-Buckle Sandal" });
     await expect(line).toContainText("EU 41");
-    const unit = naira(await line.locator("span.text-sm").filter({ hasText: "₦" }).first().textContent() ?? "");
+    const unit = naira(await line.locator(".tabular").first().textContent() ?? ""); // line total at quantity 1
 
     await line.getByRole("button", { name: "Increase quantity" }).click();
     await expect(line.locator("[aria-live]")).toHaveText("2");
     if (unit > 0) await expect(page.locator("aside")).toContainText((unit * 2).toLocaleString("en-NG"));
-    await expect(cartButton(page)).toHaveAccessibleName("Cart, 2 items");
+    await expectCartCount(page, 2);
 
     await page.reload();
     await hydrated(page);
@@ -117,9 +129,9 @@ test.describe("cart", () => {
     const text = whatsappText(await page.locator("aside").getByRole("link", { name: "Order on WhatsApp" }).getAttribute("href"));
     expect(text).toContain("2 x Two-Buckle Sandal (Rust suede), EU 41");
 
-    await line.getByRole("button", { name: "Remove" }).click();
+    await line.getByRole("button", { name: /^Remove / }).click();
     await expect(page.getByText("Your cart is empty")).toBeVisible();
-    await expect(cartButton(page)).toHaveAccessibleName("Cart, 0 items");
+    await expectCartCount(page, 0);
   });
 
   test("ignores tampered cart data saved in the browser", async ({ page }) => {
@@ -134,7 +146,7 @@ test.describe("cart", () => {
     await page.goto("/cart");
     await hydrated(page);
     await expect(page.locator("main li")).toHaveCount(1);
-    await expect(cartButton(page)).toHaveAccessibleName("Cart, 1 item");
+    await expectCartCount(page, 1);
     await page.evaluate(() => localStorage.setItem("lp-cart-v2", "{not json"));
     await page.reload();
     await expect(page.getByText("Your cart is empty")).toBeVisible();

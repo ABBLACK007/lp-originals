@@ -1,28 +1,16 @@
 "use client";
-import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Header from "./Header";
-import RotatingStamp from "./RotatingStamp";
+import Icon from "./Icon";
 
 export type HeroCta = { label: string; href: string; style: "gold" | "outline"; external?: boolean };
 // Art-directed photo, pre-computed on the server with getImageProps (landscape for desktop, portrait for phones).
 export type HeroArt = { desktop: string; mobile: string; src: string; width: number; height: number; sizes: string };
-type Base = { id: string; eyebrow: string; title: string; sub: string; ctas: HeroCta[] };
-export type HeroSlide =
-  | (Base & { kind: "photo"; art: HeroArt; position?: string; focus?: string; shade?: "left" })
-  | (Base & { kind: "flyer"; tone: "ink" | "sand" | "cocoa" | "taupe"; photos: StaticImageData[]; word: string; layout?: "stack" | "lineup"; scene?: Scene });
-// Art direction for a flyer slide (inspired by poster/banner layouts, drawn in code around LP photos):
-// comfort: cream backdrop, palm-leaf shadow, display circle, boxed tag and feature tagline
-// studio:  white studio, plinth the shoes lean on, hard window shadow, big solid word
-// classic: caramel-to-brown gradient, pedestal, framed brand title
-type Scene = "comfort" | "studio" | "classic";
+export type HeroSlide = { id: string; art: HeroArt; focus?: string; title: string; sub: string; ctas: HeroCta[] };
 
-// Light-background flyer tones get dark text and bronze accents.
-const isLight = (s: HeroSlide) => s.kind === "flyer" && (s.tone === "sand" || s.tone === "taupe");
-
-// Slide length is the "animate-progress" duration in tailwind.config.ts (6.5s); the bar finishing advances the slide.
-
+// Full-bleed black & white photo slides (the mockup's opening screen): bold uppercase headline, one white
+// button. Slide length is the "animate-progress" duration in tailwind.config.ts; the bar finishing advances.
 export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [i, setI] = useState(0);
   const [userPaused, setUserPaused] = useState(false);
@@ -43,10 +31,8 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   }, []);
 
   const go = useCallback((n: number) => setI((n + slides.length) % slides.length), [slides.length]);
-  const autoplay = !reduced;
+  const autoplay = !reduced && slides.length > 1;
   const running = autoplay && !userPaused && !hovered && !focused && !hidden;
-  const cur = slides[i];
-  const onDark = !isLight(cur);
 
   const onKey = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowRight") go(i + 1);
@@ -68,65 +54,67 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
           const dx = e.clientX - touchX.current; touchX.current = null;
           if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1));
         }}
-        className="relative h-[calc(100svh-24px)] max-h-[800px] min-h-[620px] touch-pan-y overflow-hidden rounded-hero bg-ink md:h-[780px]"
+        className="relative h-[calc(100svh-104px)] max-h-[760px] min-h-[540px] touch-pan-y overflow-hidden rounded-hero bg-ink md:h-[760px] md:max-h-none"
       >
         {slides.map((s, n) => (
           <div key={s.id} role="group" aria-roledescription="slide" aria-label={`${n + 1} of ${slides.length}: ${s.title}`}
             aria-hidden={n !== i} inert={n !== i}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${n === i ? "z-10 opacity-100" : "z-0 opacity-0"}`}>
-            {s.kind === "photo" ? <PhotoBg s={s} active={n === i} priority={n === 0} /> : <FlyerBg s={s} active={n === i} />}
+            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${n === i ? "z-10 opacity-100" : "z-0 opacity-0"}`}>
+            <Photo s={s} active={n === i} first={n === 0} />
             <SlideText s={s} active={n === i} />
           </div>
         ))}
 
-        <div className="absolute inset-x-0 top-0 z-20 px-5 pt-5 md:px-10 md:pt-7"><Header variant="overlay" onLight={!onDark} /></div>
+        <div className="absolute inset-x-0 top-0 z-20 px-4 pt-4 md:px-8 md:pt-6"><Header variant="overlay" /></div>
 
-        {/* Controls */}
-        <div className="absolute inset-x-0 bottom-0 z-20 flex items-center gap-4 px-5 pb-6 md:px-10 md:pb-9">
-          <div className="flex flex-grow items-center gap-2" role="group" aria-label="Choose slide">
-            {slides.map((s, n) => (
-              <button key={s.id} type="button" onClick={() => go(n)} aria-label={`Show slide ${n + 1}: ${s.title}`} aria-current={n === i}
-                className="group flex h-8 items-center">
-                <span className={`relative block h-[3px] overflow-hidden rounded-full transition-[width,background-color] duration-500 ease-out ${onDark ? "bg-white/30" : "bg-ink/20"} ${n === i ? "w-12 md:w-16" : `w-5 ${onDark ? "group-hover:bg-white/60" : "group-hover:bg-ink/40"}`}`}>
-                  {n === i && (
-                    <span key={i}
-                      onAnimationEnd={() => running && go(i + 1)}
-                      className={`absolute inset-0 origin-left rounded-full bg-gold ${autoplay ? "animate-progress" : ""}`}
-                      style={{ animationPlayState: running ? "running" : "paused" }} />
-                  )}
-                </span>
-              </button>
-            ))}
+        {/* Controls: progress dots centred on phones; counter, pause and arrows on wider screens */}
+        {slides.length > 1 && (
+          <div className="absolute inset-x-0 bottom-0 z-20 flex items-center justify-center gap-4 px-5 pb-5 md:justify-between md:px-10 md:pb-8">
+            <div className="flex items-center gap-1.5" role="group" aria-label="Choose slide">
+              {slides.map((s, n) => (
+                <button key={s.id} type="button" onClick={() => go(n)} aria-label={`Show slide ${n + 1}: ${s.title}`} aria-current={n === i}
+                  className="group flex h-8 items-center px-0.5">
+                  <span className={`relative block h-1 overflow-hidden rounded-full bg-white/35 transition-[width,background-color] duration-300 ease-out ${n === i ? "w-9" : "w-2 group-hover:bg-white/70"}`}>
+                    {n === i && (
+                      <span key={i} onAnimationEnd={() => running && go(i + 1)}
+                        className={`absolute inset-0 origin-left rounded-full bg-white ${autoplay ? "animate-progress" : ""}`}
+                        style={{ animationPlayState: running ? "running" : "paused" }} />
+                    )}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <div className="absolute right-4 flex items-center gap-2 md:static">
+              <span className="tabular hidden text-sm text-white/80 md:block" aria-hidden="true">{i + 1} / {slides.length}</span>
+              {autoplay && (
+                <RoundBtn label={userPaused ? "Play slideshow" : "Pause slideshow"} onClick={() => setUserPaused(!userPaused)}>
+                  <Icon name={userPaused ? "play" : "pause"} size={16} filled={userPaused} />
+                </RoundBtn>
+              )}
+              <div className="hidden gap-2 md:flex">
+                <RoundBtn label="Previous slide" onClick={() => go(i - 1)}><Icon name="arrowLeft" size={18} /></RoundBtn>
+                <RoundBtn label="Next slide" onClick={() => go(i + 1)}><Icon name="arrowRight" size={18} /></RoundBtn>
+              </div>
+            </div>
           </div>
-          <span className={`hidden font-display text-lg transition-colors md:block ${onDark ? "text-white/80" : "text-ink/70"}`} aria-hidden="true">
-            {String(i + 1).padStart(2, "0")}<span className="text-sm opacity-60">/{String(slides.length).padStart(2, "0")}</span>
-          </span>
-          {autoplay && (
-            <CircleBtn label={userPaused ? "Play slideshow" : "Pause slideshow"} onClick={() => setUserPaused(!userPaused)}>
-              {userPaused ? <path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none" /> : <><path d="M9 6v12" /><path d="M15 6v12" /></>}
-            </CircleBtn>
-          )}
-          <div className="hidden gap-2 md:flex">
-            <CircleBtn label="Previous slide" onClick={() => go(i - 1)}><path d="M19 12H5" /><path d="M11 6l-6 6 6 6" /></CircleBtn>
-            <CircleBtn label="Next slide" onClick={() => go(i + 1)}><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></CircleBtn>
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );
 }
 
-function CircleBtn({ label, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
+function RoundBtn({ label, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
   return (
     <button type="button" onClick={onClick} aria-label={label}
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink/50 text-white ring-1 ring-inset ring-white/20 backdrop-blur transition-[transform,background-color] duration-150 ease-out hover:bg-ink/70 active:scale-[0.94]">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{children}</svg>
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/40 text-white transition-[transform,background-color,border-color] duration-150 ease-out hover:border-white hover:bg-white/10 active:scale-[0.94]">
+      {children}
     </button>
   );
 }
 
-// Full-bleed photo with a slow push-in while the slide is showing.
-function PhotoBg({ s, active, priority }: { s: Extract<HeroSlide, { kind: "photo" }>; active: boolean; priority: boolean }) {
+// Full-bleed photo in black & white with a slow push-in while the slide is showing. The first slide's photo is
+// preloaded from the page <head> (app/page.tsx).
+function Photo({ s, active, first }: { s: HeroSlide; active: boolean; first: boolean }) {
   return (
     <>
       <picture className="absolute inset-0 overflow-hidden">
@@ -134,180 +122,36 @@ function PhotoBg({ s, active, priority }: { s: Extract<HeroSlide, { kind: "photo
         <source srcSet={s.art.mobile} sizes={s.art.sizes} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={s.art.src} width={s.art.width} height={s.art.height} alt="" decoding="async"
-          loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "low"}
+          loading={first ? "eager" : "lazy"} fetchPriority={first ? "high" : "low"}
           style={s.focus ? { objectPosition: s.focus } : undefined}
-          className={`h-full w-full object-cover transition-transform duration-[8000ms] ease-out ${s.position ?? ""} ${active ? "scale-100" : "scale-[1.08]"}`} />
+          className={`h-full w-full object-cover contrast-[1.06] grayscale transition-transform duration-[8000ms] ease-out ${active ? "scale-100" : "scale-[1.06]"}`} />
       </picture>
-      <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/20 to-ink/80" aria-hidden="true" />
-      {/* Product shots on bright backgrounds: extra shade behind the text so white type stays readable */}
-      {s.shade === "left" && <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 to-transparent md:bg-gradient-to-r md:from-ink/90 md:via-ink/55 md:to-transparent" aria-hidden="true" />}
-    </>
-  );
-}
-
-// Poster layout for portrait product photos: a blurred colour wash of the product fills the whole slide,
-// with cork grain, a big outlined word, fanned "printed" photos and a turning stamp on top.
-// Phones place the photo stack inside the text column (see SlideText) so it always fills the space above the
-// headline; tablets/desktop show it on the right.
-function FlyerBg({ s, active }: { s: Extract<HeroSlide, { kind: "flyer" }>; active: boolean }) {
-  const ink = !isLight(s); // dark slides (ink, cocoa) share light text and gold accents
-  const cocoa = s.tone === "cocoa";
-  const taupe = s.tone === "taupe";
-  const lineup = s.layout === "lineup";
-  return (
-    <div className={`absolute inset-0 overflow-hidden ${cocoa ? "bg-[#2A1C13]" : taupe ? "bg-[#E8E1DB]" : ink ? "bg-ink" : "bg-dune"}`}>
-      {s.scene ? <SceneLayers scene={s.scene} active={active} lineup={lineup} /> : <>
-      {/* Ambient wash: a tiny (≈64px) version of the photo, blurred and scaled up. Costs a few KB. Cocoa slides use a pure gradient instead. */}
-      {!cocoa && !taupe && (
-      <div aria-hidden="true" className={`absolute inset-0 transition-transform duration-[8000ms] ease-out ${active ? "scale-110" : "scale-125"}`}>
-        <Image src={s.photos[0]} alt="" fill sizes="64px" quality={75} className={`object-cover blur-2xl ${cocoa ? "opacity-25 saturate-150" : ink ? "opacity-35" : "opacity-40 saturate-50"}`} />
-      </div>
-      )}
-      <div aria-hidden="true" className={`absolute inset-0 ${cocoa ? "bg-[radial-gradient(85%_55%_at_85%_8%,rgba(201,164,92,0.42),transparent_60%),radial-gradient(70%_45%_at_0%_95%,rgba(140,107,42,0.32),transparent_70%),linear-gradient(to_bottom,#3A2618,#26180F_55%,#140E0A)]" : ink ? "bg-[radial-gradient(90%_60%_at_70%_25%,rgba(201,164,92,0.14),transparent_65%),linear-gradient(to_bottom,rgba(20,18,16,0.7),rgba(20,18,16,0.45)_40%,rgba(20,18,16,0.96))]" : taupe ? "bg-[radial-gradient(70%_55%_at_75%_35%,rgba(255,255,255,0.75),transparent_70%),linear-gradient(to_bottom,rgba(232,225,219,0),rgba(214,204,195,0.6))]" : "bg-gradient-to-b from-dune/70 via-dune/40 to-dune/95"}`} />
-      {cocoa && (
-        // Gold "sun" arcs behind the photos
-        <div aria-hidden="true" className="absolute left-1/2 top-[33%] h-[min(130vw,700px)] w-[min(130vw,700px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-gold/40 md:left-[72%] md:top-1/2">
-          <div className="absolute inset-[10%] rounded-full border border-dashed border-gold/25" />
-          <div className="absolute inset-[22%] rounded-full bg-gold/10" />
-        </div>
-      )}
-      </>}
-      <div aria-hidden="true" className={`absolute inset-0 ${ink ? "cork-dots-light" : "cork-dots"}`} />
-      {/* Soft spotlight behind the photos */}
-      {!s.scene && <div aria-hidden="true" className={`absolute left-1/2 top-[30%] h-[60%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl md:left-[72%] md:top-1/2 md:w-[50%] ${ink ? "bg-gold/15" : "bg-white/50"}`} />}
-      <span aria-hidden="true"
-        className={`text-outline pointer-events-none absolute right-3 top-[72px] select-none font-display text-[120px] font-bold uppercase leading-none md:bottom-[-3.5rem] md:left-[28%] md:right-auto md:top-auto md:text-[260px] ${s.scene === "studio" ? "text-ink/[0.07] [-webkit-text-fill-color:currentColor] [-webkit-text-stroke:0]" : ink ? "text-gold/35" : "text-bronze/35"} transition-transform duration-[8000ms] ease-out ${active ? "translate-x-0" : "translate-x-10"}`}>
-        {s.word}
-      </span>
-      <div className="absolute inset-y-0 right-[6%] hidden w-[46%] items-center justify-center md:flex">
-        {lineup
-          ? <div className={`aspect-[0.78] max-w-full ${s.scene === "classic" ? "mt-[18%] h-[64%]" : "h-[80%]"}`}><Lineup photos={s.photos} active={active} sizes="20vw" /></div>
-          : <PhotoStack photos={s.photos} active={active} size="desktop" />}
-        {(!s.scene || s.scene === "studio") && <RotatingStamp size={112} tone={ink ? "gold" : "bronze"} filled className={`absolute ${lineup ? "-right-8 bottom-[22%]" : "right-[-2%] top-[17%]"}`} />}
-      </div>
-    </div>
-  );
-}
-
-function SceneLayers({ scene, active, lineup }: { scene: Scene; active: boolean; lineup: boolean }) {
-  if (scene === "comfort") return (
-    <>
-      <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(160deg,#F6F2EC,#ECE4DA_60%,#E2D8CC)]" />
-      {/* Palm-leaf shadow falling across the top right */}
-      <svg aria-hidden="true" viewBox="0 0 400 400" className={`absolute -right-16 -top-10 w-[75%] max-w-[620px] text-[#8C7B66] opacity-[0.16] blur-[3px] transition-transform duration-[8000ms] ease-out md:-right-10 md:w-[48%] ${active ? "rotate-0" : "rotate-6"}`}>
-        <g fill="currentColor">
-          {Array.from({ length: 11 }, (_, n) => <ellipse key={n} cx="200" cy="120" rx="16" ry="120" transform={`rotate(${-75 + n * 15} 330 330)`} />)}
-        </g>
-      </svg>
-      {/* Display circle behind the shoes */}
-      <div aria-hidden="true" className="absolute left-1/2 top-[31%] h-[min(86vw,420px)] w-[min(86vw,420px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E3D9CD] shadow-[inset_0_-30px_60px_rgba(140,107,42,0.12)] md:left-[71%] md:top-[52%] md:h-[560px] md:w-[560px]" />
-      {/* Boxed tag + tagline (wide screens) */}
-      <div aria-hidden="true" className="absolute right-10 top-28 hidden w-[132px] flex-col items-center gap-1.5 border border-bronze/40 px-3 py-4 text-center text-[10px] font-semibold tracking-[0.22em] text-bronze lg:flex">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M20 4C11 4 5 10 5 19" /><path d="M20 4c0 9-6 14-13 14" /><path d="M5 19l7-7" /></svg>
-        <span>HANDMADE</span><span>CORK FOOTBED</span><span>MADE TO ORDER</span><span className="mt-1 h-px w-10 bg-bronze/50" />
-      </div>
-      <span aria-hidden="true" className="absolute bottom-[42px] left-1/2 hidden -translate-x-1/2 text-[11px] tracking-[0.42em] text-bronze/80 lg:block">COMFORT THAT MOVES WITH YOU</span>
-    </>
-  );
-  if (scene === "studio") return (
-    <>
-      <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(115deg,#FBFAF8,#F1EFEB_45%,#E2DFDA)]" />
-      {/* Hard window light falling across the wall */}
-      <div aria-hidden="true" className="absolute -right-1/4 top-0 h-full w-[70%] skew-x-[-24deg] bg-gradient-to-r from-transparent via-white/70 to-transparent" />
-      {/* Plinth the shoes lean against, with a long shadow on the wall */}
-      <div aria-hidden="true" className={`absolute left-[30%] top-[22%] h-[34%] w-[44%] md:left-[63%] md:top-[26%] md:h-[66%] md:w-[24%] ${lineup ? "hidden" : ""}`}>
-        <div className="absolute inset-0 translate-x-[18%] translate-y-[6%] skew-x-[-18deg] bg-ink/10 blur-md" />
-        <div className="absolute inset-0 bg-gradient-to-r from-white to-[#F1EFEB] shadow-[0_30px_60px_-30px_rgba(20,18,16,0.35)]" />
-        <div className="absolute inset-y-0 left-full w-[16%] origin-left skew-y-[-35deg] bg-gradient-to-b from-[#DAD6CF] to-[#C7C2BA]" />
-        <div className="absolute inset-x-0 bottom-full h-[5%] origin-bottom skew-x-[-55deg] bg-[#F7F6F3]" />
-      </div>
-      {/* Floor line */}
-      <div aria-hidden="true" className="absolute inset-x-0 top-[56%] h-px bg-ink/10 md:top-[96%]" />
-    </>
-  );
-  return (
-    <>
-      <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(to_bottom,#C29A78,#A47552_45%,#6E4127)]" />
-      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(70%_50%_at_75%_20%,rgba(255,240,220,0.35),transparent_70%)]" />
-      {/* Pedestal rising from the bottom behind the shoes */}
-      <div aria-hidden="true" className="absolute bottom-0 left-[12%] h-[52%] w-[76%] bg-gradient-to-b from-[#8A5A38] to-[#5E3820] shadow-[inset_0_20px_40px_rgba(0,0,0,0.15)] md:left-[56%] md:h-[58%] md:w-[30%]" />
-      {/* Framed brand title (wide screens) */}
-      <div aria-hidden="true" className="absolute right-[6%] top-[13%] hidden w-[46%] flex-col items-center lg:flex">
-        <span className="border border-white/50 px-6 pb-1 pt-2 font-display text-[44px] font-light uppercase leading-none tracking-[0.18em] text-white/90">LP Wears</span>
-        <span className="-mt-2.5 bg-[#B38563] px-3 text-[11px] tracking-[0.4em] text-white/90">HANDMADE FOOTWEAR</span>
-      </div>
-    </>
-  );
-}
-
-// Staggered two-column line-up of products (a zig-zag, like a catalogue flyer). Tiles rise in one after another.
-function Lineup({ photos, active, sizes }: { photos: StaticImageData[]; active: boolean; sizes: string }) {
-  const cols = [photos.filter((_, n) => n % 2 === 0), photos.filter((_, n) => n % 2 === 1)];
-  return (
-    <div className="grid h-full grid-cols-2 gap-3">
-      {cols.map((col, c) => (
-        <div key={c} className={`flex min-h-0 flex-col gap-3 ${c === 0 ? "pb-[14%]" : "pt-[14%]"}`}>
-          {col.map((src, n) => {
-            const order = n * 2 + c;
-            return (
-              <div key={order} style={{ transitionDelay: active ? `${150 + order * 110}ms` : "0ms" }}
-                className={`relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-white p-1.5 shadow-[0_18px_40px_-18px_rgba(20,18,16,0.45)] transition-[transform,opacity] duration-700 ease-out ${active ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"}`}>
-                <div className="relative h-full w-full overflow-hidden rounded-xl"><Image src={src} alt="" fill sizes={sizes} loading="eager" className="object-cover" /></div>
-              </div>
-            );
-          })}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// Two fanned prints (front + back). Heights are relative to the box it sits in.
-function PhotoStack({ photos, active, size }: { photos: StaticImageData[]; active: boolean; size: "phone" | "desktop" }) {
-  const [a, b] = photos;
-  const desk = size === "desktop";
-  return (
-    <>
-      {b && (
-        <div className={`absolute aspect-[4/5] w-auto overflow-hidden rounded-xl bg-white shadow-2xl transition-transform duration-1000 ease-out ${desk ? "h-[58%] p-2" : "h-[82%] p-1.5"} ${active ? "-translate-x-[38%] -rotate-[9deg]" : "-translate-x-[20%] -rotate-3"}`}>
-          <div className="relative h-full w-full overflow-hidden rounded-lg"><Image src={b} alt="" fill sizes={desk ? "30vw" : "45vw"} className="object-cover" /></div>
-        </div>
-      )}
-      <div className={`relative aspect-[4/5] w-auto overflow-hidden rounded-xl bg-white shadow-2xl transition-transform duration-1000 ease-out ${desk ? "h-[66%] p-2" : "h-[94%] p-1.5"} ${b ? (active ? "translate-x-[22%] rotate-[5deg]" : "translate-x-[8%] rotate-1") : active ? "rotate-[3deg]" : "rotate-0"}`}>
-        <div className="relative h-full w-full overflow-hidden rounded-lg"><Image src={a} alt="" fill sizes={desk ? "34vw" : "55vw"} className="object-cover" /></div>
-      </div>
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/55 to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 bottom-0 h-[72%] bg-gradient-to-t from-black/90 via-black/45 to-transparent" aria-hidden="true" />
     </>
   );
 }
 
 function SlideText({ s, active }: { s: HeroSlide; active: boolean }) {
-  const light = !isLight(s);
   const rise = (d: number) => (active ? { className: "animate-rise", style: { animationDelay: `${d}ms` } } : { className: "opacity-0", style: undefined });
+  const [main, ...rest] = s.ctas;
+  const cta = (c: HeroCta, cls: string, arrow = false) => {
+    const body = <>{c.label}{arrow && <Icon name="arrowRight" size={18} />}</>;
+    return c.external
+      ? <a key={c.label} href={c.href} target="_blank" rel="noreferrer" className={cls}>{body}</a>
+      : <Link key={c.label} href={c.href} className={cls}>{body}</Link>;
+  };
   return (
-    <div className="absolute inset-0 flex flex-col justify-end px-5 pb-24 pt-[84px] md:w-[58%] md:px-10 md:pb-28 md:pt-0">
-      {/* Phones: the flyer's photos take whatever height is left above the text, so there is no empty band. */}
-      {s.kind === "flyer" && (
-        <div className="relative mb-5 flex min-h-0 flex-1 items-center justify-center md:hidden">
-          {s.layout === "lineup"
-            ? <div className="aspect-[1.1] h-full max-w-full"><Lineup photos={s.photos} active={active} sizes="45vw" /></div>
-            : <PhotoStack photos={s.photos} active={active} size="phone" />}
-          <RotatingStamp size={64} tone={light ? "gold" : "bronze"} filled className="absolute bottom-0 right-0" />
-        </div>
-      )}
-      <div className="flex max-w-[640px] flex-col gap-3 md:gap-5">
-        <span {...rise(100)}><span className={`inline-block rounded-full px-3.5 py-1.5 text-[11px] uppercase tracking-[0.3em] md:text-[12px] ${light ? "glass-dark text-gold" : "bg-ink text-gold"}`}>{s.eyebrow}</span></span>
-        <h2 {...rise(180)}>
-          <span className={`block text-balance font-display text-[44px] font-medium uppercase leading-[0.95] tracking-[-0.01em] sm:text-[52px] md:text-[92px] ${light ? "text-white" : "text-ink"}`}>{s.title}</span>
+    <div className="absolute inset-0 flex flex-col items-center justify-end px-6 pb-20 text-center text-white md:items-start md:px-12 md:pb-28 md:text-left">
+      <div className="flex max-w-[680px] flex-col items-center gap-3.5 md:items-start md:gap-5">
+        <h2 {...rise(80)}>
+          <span className="block text-balance text-[34px] font-bold uppercase leading-[1.04] tracking-[-0.02em] sm:text-[44px] md:text-[68px]">{s.title}</span>
         </h2>
-        <p {...rise(260)}><span className={`block max-w-[520px] text-[15px] leading-relaxed md:text-lg ${light ? "text-white/85" : "text-text/80"}`}>{s.sub}</span></p>
-        <div {...rise(340)}>
-          <div className="flex flex-wrap gap-2.5 pt-1 md:gap-3">
-            {s.ctas.map((c) => {
-              const cls = `btn max-md:px-5 max-md:py-3 max-md:text-[15px] ${c.style === "gold" ? "btn-gold" : light ? "btn-outline-light" : "btn-outline"}`;
-              return c.external
-                ? <a key={c.label} href={c.href} target="_blank" rel="noreferrer" className={cls}>{c.label}</a>
-                : <Link key={c.label} href={c.href} className={cls}>{c.label}</Link>;
-            })}
+        {s.sub && <p {...rise(160)}><span className="block max-w-[34ch] text-[14px] leading-relaxed text-white/80 md:max-w-[46ch] md:text-[17px]">{s.sub}</span></p>}
+        <div {...rise(240)}>
+          <div className="flex flex-col items-center gap-3 pt-2 md:flex-row">
+            {main && cta(main, "btn btn-light min-w-[220px] gap-3", true)}
+            {rest.map((c) => cta(c, "btn btn-ghost-light max-md:min-h-[44px] max-md:border-0 max-md:underline max-md:underline-offset-4"))}
           </div>
         </div>
       </div>

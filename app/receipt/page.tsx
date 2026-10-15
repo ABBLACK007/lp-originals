@@ -9,8 +9,8 @@ export default function ReceiptPage() {
   return (
     <main id="main">
       <div className="print:hidden"><Header /></div>
-      <div className="mx-auto max-w-page px-5 pt-14 md:px-8 md:pt-20 print:max-w-none print:p-0">
-        <h1 className="mb-10 font-display text-5xl font-light uppercase text-bronze md:text-[56px] print:hidden">Your <strong className="font-semibold">receipt</strong></h1>
+      <div className="mx-auto max-w-page px-5 pt-8 md:px-8 md:pt-14 print:max-w-none print:p-0">
+        <h1 className="mb-8 text-[28px] font-semibold md:text-[40px] print:hidden">Your receipt</h1>
         <ReceiptView />
       </div>
       <div className="print:hidden"><Footer /></div>
