@@ -9,13 +9,6 @@ export function whatsappHref(s: Pick<SiteSettings, "whatsappNumber" | "whatsappG
   return `https://wa.me/${n}?text=${encodeURIComponent(s.whatsappGreeting + want)}`;
 }
 
-// "2347061702536" -> "+234 706 170 2536" (Nigerian numbers); other numbers are shown as +<digits>.
-export function formatPhone(number: string) {
-  const n = number.replace(/\D/g, "");
-  const ng = /^234(\d{3})(\d{3})(\d{4})$/.exec(n);
-  return ng ? `+234 ${ng[1]} ${ng[2]} ${ng[3]}` : `+${n}`;
-}
-
 export function formatNaira(amount: number | null) {
   if (amount === null) return "₦ [PRICE]";
   return new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(amount);

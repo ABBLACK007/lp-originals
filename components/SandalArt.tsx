@@ -10,8 +10,8 @@ export default function SandalArt({ style, strap, className = "" }: { style: San
         <>
           <rect x="92" y="24" width="24" height="72" rx="7" fill={strap} />
           <rect x="136" y="23" width="24" height="74" rx="7" fill={strap} />
-          <rect x="95" y="30" width="18" height="10" rx="2" fill="none" stroke="#B5B5B5" strokeWidth="2.5" />
-          <rect x="139" y="30" width="18" height="10" rx="2" fill="none" stroke="#B5B5B5" strokeWidth="2.5" />
+          <rect x="95" y="30" width="18" height="10" rx="2" fill="none" stroke="#C9A45C" strokeWidth="2.5" />
+          <rect x="139" y="30" width="18" height="10" rx="2" fill="none" stroke="#C9A45C" strokeWidth="2.5" />
         </>
       )}
       {style === "one" && <rect x="104" y="24" width="52" height="72" rx="10" fill={strap} />}

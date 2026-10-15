@@ -1,5 +1,4 @@
 "use client";
-import Icon from "@/components/Icon";
 import { useState } from "react";
 import { categories, categoryLabel, type Product } from "@/lib/content-types";
 import { formatNaira } from "@/lib/site";
@@ -29,7 +28,7 @@ export default function ProductsPanel({ products, update }: { products: Product[
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" onClick={add} className="btn btn-primary btn-sm"><Icon name="plus" size={16} />Add product</button>
+        <button type="button" onClick={add} className="btn btn-gold btn-sm">+ Add product</button>
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search products" className={`${inputCls} max-w-xs`} />
         <span className="text-sm text-muted">{products.length} products · {products.filter((p) => p.hidden).length} hidden</span>
       </div>
@@ -40,16 +39,16 @@ export default function ProductsPanel({ products, update }: { products: Product[
           return (
             <li key={p.slug} className="overflow-hidden rounded-panel bg-white ring-1 ring-line">
               <button type="button" onClick={() => setOpen(isOpen ? null : p.slug)} aria-expanded={isOpen}
-                className="flex w-full items-center gap-3 p-3 text-left hover:bg-mist/60">
-                {p.images[0] ? <Thumb img={p.images[0]} className="h-14 w-12" /> : <div className="h-14 w-12 shrink-0 rounded-lg bg-tile" />}
+                className="flex w-full items-center gap-3 p-3 text-left hover:bg-cream/60">
+                {p.images[0] ? <Thumb img={p.images[0]} className="h-14 w-12" /> : <div className="h-14 w-12 shrink-0 rounded-lg bg-sand" />}
                 <span className="flex min-w-0 flex-grow flex-col">
                   <span className="truncate font-medium">{p.name}</span>
                   <span className="truncate text-xs text-muted">{p.material} · {categoryLabel(p.category)}</span>
                 </span>
                 <span className="hidden text-sm sm:block">{formatNaira(p.price)}</span>
                 {p.hidden && <span className="rounded-full bg-line px-2 py-0.5 text-[11px]">Hidden</span>}
-                {p.isNew && <span className="rounded-full bg-ink px-2 py-0.5 text-[11px] text-white">New</span>}
-                <span aria-hidden="true" className={`transition-transform ${isOpen ? "rotate-180" : ""}`}><Icon name="chevronDown" size={18} /></span>
+                {p.isNew && <span className="rounded-full bg-gold/30 px-2 py-0.5 text-[11px]">New</span>}
+                <span aria-hidden="true" className={`transition-transform ${isOpen ? "rotate-180" : ""}`}>▾</span>
               </button>
               {isOpen && (
                 <div className="grid gap-4 border-t border-line p-4 md:grid-cols-2">
@@ -70,17 +69,6 @@ export default function ProductsPanel({ products, update }: { products: Product[
                       <option value="">Everyone</option><option value="Men">Men</option><option value="Women">Women</option>
                     </select>
                   </Field>
-                  <Field label="Colour swatch" hint="The dot shown under Colour on the product page. Products with the same name show each other's swatches.">
-                    <div className="flex items-center gap-3">
-                      <input type="color" value={p.art.strap} onChange={(e) => set(p.slug, { art: { ...p.art, strap: e.target.value } })} className="h-11 w-14 cursor-pointer rounded-chip border border-edge bg-white p-1" />
-                      <span className="tabular text-sm text-muted">{p.art.strap}</span>
-                    </div>
-                  </Field>
-                  <div className="md:col-span-2">
-                    <Field label="Description" hint="Optional. Shown under Description on the product page; leave empty for a description written from the name, material and footbed.">
-                      <Text value={p.description ?? ""} max={600} multiline onChange={(v) => set(p.slug, { description: v || undefined })} />
-                    </Field>
-                  </div>
                   <Field label="Page link" hint={p.slug.startsWith("new-product") ? "Set this before showing the product: it becomes /shop/your-link and shouldn't change after." : `/shop/${p.slug} (fixed once the product is live)`}>
                     <div className="flex gap-2">
                       <input value={p.slug} className={inputCls} onChange={(e) => { const s = slugify(e.target.value); if (s && !products.some((x) => x.slug === s && x !== p)) { set(p.slug, { slug: s }); setOpen(s); } }} />
@@ -98,35 +86,19 @@ export default function ProductsPanel({ products, update }: { products: Product[
                         <div key={img.src} className="flex flex-col items-center gap-1.5">
                           <Thumb img={img} className="h-28 w-[90px]" />
                           <div className="flex gap-1">
-                            <SmallBtn title="Move left" disabled={n === 0} onClick={() => set(p.slug, (x) => ({ images: move(x.images, n, -1) }))}><Icon name="arrowLeft" size={14} /></SmallBtn>
-                            <SmallBtn title="Move right" disabled={n === p.images.length - 1} onClick={() => set(p.slug, (x) => ({ images: move(x.images, n, 1) }))}><Icon name="arrowRight" size={14} /></SmallBtn>
-                            <SmallBtn title="Remove photo" danger onClick={() => set(p.slug, (x) => ({ images: x.images.filter((_, k) => k !== n) }))}><Icon name="close" size={14} /></SmallBtn>
+                            <SmallBtn title="Move left" disabled={n === 0} onClick={() => set(p.slug, (x) => ({ images: move(x.images, n, -1) }))}>←</SmallBtn>
+                            <SmallBtn title="Move right" disabled={n === p.images.length - 1} onClick={() => set(p.slug, (x) => ({ images: move(x.images, n, 1) }))}>→</SmallBtn>
+                            <SmallBtn title="Remove photo" danger onClick={() => set(p.slug, (x) => ({ images: x.images.filter((_, k) => k !== n) }))}>✕</SmallBtn>
                           </div>
                         </div>
                       ))}
                       {p.images.length < 8 && <UploadButton multiple onUploaded={(img) => set(p.slug, (x) => ({ images: [...x.images, img].slice(0, 8) }))} />}
                     </div>
                   </div>
-                  <div className="flex flex-col gap-2 md:col-span-2">
-                    <span className="text-sm font-medium">Cut-out photo <span className="font-normal text-muted">(the shoe on a transparent background: shown on product cards and on the product stand)</span></span>
-                    <div className="flex flex-wrap items-center gap-3">
-                      {p.cutout && (
-                        <div className="flex flex-col items-center gap-1.5">
-                          <div className="relative h-28 w-28 overflow-hidden rounded-lg bg-tile ring-1 ring-line">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={p.cutout.src} alt="" className="h-full w-full object-contain p-2" />
-                          </div>
-                          <SmallBtn title="Remove cut-out" danger onClick={() => set(p.slug, { cutout: undefined })}><Icon name="close" size={14} /></SmallBtn>
-                        </div>
-                      )}
-                      <UploadButton label={p.cutout ? "Replace cut-out" : "Upload cut-out (PNG)"} onUploaded={(img) => set(p.slug, { cutout: img })} />
-                      {!p.cutout && <span className="text-xs text-muted">Without one, cards show the first photo in a frame. Make a cut-out with any background-remover app and save it as PNG.</span>}
-                    </div>
-                  </div>
                   <div className="flex flex-wrap justify-between gap-2 border-t border-line pt-3 md:col-span-2">
                     <div className="flex gap-2">
-                      <SmallBtn title="Move up in the shop" disabled={i === 0} onClick={() => update((ps) => move(ps, i, -1))}><span className="inline-flex items-center gap-1"><Icon name="arrowUp" size={14} />Up</span></SmallBtn>
-                      <SmallBtn title="Move down in the shop" disabled={i === products.length - 1} onClick={() => update((ps) => move(ps, i, 1))}><span className="inline-flex items-center gap-1"><Icon name="arrowDown" size={14} />Down</span></SmallBtn>
+                      <SmallBtn title="Move up in the shop" disabled={i === 0} onClick={() => update((ps) => move(ps, i, -1))}>↑ Up</SmallBtn>
+                      <SmallBtn title="Move down in the shop" disabled={i === products.length - 1} onClick={() => update((ps) => move(ps, i, 1))}>↓ Down</SmallBtn>
                     </div>
                     <DeleteButton onConfirm={() => update((ps) => ps.filter((x) => x.slug !== p.slug))} />
                   </div>

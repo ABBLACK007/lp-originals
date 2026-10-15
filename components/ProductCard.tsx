@@ -1,38 +1,44 @@
 import Link from "next/link";
 import Image from "next/image";
 import SandalArt from "./SandalArt";
-import HeartButton from "./HeartButton";
-import QuickAddButton from "./QuickAddButton";
-import type { Product } from "@/lib/content-types";
+import { categoryLabel, type Product } from "@/lib/content-types";
 import { formatNaira } from "@/lib/site";
 
-// The mockup's product card: light grey card with two thin corner arcs, a black cart button (top left, opens the
-// size sheet) and a heart (top right), the shoe floating in the middle, then name and price. Uses the product's
-// cut-out photo when it has one; otherwise its first photo in a rounded frame. The whole card opens the product.
-export default function ProductCard({ p, eager = false }: { p: Product; eager?: boolean }) {
-  const cut = p.cutout;
-  const photo = cut ?? p.images[0];
+// Card image sizes: 2 columns on phones, 4 on desktop.
+const SIZES = "(min-width: 768px) 25vw, 50vw";
+
+export default function ProductCard({ p }: { p: Product }) {
+  const [main, alt] = p.images;
   return (
-    <article className="group relative flex aspect-[0.92] flex-col overflow-hidden rounded-[10px] bg-tile shadow-[0_2px_5px_rgba(17,17,17,0.10)]">
-      <span aria-hidden="true" className="pointer-events-none absolute -left-[34%] -top-[30%] aspect-square w-[68%] rounded-full border border-[#DCDCDC]" />
-      <span aria-hidden="true" className="pointer-events-none absolute -bottom-[34%] -right-[30%] aspect-square w-[68%] rounded-full border border-[#DCDCDC]" />
-      <div className="relative z-10 flex items-center justify-between px-2.5 pt-2.5">
-        <QuickAddButton p={p} />
-        <HeartButton slug={p.slug} name={p.name} size="sm" />
-      </div>
-      <div className={`relative mx-3 min-h-0 flex-1 ${cut ? "" : "my-1 overflow-hidden rounded-[8px] bg-white"}`}>
-        {photo ? (
-          <Image src={photo} alt="" fill sizes="200px" loading={eager ? "eager" : "lazy"} fetchPriority={eager ? "high" : "auto"}
-            placeholder={!cut && photo.blurDataURL ? "blur" : "empty"}
-            className={`${cut ? "object-contain drop-shadow-[0_6px_6px_rgba(17,17,17,0.18)]" : "object-cover"} transition-transform duration-300 ease-out group-hover:scale-[1.04]`} />
+    <article className="group flex flex-col gap-3.5">
+      <Link href={`/shop/${p.slug}`} className="relative block aspect-[4/5] overflow-hidden rounded-card bg-sand" aria-label={`${p.name}, ${p.material}`}>
+        {main ? (
+          <>
+            <Image src={main} alt="" fill sizes={SIZES} placeholder="blur"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" />
+            {/* Second photo fades in on hover (desktop only). */}
+            {alt && <Image src={alt} alt="" fill sizes={SIZES}
+              className="object-cover opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" />}
+          </>
         ) : (
-          <SandalArt style={p.art.style} strap={p.art.strap} className="absolute inset-0 m-auto w-3/4" />
+          <div className="flex h-full items-center justify-center">
+            <SandalArt style={p.art.style} strap={p.art.strap} className="w-3/4" />
+            <span className="absolute bottom-3.5 left-3.5 text-xs text-muted">Photo coming soon</span>
+          </div>
         )}
+        <div className="absolute left-3 top-3 flex gap-1.5">
+          {p.isNew && <span className="glass rounded-full px-3 py-1.5 text-xs font-semibold">New</span>}
+          {p.audience && <span className="glass-dark rounded-full px-3 py-1.5 text-xs font-semibold text-white">{p.audience}</span>}
+        </div>
+      </Link>
+      <div className="flex flex-col gap-0.5">
+        <span className="text-xs uppercase tracking-[0.14em] text-bronze">{categoryLabel(p.category)}</span>
+        <Link href={`/shop/${p.slug}`} className="text-[15px] font-medium no-underline md:text-[17px]">{p.name}</Link>
+        <span className="text-[13px] text-muted">{p.material}</span>
       </div>
-      <div className="relative flex flex-col items-center px-2 pb-3 pt-1 text-center">
-        {/* The name link covers the whole card (after:inset-0) so any tap opens the product. */}
-        <Link href={`/shop/${p.slug}`} className="line-clamp-1 text-[14px] font-medium leading-snug tracking-[0.01em] no-underline after:absolute after:inset-0">{p.name}</Link>
-        <span className="tabular mt-0.5 text-[12px] font-semibold">{formatNaira(p.price)}</span>
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-sm font-medium">{formatNaira(p.price)}</span>
+        <Link href={`/shop/${p.slug}`} className="link py-2 text-sm">Choose size</Link>
       </div>
     </article>
   );

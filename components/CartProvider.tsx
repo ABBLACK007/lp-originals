@@ -9,7 +9,7 @@ type Cart = {
   count: number;
   ready: boolean; // saved cart has been read from the browser
 
-  add: (slug: string, size: string, qty?: number) => void;
+  add: (slug: string, size: string) => void;
   setQty: (slug: string, size: string, qty: number) => void;
   remove: (slug: string, size: string) => void;
   clear: () => void;
@@ -50,11 +50,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     items,
     ready: loaded,
     count: items.reduce((n, i) => n + i.qty, 0),
-    add: (slug, size, qty = 1) => setItems((xs) => {
+    add: (slug, size) => setItems((xs) => {
       const hit = xs.find((i) => i.slug === slug && i.size === size);
       if (!getProduct(slug) || !sizes.includes(size)) return xs;
-      if (hit) return xs.map((i) => (i === hit ? { ...i, qty: clampQty(i.qty + qty) } : i));
-      return xs.length >= MAX_LINES ? xs : [...xs, { slug, size, qty: clampQty(qty) }];
+      if (hit) return xs.map((i) => (i === hit ? { ...i, qty: clampQty(i.qty + 1) } : i));
+      return xs.length >= MAX_LINES ? xs : [...xs, { slug, size, qty: 1 }];
     }),
     setQty: (slug, size, qty) => setItems((xs) => xs.map((i) => (i.slug === slug && i.size === size ? { ...i, qty: clampQty(qty) } : i))),
     remove: (slug, size) => setItems((xs) => xs.filter((i) => !(i.slug === slug && i.size === size))),

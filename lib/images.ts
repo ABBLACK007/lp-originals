@@ -28,22 +28,6 @@ import slidesTrio from "@/assets/photos/lp-slides-trio.jpg";
 import wovenOlive from "@/assets/photos/woven-slide-olive.jpg";
 import stitchedGreen from "@/assets/photos/stitched-slide-green.jpg";
 
-// Product cut-outs (transparent background), made from the photos above by scripts/make-cutouts.py
-import cutBuckleRust from "@/assets/cutouts/buckle-sandal-rust.png";
-import cutWideBandTan from "@/assets/cutouts/wide-band-slide-tan.png";
-import cutCrossStrapBlack from "@/assets/cutouts/cross-strap-slide-black.png";
-import cutTwoStrapBrown from "@/assets/cutouts/two-strap-slide-brown.png";
-import cutBandChocolate from "@/assets/cutouts/band-slide-chocolate.png";
-import cutPlatformToePost from "@/assets/cutouts/platform-toe-post-brown.png";
-import cutStitchedBlack from "@/assets/cutouts/stitched-slide-black.png";
-import cutStitchedGreen from "@/assets/cutouts/stitched-slide-green.png";
-import cutWovenOlive from "@/assets/cutouts/woven-slide-olive.png";
-import cutCutoutRed from "@/assets/cutouts/cutout-slide-red.png";
-import cutPerforatedBrown from "@/assets/cutouts/perforated-slide-brown.png";
-import cutCrossSlideBlack from "@/assets/cutouts/cross-slide-black-leather.png";
-import cutToePostCream from "@/assets/cutouts/toe-post-sandal-cream.png";
-import cutClogMocha from "@/assets/cutouts/clog-mocha.png";
-
 // Campaign imagery (AI-generated lifestyle shots)
 export const images = { heroDesktop, heroMobile, promo, ordering, buckle, sole };
 
@@ -52,10 +36,5 @@ export const photos = {
   corkCollection, wideBandTan, crossStrapBlack, twoStrapBrown, buckleRust, buckleGroup,
   bandChocolate, corkFootbed, cutoutRed, crossSlideBlack, toePostCream, perforatedBrown, clogMocha, buckleWorn,
   platformToePost, stitchedBlack, slidesTrio, wovenOlive, stitchedGreen,
-};
-
-// The shoes on their own, for product cards and the product stand
-export const cutouts = {
-  cutBuckleRust, cutWideBandTan, cutCrossStrapBlack, cutTwoStrapBrown, cutBandChocolate, cutPlatformToePost, cutStitchedBlack, cutStitchedGreen, cutWovenOlive, cutCutoutRed, cutPerforatedBrown, cutCrossSlideBlack, cutToePostCream, cutClogMocha,
 };
 

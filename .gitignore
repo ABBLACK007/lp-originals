@@ -25,13 +25,3 @@ Thumbs.db
 .playwright-cli
 
 .env*
-
-# Playwright test output
-/test-results
-/playwright-report
-
-# impeccable review captures (regenerated each review)
-/.impeccable/review
-
-# local Python environments (scripts/make-cutouts.py)
-.venv*

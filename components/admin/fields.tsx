@@ -37,7 +37,7 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
 export function SmallBtn({ onClick, children, danger, disabled, title }: { onClick: () => void; children: React.ReactNode; danger?: boolean; disabled?: boolean; title?: string }) {
   return (
     <button type="button" onClick={onClick} disabled={disabled} title={title} aria-label={title}
-      className={`rounded-full px-3 py-1.5 text-xs font-medium ring-1 ring-inset transition-colors disabled:opacity-40 ${danger ? "text-bad ring-bad/30 hover:bg-bad/10" : "ring-line hover:bg-tile"}`}>
+      className={`rounded-full px-3 py-1.5 text-xs font-medium ring-1 ring-inset transition-colors disabled:opacity-40 ${danger ? "text-[#8A2E2E] ring-[#8A2E2E]/30 hover:bg-[#8A2E2E]/10" : "ring-line hover:bg-sand"}`}>
       {children}
     </button>
   );
@@ -73,7 +73,6 @@ async function shrink(file: File): Promise<Blob> {
     if (["image/jpeg", "image/png", "image/webp"].includes(file.type) && file.size <= MAX_SEND) return file;
     throw new Error("This photo couldn't be opened. Save or export it as a JPG and try again.");
   }
-  const keepAlpha = file.type === "image/png" || file.type === "image/webp";
   // Step the size and quality down until the photo is small enough to send.
   for (const [max, quality] of [[2000, 0.86], [1600, 0.8], [1280, 0.72], [1024, 0.65]] as const) {
     const scale = Math.min(1, max / Math.max(src.width, src.height));
@@ -83,8 +82,7 @@ async function shrink(file: File): Promise<Blob> {
     const ctx = canvas.getContext("2d");
     if (!ctx) break;
     ctx.drawImage(src, 0, 0, canvas.width, canvas.height);
-    // Transparent photos (cut-outs) are sent as WebP so the transparency survives; others as JPEG.
-    const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, keepAlpha ? "image/webp" : "image/jpeg", quality));
+    const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, "image/jpeg", quality));
     if (blob && blob.size <= MAX_SEND) return blob;
   }
   throw new Error("This photo is too large to upload. Try a smaller photo or a screenshot of it.");
@@ -93,8 +91,7 @@ async function shrink(file: File): Promise<Blob> {
 export async function uploadFile(file: File): Promise<Img> {
   const blob = await shrink(file);
   const form = new FormData();
-  const type = blob.type || "image/jpeg";
-  form.append("file", new File([blob], type === "image/jpeg" ? "photo.jpg" : type === "image/webp" ? "photo.webp" : "photo.png", { type }));
+  form.append("file", new File([blob], "photo.jpg", { type: blob.type || "image/jpeg" }));
   let res;
   try {
     res = await uploadImage(form);
@@ -129,14 +126,14 @@ export function UploadButton({ onUploaded, label = "Upload photo", multiple }: {
         {busy ? "Uploading…" : label}
       </button>
       <input ref={ref} type="file" accept="image/*" multiple={multiple} hidden onChange={(e) => pick(e.target.files)} />
-      {error && <span role="alert" className="text-xs text-bad">{error}</span>}
+      {error && <span role="alert" className="text-xs text-[#8A2E2E]">{error}</span>}
     </span>
   );
 }
 
 export function Thumb({ img, className = "h-20 w-16", children }: { img: Img; className?: string; children?: React.ReactNode }) {
   return (
-    <div className={`relative shrink-0 overflow-hidden rounded-lg bg-tile ring-1 ring-line ${className}`}>
+    <div className={`relative shrink-0 overflow-hidden rounded-lg bg-sand ring-1 ring-line ${className}`}>
       <Image src={img} alt="" fill sizes="120px" className="object-cover" />
       {children}
     </div>

@@ -6,13 +6,13 @@ import { useWhatsapp } from "@/components/StoreProvider";
 export default function Error({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const whatsappLink = useWhatsapp();
   return (
-    <main id="main" className="flex min-h-[70vh] flex-col items-start justify-center gap-5 px-6">
-      <h1 className="text-[24px] font-semibold">Something slipped</h1>
-      <p className="font-read text-[15px] text-muted">Sorry, this page didn&apos;t load properly. Try again, or send us a message and we&apos;ll help you order.</p>
+    <main id="main" className="mx-auto flex min-h-[70vh] max-w-page flex-col items-start justify-center gap-5 px-5 md:px-8">
+      <h1 className="font-display text-5xl font-light uppercase text-bronze">Something <strong className="font-semibold">slipped</strong></h1>
+      <p className="max-w-md text-muted">Sorry, this page didn&apos;t load properly. Try again, or send us a message and we&apos;ll help you order.</p>
       <div className="flex flex-wrap gap-3">
-        <button type="button" onClick={reset} className="btn btn-primary">Try again</button>
-        <Link href="/" className="btn btn-secondary">Back home</Link>
-        <a href={whatsappLink("help placing an order (the website had a problem).")} target="_blank" rel="noreferrer" className="btn btn-secondary">WhatsApp us</a>
+        <button type="button" onClick={reset} className="btn btn-gold">Try again</button>
+        <Link href="/" className="btn btn-outline">Back home</Link>
+        <a href={whatsappLink("help placing an order (the website had a problem).")} target="_blank" rel="noreferrer" className="btn btn-outline">WhatsApp us</a>
       </div>
     </main>
   );

@@ -14,13 +14,11 @@ export type Product = {
   material: string;
   category: Category;
   footbed?: string;
-  description?: string; // shown under Description on the product page; a default is written from the fields when empty
   audience?: "Men" | "Women";
   price: number | null; // NGN; null shows "[PRICE]"
   isNew?: boolean;
   hidden?: boolean; // kept in the admin, not shown in the shop
   images: Img[]; // first image is the main one
-  cutout?: Img; // the shoe on its own (transparent PNG): product cards and the product stand
   art: { style: SandalStyle; strap: string }; // drawn placeholder when there are no photos yet
 };
 
@@ -48,8 +46,6 @@ export type SiteSettings = {
   whatsappGreeting: string;
   productionDays: string;
   promo: { enabled: boolean; title: string; discount: string; dates: string };
-  // Foot length (cm) for each EU size, shown in the shop's size guide; the table is hidden until one is filled in.
-  footLength?: Partial<Record<string, string>>;
 };
 
 export type Content = {
