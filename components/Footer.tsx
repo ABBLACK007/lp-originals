@@ -37,7 +37,7 @@ export default async function Footer() {
         </div>
       </div>
       <div className="mt-12 flex justify-between border-t border-white/15 pt-6 text-[13px] text-white/60">
-        <span>© {new Date().getFullYear()} LP Wears</span>
+        <span>© {new Date().getFullYear()} LP Originals</span>
         <span>Privacy · Terms</span>
       </div>
     </footer>

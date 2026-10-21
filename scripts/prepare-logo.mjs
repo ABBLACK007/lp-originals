@@ -1,4 +1,4 @@
-// Builds the web logo files from the client's LP Wears logo (black + brown on white):
+// Builds the web logo files from the client's LP Originals logo (black + brown on white):
 //   npm run logo
 // - public/images/logo-light.png  cream letters, gold swoosh, transparent (for the dark header/footer)
 // - public/images/logo-dark.png   original ink + brown, transparent (for light backgrounds)
@@ -8,7 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const src = path.join(root, "assets/brand/lp-wears-logo-original.png");
+const src = path.join(root, "assets/brand/lp-originals-logo.png");
 const INK = [20, 18, 16], BROWN = [150, 106, 59];
 const CREAM = [242, 237, 230], GOLD = [201, 164, 92];
 
@@ -32,7 +32,7 @@ const full = await sharp(src).png().toBuffer();
 await (await recolor(full, CREAM, GOLD)).resize({ width: 640 }).png({ compressionLevel: 9 }).toFile(path.join(root, "public/images/logo-light.png"));
 await (await recolor(full, INK, BROWN)).resize({ width: 640 }).png({ compressionLevel: 9 }).toFile(path.join(root, "public/images/logo-dark.png"));
 
-// LP mark only (everything above the WEARS line, which starts at y≈700 in the original).
+// LP mark only (everything above the ORIGINALS line, which starts at y≈698 in the original).
 const meta = await sharp(src).metadata();
 const markSrc = await sharp(src).extract({ left: 0, top: 0, width: meta.width, height: 690 }).png().toBuffer();
 const mark = await (await recolor(markSrc, CREAM, GOLD)).png().toBuffer();

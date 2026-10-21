@@ -40,7 +40,7 @@ export default function ReceiptView() {
       <article aria-label={`Receipt ${r.id}`} className="relative overflow-hidden rounded-panel bg-white p-6 shadow-[0_24px_60px_-30px_rgba(20,18,16,0.4)] ring-1 ring-line md:p-10 print:rounded-none print:p-0 print:shadow-none print:ring-0">
         <div className="flex flex-wrap items-start justify-between gap-6 border-b border-dashed border-line pb-6">
           <div className="flex flex-col items-start gap-2">
-            <Image src={logoDark} alt="LP Wears" className="h-14 w-auto" />
+            <Image src={logoDark} alt="LP Originals" className="h-14 w-auto" />
             <span className="text-xs text-muted">Handmade in Nigeria · WhatsApp +234 706 170 2536</span>
           </div>
           <div className="flex flex-col items-end gap-1 text-right">
@@ -84,7 +84,7 @@ export default function ReceiptView() {
 
         <p className="mt-8 border-t border-dashed border-line pt-5 text-xs leading-relaxed text-muted">
           Every pair is made to order: production takes {site.productionDays} working days after payment, then we deliver nationwide.
-          Quote receipt number <strong className="font-mono text-ink">{r.id}</strong> when you pay or ask about your order. Thank you for shopping LP Wears.
+          Quote receipt number <strong className="font-mono text-ink">{r.id}</strong> when you pay or ask about your order. Thank you for shopping LP Originals.
         </p>
       </article>
 

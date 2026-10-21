@@ -2,7 +2,7 @@
 // production time) are editable in /admin and come from the store content (see lib/content.ts).
 import type { SiteSettings } from "./content-types";
 
-// Every WhatsApp button opens a chat with LP Wears with the greeting already typed. `want` fills in the
+// Every WhatsApp button opens a chat with LP Originals with the greeting already typed. `want` fills in the
 // blank (e.g. the product and size); leave it out and the customer types the rest.
 export function whatsappHref(s: Pick<SiteSettings, "whatsappNumber" | "whatsappGreeting">, want = "") {
   const n = s.whatsappNumber.replace(/\D/g, "");

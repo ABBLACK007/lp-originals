@@ -1,5 +1,5 @@
 // Order receipts generated from the cart, in the customer's browser. There is no payment yet, so a
-// receipt is an order summary marked "payment pending"; WhatsApp is how the order reaches LP Wears.
+// receipt is an order summary marked "payment pending"; WhatsApp is how the order reaches LP Originals.
 import type { CartItem } from "@/components/CartProvider";
 import type { Product } from "./content-types";
 type GetProduct = (slug: string) => Product | undefined;
@@ -7,7 +7,7 @@ import { formatNaira } from "./site";
 
 export type ReceiptLine = { slug: string; name: string; material: string; size: string; qty: number; unitPrice: number | null };
 export type Receipt = {
-  id: string; // e.g. LPW-261006-4F7K
+  id: string; // e.g. LPO-261006-4F7K
   createdAt: string; // ISO date
   signature: string; // cart contents the receipt was made from
   lines: ReceiptLine[];
@@ -24,7 +24,7 @@ function newId(date: Date) {
   const ymd = date.toISOString().slice(2, 10).replace(/-/g, "");
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I
   const rnd = crypto.getRandomValues(new Uint8Array(4));
-  return `LPW-${ymd}-${Array.from(rnd, (b) => alphabet[b % alphabet.length]).join("")}`;
+  return `LPO-${ymd}-${Array.from(rnd, (b) => alphabet[b % alphabet.length]).join("")}`;
 }
 
 export function buildReceipt(items: CartItem[], getProduct: GetProduct, customer = { name: "", phone: "" }): Receipt {

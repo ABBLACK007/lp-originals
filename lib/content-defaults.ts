@@ -13,11 +13,11 @@ export function img(key: keyof typeof photos | keyof typeof images): Img {
 }
 
 export const defaultSite: SiteSettings = {
-  name: "LP Wears",
+  name: "LP Originals",
   instagram: "https://www.instagram.com/_lp_originals_/",
   instagramHandle: "@_lp_originals_",
   whatsappNumber: "2347061702536",
-  whatsappGreeting: "Hi, I'm from the LP Wears website. I want to get ",
+  whatsappGreeting: "Hi, I'm from the LP Originals website. I want to get ",
   productionDays: "[X]",
   promo: { enabled: true, title: "Detty December Drop", discount: "[XX]% off", dates: "[DATES]" },
 };
@@ -80,9 +80,9 @@ export const defaultSlides: Slide[] = [
 ];
 
 export const defaultGallery: GalleryItem[] = [
-  { src: img("slidesTrio"), alt: "LP Wears slides in olive, black and green, with LP labels", kind: "product", product: "stitched-cut-out-slide-black" },
-  { src: img("platformToePost"), alt: "Brown platform toe-post sandals beside the LP Wears card", kind: "product", product: "platform-toe-post-brown" },
-  { src: img("stitchedBlack"), alt: "Black stitched cut-out slides beside the LP Wears card", kind: "product", product: "stitched-cut-out-slide-black" },
+  { src: img("slidesTrio"), alt: "LP Originals slides in olive, black and green, with LP labels", kind: "product", product: "stitched-cut-out-slide-black" },
+  { src: img("platformToePost"), alt: "Brown platform toe-post sandals beside the LP brand card", kind: "product", product: "platform-toe-post-brown" },
+  { src: img("stitchedBlack"), alt: "Black stitched cut-out slides beside the LP brand card", kind: "product", product: "stitched-cut-out-slide-black" },
   { src: img("buckleGroup"), alt: "Two-buckle cork sandals in rust, orange and tan suede", kind: "product", product: "two-buckle-sandal-rust" },
   { src: img("heroMobile"), alt: "Agbada and cork sandals on a city street", kind: "campaign" },
   { src: img("cutoutRed"), alt: "Red croc-embossed cut-out slides in a gift box", kind: "product", product: "cut-out-slide-red" },

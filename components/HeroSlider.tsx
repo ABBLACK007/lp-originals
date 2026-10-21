@@ -56,7 +56,7 @@ export default function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   return (
     <section className="px-3 pt-3 md:px-6 md:pt-6">
       <div
-        aria-roledescription="carousel" aria-label="LP Wears highlights"
+        aria-roledescription="carousel" aria-label="LP Originals highlights"
         onKeyDown={onKey}
         onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHovered(true); }}
         onMouseLeave={() => setHovered(false)}
@@ -233,7 +233,7 @@ function SceneLayers({ scene, active, lineup }: { scene: Scene; active: boolean;
       <div aria-hidden="true" className="absolute bottom-0 left-[12%] h-[52%] w-[76%] bg-gradient-to-b from-[#8A5A38] to-[#5E3820] shadow-[inset_0_20px_40px_rgba(0,0,0,0.15)] md:left-[56%] md:h-[58%] md:w-[30%]" />
       {/* Framed brand title (wide screens) */}
       <div aria-hidden="true" className="absolute right-[6%] top-[13%] hidden w-[46%] flex-col items-center lg:flex">
-        <span className="border border-white/50 px-6 pb-1 pt-2 font-display text-[44px] font-light uppercase leading-none tracking-[0.18em] text-white/90">LP Wears</span>
+        <span className="border border-white/50 px-6 pb-1 pt-2 font-display text-[44px] font-light uppercase leading-none tracking-[0.18em] text-white/90">LP Originals</span>
         <span className="-mt-2.5 bg-[#B38563] px-3 text-[11px] tracking-[0.4em] text-white/90">HANDMADE FOOTWEAR</span>
       </div>
     </>

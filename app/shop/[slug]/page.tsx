@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 export const dynamicParams = true;
 
 const describe = (p: Product) =>
-  `${p.name} in ${p.material.toLowerCase()}${p.footbed ? ` on a ${p.footbed.toLowerCase()}` : ""}. Handmade to order in EU sizes 36 to 46 by LP Wears, delivered nationwide.`;
+  `${p.name} in ${p.material.toLowerCase()}${p.footbed ? ` on a ${p.footbed.toLowerCase()}` : ""}. Handmade to order in EU sizes 36 to 46 by LP Originals, delivered nationwide.`;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = findProduct(await getContent(), (await params).slug);

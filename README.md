@@ -1,6 +1,6 @@
-# LP Wears website
+# LP Originals website
 
-E-commerce site for LP Wears ([@_lp_originals_](https://www.instagram.com/_lp_originals_/)), a brand of handmade cork-footbed sandals, slides, palms and clogs.
+E-commerce site for LP Originals ([@_lp_originals_](https://www.instagram.com/_lp_originals_/)), a brand of handmade cork-footbed sandals, slides, palms and clogs.
 
 Stack: Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS 3, sharp, Vercel Blob (store content + uploaded photos), zod.
 
@@ -31,7 +31,7 @@ npm run dev      # http://localhost:3000
 The store owner edits products and prices (add, hide, reorder, photos), hero slides (photos, text, buttons, focus point), the gallery and settings (WhatsApp number and greeting, promo, production time, Instagram) at **/admin**.
 
 - Login: one password, `ADMIN_PASSWORD` (12+ chars), plus `ADMIN_SESSION_SECRET` (32+ chars). Both are Vercel environment variables and live in `.env.local` for local work (git-ignored). Changing the password signs everyone out. Sessions last 12 hours (signed httpOnly cookie, `lib/admin-auth.ts`); `proxy.ts` guards /admin and every server action re-checks (`app/admin/actions.ts`).
-- Storage: Vercel Blob store `lp-wears-content` (`BLOB_READ_WRITE_TOKEN`). Each save writes `content/store-<time>.json` (never overwritten: Blob overwrites are eventually consistent); the newest wins, the last 3 are kept. Photos go to `uploads/`, re-encoded by sharp (EXIF/GPS stripped, max 2000px).
+- Storage: Vercel Blob store `lp-wears-content` (`BLOB_READ_WRITE_TOKEN`; the store keeps the name it was created with). Each save writes `content/store-<time>.json` (never overwritten: Blob overwrites are eventually consistent); the newest wins, the last 3 are kept. Photos go to `uploads/`, re-encoded by sharp (EXIF/GPS stripped, max 2000px).
 - Validation: `lib/content-schema.ts` bounds every field and only allows site paths, #anchors, "whatsapp" or https links, and images from this site or its Blob store.
 - Without saved content (or without a Blob token) the site shows `lib/content-defaults.ts`. Prices there are samples.
 - Running locally writes to the same Blob store as production: test with care.
@@ -51,7 +51,7 @@ The store owner edits products and prices (add, hide, reorder, photos), hero sli
 ## Before launch, fill in
 
 Search the codebase for `[` to find every placeholder:
-- `[X]` production days, promo `[XX]%` and `[DATES]` (WhatsApp: +234 706 170 2536 is set in `lib/site.ts`; every button opens a chat with "Hi, I'm from the LP Wears website. I want to get …")
+- `[X]` production days, promo `[XX]%` and `[DATES]` (WhatsApp +234 706 170 2536 is set in admin › Settings; every button opens a chat with "Hi, I'm from the LP Originals website. I want to get …")
 - Prices (`price: null` shows ₦ [PRICE]), clog material and photo
 - Size guide foot lengths `[cm]`
 - Confirm product names, materials and prices in /admin (names were written from the photos; prices are samples)

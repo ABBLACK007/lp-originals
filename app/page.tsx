@@ -266,7 +266,7 @@ export default async function Home() {
         </section>
       </div>
 
-      <div className="-mb-8 mt-20 md:-mb-12 md:mt-28"><Marquee variant="outline" reverse items={["Step into comfort", "LP Wears", "Handmade in Nigeria"]} /></div>
+      <div className="-mb-8 mt-20 md:-mb-12 md:mt-28"><Marquee variant="outline" reverse items={["Step into comfort", "LP Originals", "Handmade in Nigeria"]} /></div>
       <Footer />
     </main>
   );

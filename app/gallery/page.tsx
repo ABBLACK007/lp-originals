@@ -5,7 +5,7 @@ import SectionTitle from "@/components/SectionTitle";
 import GalleryGrid from "@/components/GalleryGrid";
 import { getContent } from "@/lib/content";
 
-export const metadata: Metadata = { title: "Gallery", description: "LP Wears sandals and slides up close, and how they wear.", alternates: { canonical: "/gallery" } };
+export const metadata: Metadata = { title: "Gallery", description: "LP Originals sandals and slides up close, and how they wear.", alternates: { canonical: "/gallery" } };
 
 export default async function GalleryPage() {
   const { site, gallery } = await getContent();

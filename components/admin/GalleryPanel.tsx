@@ -9,7 +9,7 @@ export default function GalleryPanel({ gallery, products, update }: { gallery: G
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-3">
-        <UploadButton multiple label="Add photos" onUploaded={(img) => update((g) => [{ src: img, alt: "LP Wears sandals", kind: "product" }, ...g])} />
+        <UploadButton multiple label="Add photos" onUploaded={(img) => update((g) => [{ src: img, alt: "LP Originals sandals", kind: "product" }, ...g])} />
         <span className="text-sm text-muted">{gallery.length} photos. Describe each photo: it&apos;s read aloud to blind visitors and helps Google.</span>
       </div>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
