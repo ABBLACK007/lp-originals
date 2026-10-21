@@ -35,7 +35,13 @@ export default function AdminEditor({ initial }: { initial: Content }) {
 
   const save = () => startSaving(async () => {
     setStatus(null);
-    const res = await saveContent(draft, saved.updatedAt);
+    let res;
+    try {
+      res = await saveContent(draft, saved.updatedAt);
+    } catch {
+      setStatus({ kind: "error", text: "Couldn't reach the server. Check your connection and press Save changes again." });
+      return;
+    }
     if (res.ok) {
       const next = { ...draft, updatedAt: res.updatedAt };
       setSaved(next); setDraft(next);
@@ -82,7 +88,7 @@ export default function AdminEditor({ initial }: { initial: Content }) {
                 {status.text}
                 {status.issues && <ul className="mt-1 list-disc pl-5 text-xs">{status.issues.map((x) => <li key={x}>{x}</li>)}</ul>}
               </div>
-            ) : dirty ? <span className="text-ink">You have unsaved changes.</span> : <span className="text-muted">All changes saved.</span>}
+            ) : dirty ? <span className="text-ink">Not on the site yet: press <strong>Save changes</strong> to publish your edits and photos.</span> : <span className="text-muted">All changes saved.</span>}
           </div>
           <div className="flex gap-2">
             <button type="button" disabled={!dirty || saving} onClick={() => { setDraft(saved); setStatus(null); }} className="btn btn-outline btn-sm disabled:opacity-40">Discard</button>

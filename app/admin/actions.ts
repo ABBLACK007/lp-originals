@@ -7,7 +7,7 @@ import { put, del } from "@vercel/blob";
 import sharp from "sharp";
 import { SESSION_COOKIE, SESSION_HOURS, adminConfigured, checkPassword, createSession } from "@/lib/admin-auth";
 import { isAdmin } from "@/lib/admin-guard";
-import { CONTENT_TAG, contentPath, listVersions, readVersion } from "@/lib/content";
+import { CONTENT_TAG, contentPath, listVersions, readVersion, type StoredVersion } from "@/lib/content";
 import { contentSchema } from "@/lib/content-schema";
 import type { Content, Img } from "@/lib/content-types";
 
@@ -44,23 +44,56 @@ const uploadsIn = (c: Content) => new Set([
 
 export type SaveResult = { ok: true; updatedAt: string } | { ok: false; error: string; issues?: string[] };
 
+// Where a refused field is, in the editor's words: "Gallery photo 3 › Description".
+const FIELD: Record<string, string> = {
+  name: "Name", material: "Material and colour", price: "Price", footbed: "Footbed", images: "Photos", slug: "Link",
+  eyebrow: "Small label", title: "Headline", sub: "Text", label: "Button text", href: "Goes to", alt: "Description",
+  whatsappNumber: "WhatsApp number", whatsappGreeting: "WhatsApp greeting", productionDays: "Production time",
+  discount: "Offer", dates: "Dates", instagram: "Instagram link", instagramHandle: "Instagram handle",
+};
+function issuePlace(path: PropertyKey[], draft: unknown) {
+  const [section, i] = path;
+  const n = typeof i === "number" ? i + 1 : 0;
+  const name = (draft as { products?: { name?: unknown }[] } | null)?.products?.[n - 1]?.name;
+  const parts = [
+    section === "products" ? (n ? `Product “${typeof name === "string" && name.trim() ? name.trim() : n}”` : "Products")
+      : section === "slides" ? (n ? `Hero slide ${n}` : "Hero slides")
+      : section === "gallery" ? (n ? `Gallery photo ${n}` : "Gallery")
+      : "Settings",
+  ];
+  path.forEach((k, j) => {
+    if (j === 0 || typeof k !== "string") return;
+    if (k === "ctas" && typeof path[j + 1] === "number") parts.push(`Button ${(path[j + 1] as number) + 1}`);
+    else if (k === "promo") parts.push("Promo");
+    else if (FIELD[k]) parts.push(k === "title" && path.includes("promo") ? "Promo name" : FIELD[k]);
+  });
+  return parts.join(" › ");
+}
+
 export async function saveContent(draft: unknown, baseUpdatedAt: string): Promise<SaveResult> {
-  if (!(await isAdmin())) return { ok: false, error: "Your session has ended. Log in again." };
+  if (!(await isAdmin())) return refused("Save", { ok: false, error: "Your session has ended. Log in again." });
   const parsed = contentSchema.safeParse(draft);
   if (!parsed.success) {
-    return { ok: false, error: "Some fields need fixing.", issues: parsed.error.issues.slice(0, 8).map((i) => `${i.path.join(" › ")}: ${i.message}`) };
+    const issues = parsed.error.issues.slice(0, 8).map((i) => `${issuePlace(i.path, draft)}: ${i.message}`);
+    return refused("Save", { ok: false, error: "Not saved yet. Fix these, then press Save changes again:", issues });
   }
-  // Someone else (another tab or device) saved since this editor loaded: don't overwrite their work.
-  const versions = await listVersions();
-  const latest = versions[0] ? await readVersion(versions[0]) : null;
-  if (latest && latest.updatedAt !== baseUpdatedAt) {
-    return { ok: false, error: "The store was changed somewhere else since you opened the editor. Reload the page to get the latest version." };
+  let versions: StoredVersion[], content: Content;
+  try {
+    // Someone else (another tab or device) saved since this editor loaded: don't overwrite their work.
+    versions = await listVersions();
+    const latest = versions[0] ? await readVersion(versions[0]) : null;
+    if (latest && latest.updatedAt !== baseUpdatedAt) {
+      return refused("Save", { ok: false, error: "The store was changed somewhere else since you opened the editor. Reload the page to get the latest version." });
+    }
+    const now = Date.now();
+    content = { ...(parsed.data as Content), updatedAt: new Date(now).toISOString() };
+    await put(contentPath(now), JSON.stringify(content), {
+      access: "public", addRandomSuffix: false, contentType: "application/json", cacheControlMaxAge: 31536000,
+    });
+  } catch (e) {
+    console.error("Save failed", e);
+    return { ok: false, error: "Couldn't save just now (storage didn't answer). Wait a minute and press Save changes again." };
   }
-  const now = Date.now();
-  const content = { ...(parsed.data as Content), updatedAt: new Date(now).toISOString() };
-  await put(contentPath(now), JSON.stringify(content), {
-    access: "public", addRandomSuffix: false, contentType: "application/json", cacheControlMaxAge: 31536000,
-  });
   updateTag(CONTENT_TAG); // this admin sees the change straight away
   revalidatePath("/", "layout"); // and every page is rebuilt with it
 
@@ -82,12 +115,18 @@ export async function saveContent(draft: unknown, baseUpdatedAt: string): Promis
 // ---------- Uploads ----------
 export type UploadResult = { ok: true; img: Img } | { ok: false; error: string };
 
+// Refusals are logged (reasons only, no content) so they show in the Vercel logs.
+function refused<T extends { ok: false; error: string; issues?: string[] }>(what: string, res: T): T {
+  console.warn(`${what} refused: ${res.error}`, res.issues ?? "");
+  return res;
+}
+
 export async function uploadImage(form: FormData): Promise<UploadResult> {
-  if (!(await isAdmin())) return { ok: false, error: "Your session has ended. Log in again." };
+  if (!(await isAdmin())) return refused("Upload", { ok: false, error: "Your session has ended. Log in again." });
   const file = form.get("file");
-  if (!(file instanceof File)) return { ok: false, error: "No file received." };
-  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) return { ok: false, error: "Use a JPG, PNG or WebP photo." };
-  if (file.size > MAX_UPLOAD) return { ok: false, error: "That photo is too large (max 4MB)." };
+  if (!(file instanceof File)) return refused("Upload", { ok: false, error: "No file received." });
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) return refused("Upload", { ok: false, error: "Use a JPG, PNG or WebP photo." });
+  if (file.size > MAX_UPLOAD) return refused("Upload", { ok: false, error: "That photo is too large (max 4MB)." });
   try {
     // Re-encode everything: strips EXIF (incl. GPS location), fixes orientation, caps size.
     const input = sharp(Buffer.from(await file.arrayBuffer()), { limitInputPixels: 50_000_000 }).rotate();

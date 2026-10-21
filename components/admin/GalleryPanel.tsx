@@ -17,7 +17,7 @@ export default function GalleryPanel({ gallery, products, update }: { gallery: G
           <li key={g.src.src + i} className="flex gap-3 rounded-panel bg-white p-3 ring-1 ring-line">
             <Thumb img={g.src} className="h-28 w-24" />
             <div className="flex min-w-0 flex-grow flex-col gap-2">
-              <textarea value={g.alt} maxLength={140} rows={2} aria-label="Photo description" onChange={(e) => set(i, { alt: e.target.value })} className={`${inputCls} resize-none text-sm`} />
+              <textarea value={g.alt} maxLength={140} rows={2} aria-label="Photo description" onChange={(e) => set(i, { alt: e.target.value.replace(/[\r\n]+/g, " ") })} className={`${inputCls} resize-none text-sm`} />
               <div className="flex gap-2">
                 <select aria-label="Photo type" value={g.kind} onChange={(e) => set(i, { kind: e.target.value as GalleryItem["kind"] })} className={`${inputCls} py-1.5 text-sm`}>
                   <option value="product">Product</option><option value="campaign">Campaign</option>

@@ -56,7 +56,7 @@ export default function ProductsPanel({ products, update }: { products: Product[
                   <Field label="Material and colour"><Text value={p.material} max={80} onChange={(v) => set(p.slug, { material: v })} /></Field>
                   <Field label="Price (₦)" hint="Whole naira. Leave empty to show “₦ [PRICE]”.">
                     <input inputMode="numeric" value={p.price ?? ""} className={inputCls} placeholder="e.g. 25000"
-                      onChange={(e) => { const d = e.target.value.replace(/\D/g, "").slice(0, 9); set(p.slug, { price: d === "" ? null : Number(d) }); }} />
+                      onChange={(e) => { const d = e.target.value.replace(/\D/g, "").slice(0, 8); set(p.slug, { price: d === "" ? null : Number(d) }); }} />
                   </Field>
                   <Field label="Category">
                     <select value={p.category} onChange={(e) => set(p.slug, { category: e.target.value as Product["category"] })} className={inputCls}>
