@@ -8,9 +8,10 @@ const EMPTY = "Can't be empty";
 const text = (max: number) => z.string().trim().max(max, `Too long (max ${max} characters)`);
 const line = (max: number) => z.string().overwrite((s) => s.replace(/\s*[\r\n]+\s*/g, " ")).trim().max(max, `Too long (max ${max} characters)`);
 
-// Images: built-in files from this site, or files in this project's Vercel Blob store.
+// Images: built-in files from this site, or files in this project's Vercel Blob store. Built-in files are
+// /_next/static/media/… locally but /_next/static/immutable/media/… on Vercel, so any folder before media/ is fine.
 const imgSrc = z.string().max(500).refine(
-  (s) => /^\/_next\/static\/media\/[\w.\-]+$/.test(s) || /^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\/[\w.\-/]+$/.test(s),
+  (s) => /^\/_next\/static\/(?:[\w-]+\/)*media\/[\w.\-]+$/.test(s) || /^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\/[\w.\-/]+$/.test(s),
   "Image must be uploaded through the admin",
 );
 export const imgSchema = z.object({
